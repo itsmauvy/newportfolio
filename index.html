@@ -27,18 +27,15 @@
     /* ── 영상 (화면 중앙) ── */
     #video-wrap {
       position: absolute;
-      top: 50%; left: 50%;
-      translate: -50% -50%;
-      width: 42vw;
-      aspect-ratio: 16 / 9;
-      flex-shrink: 0;
-      will-change: transform;
+      inset: 0;
+      width: 100%; height: 100%;
+      will-change: mask-size;
       overflow: hidden;
 
       -webkit-mask-image: url('assets/img/bin v1.png');
               mask-image: url('assets/img/bin v1.png');
-      -webkit-mask-size: contain;
-              mask-size: contain;
+      -webkit-mask-size: 26vmin;
+              mask-size: 26vmin;
       -webkit-mask-repeat: no-repeat;
               mask-repeat: no-repeat;
       -webkit-mask-position: center;
@@ -63,95 +60,162 @@
       letter-spacing: 0.25em;
     }
 
-    /* ── 텍스트 레이아웃 (영상 주변) ── */
-
-    /* 좌상단 — 이름 */
-    .txt-topleft {
-      position: absolute;
-      top: 7vh; left: 4vw;
-      will-change: transform, opacity;
-    }
-    .txt-topleft h1 {
-      font-size: clamp(2rem, 5vw, 6rem);
-      font-weight: 300;
-      letter-spacing: -0.03em;
-      line-height: 0.9;
-      color: #000;
-    }
-
-    /* 우상단 — 직함 */
-    .txt-topright {
-      position: absolute;
-      top: 7vh; right: 4vw;
-      text-align: right;
-      will-change: transform, opacity;
-    }
-    .txt-topright p {
-      font-size: clamp(0.7rem, 1.1vw, 1rem);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #888;
-      line-height: 1.8;
-    }
-
-    /* 좌하단 — 연도 */
-    .txt-botleft {
-      position: absolute;
-      bottom: 7vh; left: 4vw;
-      will-change: transform, opacity;
-    }
-    .txt-botleft p {
-      font-size: clamp(0.7rem, 1vw, 0.9rem);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #aaa;
-    }
-
-    /* 우하단 — 태그라인 */
-    .txt-botright {
-      position: absolute;
-      bottom: 7vh; right: 4vw;
-      text-align: right;
-      will-change: transform, opacity;
-    }
-    .txt-botright p {
-      font-size: clamp(0.7rem, 1.1vw, 1rem);
-      letter-spacing: 0.05em;
-      color: #555;
-      line-height: 1.7;
-    }
-
-    /* 스크롤 힌트 */
-    #scroll-hint {
+    /* ── 헤더 ── */
+    #site-header {
       position: fixed;
-      bottom: 3.5vh;
-      left: 50%;
-      translate: -50% 0;
-      z-index: 10;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #aaa;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 2.4vh 4vw;
       pointer-events: none;
     }
+    #site-header .nav {
+      display: flex;
+      gap: clamp(1.4rem, 2.5vw, 3rem);
+      pointer-events: auto;
+    }
+    /* nav hover — myportfolio 라이브 사이트와 동일한 글자 롤업(roll-up) 효과 */
+    #site-header .nav a {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #15151a;
+      text-decoration: none;
+      display: inline-block;
+      overflow: hidden;
+      height: 1.4em;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+    #site-header .nav a:hover { opacity: 1; }
+    #site-header .nav .nav-link-inner {
+      position: relative;
+      display: inline-block;
+    }
+    #site-header .nav .nav-link-inner span {
+      display: block;
+      line-height: 1.4em;
+      transition: transform 0.3s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    #site-header .nav .nav-link-inner span:first-child { transform: translateY(0%); }
+    #site-header .nav .nav-link-inner span:last-child {
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
+      transform: translateY(100%);
+    }
+    #site-header .nav a:hover .nav-link-inner span:first-child { transform: translateY(-100%); }
+    #site-header .nav a:hover .nav-link-inner span:last-child { transform: translateY(0%); }
 
-    /* 프리로더 */
+    /* ── 스크롤 인디케이터 (하단 중앙: 마우스 + 화살표 + Scroll) ── */
+    #scroll-cue {
+      position: fixed;
+      left: 50%; bottom: 3.2vh;
+      transform: translateX(-50%);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      pointer-events: none;
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    #scroll-cue.is-hidden {
+      opacity: 0;
+      transform: translateX(-50%) translateY(12px);
+    }
+    #scroll-cue .mouse {
+      width: 24px; height: 38px;
+      border: 2px solid #15151a;
+      border-radius: 14px;
+      display: flex;
+      justify-content: center;
+      padding-top: 7px;
+    }
+    #scroll-cue .wheel {
+      width: 3px; height: 7px;
+      background: #15151a;
+      border-radius: 2px;
+      animation: cueWheel 1.6s ease-in-out infinite;
+    }
+    @keyframes cueWheel {
+      0%   { transform: translateY(0);    opacity: 1; }
+      70%  { transform: translateY(11px); opacity: 0; }
+      100% { transform: translateY(0);    opacity: 0; }
+    }
+    #scroll-cue .arrow {
+      width: 9px; height: 9px;
+      border-right: 2px solid #15151a;
+      border-bottom: 2px solid #15151a;
+      animation: cueArrow 1.6s ease-in-out infinite;
+    }
+    @keyframes cueArrow {
+      0%   { transform: rotate(45deg) translate(-3px, -3px); opacity: 0; }
+      50%  { opacity: 1; }
+      100% { transform: rotate(45deg) translate(3px, 3px);   opacity: 0; }
+    }
+    #scroll-cue .scroll-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #15151a;
+      opacity: 0.7;
+    }
+
+    /* ── 프리로더 (시네마틱 카운터 + 슬라이드 리빌) ── */
     #preloader {
       position: fixed;
       inset: 0;
-      background: #fff;
+      background: #0a0a0b;
       z-index: 100;
       display: flex;
-      align-items: flex-start;
-      justify-content: flex-end;
-      padding: 3vw;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
     }
-    #preloader span {
-      font-size: clamp(3rem, 8vw, 10rem);
-      font-weight: 300;
-      color: #000;
-      letter-spacing: -0.03em;
+    #preloader.is-done { transform: translateY(-100%); }
+    #preloader .pl-count {
+      display: flex;
+      align-items: baseline;
+      color: #fff;
+      font-weight: 200;
+      letter-spacing: -0.05em;
+      line-height: 0.9;
       font-variant-numeric: tabular-nums;
+      font-size: clamp(4.5rem, 16vw, 15rem);
+    }
+    #preloader .pl-count .pct {
+      font-size: 0.26em;
+      font-weight: 400;
+      letter-spacing: 0;
+      margin-left: 0.45em;
+      color: rgba(255, 255, 255, 0.45);
+    }
+    #preloader .pl-track {
+      width: min(64vw, 460px);
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    #preloader .pl-fill {
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%;
+      width: 0%;
+      background: #fff;
+      transition: width 0.2s ease;
+    }
+    #preloader .pl-label {
+      font-size: 0.66rem;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
     }
 
     #next-section {
@@ -164,19 +228,21 @@
 </head>
 <body>
 
-<div id="preloader"><span id="loader-num">0%</span></div>
+<div id="preloader">
+  <div class="pl-count"><span id="loader-num">0</span><span class="pct">%</span></div>
+  <div class="pl-track"><span class="pl-fill" id="loader-fill"></span></div>
+  <span class="pl-label">Loading</span>
+</div>
+
+<header id="site-header">
+  <nav class="nav">
+    <a href="#work"><span class="nav-link-inner"><span>Work</span><span aria-hidden="true">Work</span></span></a>
+    <a href="#about"><span class="nav-link-inner"><span>About</span><span aria-hidden="true">About</span></span></a>
+    <a href="#contact"><span class="nav-link-inner"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
+  </nav>
+</header>
 
 <div id="scene">
-
-  <!-- 텍스트: 좌상단 -->
-  <div class="txt-topleft">
-    <h1>수빈</h1>
-  </div>
-
-  <!-- 텍스트: 우상단 -->
-  <div class="txt-topright">
-    <p>UX / Product Designer<br>Portfolio 2025</p>
-  </div>
 
   <!-- Layer 1: 전체화면 영상 (스크롤 후반에 페이드인) -->
   <video id="video-full" muted loop playsinline
@@ -192,19 +258,13 @@
     </video>
   </div>
 
-  <!-- 텍스트: 좌하단 -->
-  <div class="txt-botleft">
-    <p>Seoul, Korea</p>
-  </div>
-
-  <!-- 텍스트: 우하단 -->
-  <div class="txt-botright">
-    <p>문제를 디자인으로<br>해결하는 사람</p>
-  </div>
-
 </div>
 
-<div id="scroll-hint">Scroll</div>
+<div id="scroll-cue" aria-hidden="true">
+  <div class="mouse"><span class="wheel"></span></div>
+  <span class="arrow"></span>
+  <span class="scroll-label">Scroll</span>
+</div>
 
 <div id="scroll-space"></div>
 <div id="next-section"></div>
@@ -233,78 +293,44 @@
     scrub: 1,
   };
 
-  /* ── 1) 영상 확대 → 화면 채우기 ── */
-  function getScale() {
-    const wrap = document.getElementById('video-wrap');
-    const sw = window.innerWidth, sh = window.innerHeight;
-    return Math.max(sw / wrap.offsetWidth, sh / wrap.offsetHeight) * 1.05;
-  }
+  /* ── 1) 영상은 100% 고정, 글자(마스크)만 확대 → 다 커진 뒤 전체영상으로 전환 ── */
+  // 타임라인: 앞 70% 구간에 글자 40배 확대 완료 → 뒤 30% 구간에 전체영상 페이드인(사라짐)
+  const heroTL = gsap.timeline({ scrollTrigger: ST });
+  heroTL.fromTo('#video-wrap',
+    { webkitMaskSize: '26vmin', maskSize: '26vmin' },
+    { webkitMaskSize: '2600vmin', maskSize: '2600vmin', ease: 'none', duration: 0.7 });
+  heroTL.to('#video-full', { opacity: 1, ease: 'none', duration: 0.3 });
 
-  let stVideo;
-  function buildVideo() {
-    if (stVideo) stVideo.kill();
-    gsap.set('#video-wrap', { scale: 1 });
-    stVideo = gsap.to('#video-wrap', {
-      scale: getScale(),
-      ease: 'none',
-      scrollTrigger: ST,
-    });
-  }
-  buildVideo();
-  window.addEventListener('resize', () => { ScrollTrigger.refresh(); buildVideo(); });
+  window.addEventListener('resize', () => { ScrollTrigger.refresh(); });
 
-  /* ── 2) 텍스트 → 멀어지며 사라짐 (parallax) ── */
-  // 각 텍스트를 바깥 방향으로 보내면서 opacity 0
-  gsap.to('.txt-topleft', {
-    x: '-8vw', y: '-6vh', scale: 0.7, opacity: 0,
-    ease: 'none',
-    scrollTrigger: { ...ST, end: '50% bottom' },
-  });
-  gsap.to('.txt-topright', {
-    x: '8vw', y: '-6vh', scale: 0.7, opacity: 0,
-    ease: 'none',
-    scrollTrigger: { ...ST, end: '50% bottom' },
-  });
-  gsap.to('.txt-botleft', {
-    x: '-8vw', y: '6vh', scale: 0.7, opacity: 0,
-    ease: 'none',
-    scrollTrigger: { ...ST, end: '50% bottom' },
-  });
-  gsap.to('.txt-botright', {
-    x: '8vw', y: '6vh', scale: 0.7, opacity: 0,
-    ease: 'none',
-    scrollTrigger: { ...ST, end: '50% bottom' },
-  });
-
-  /* ── 3) 전체화면 영상 페이드인 (70% 이후) ── */
-  gsap.to('#video-full', {
-    opacity: 1,
-    ease: 'none',
-    scrollTrigger: { ...ST, start: '65% top', end: 'bottom bottom' },
-  });
-
-  /* ── 4) 스크롤 힌트 페이드 ── */
-  gsap.to('#scroll-hint', {
-    opacity: 0,
-    scrollTrigger: { trigger: '#scroll-space', start: 'top top', end: '10% top', scrub: true },
-  });
-
-  /* ── 프리로더 ── */
+  /* ── 2) 스크롤 인디케이터: 영상 진입(스크롤 다운) 시 숨김, 맨 위로 돌아오면 다시 표시 ── */
   (function () {
-    const el  = document.getElementById('preloader');
-    const num = document.getElementById('loader-num');
+    const cue = document.getElementById('scroll-cue');
+    const sync = () => {
+      cue.classList.toggle('is-hidden', window.scrollY > 40);
+    };
+    window.addEventListener('scroll', sync, { passive: true });
+    sync();
+  })();
+
+  /* ── 프리로더 (카운트업 → 완료 시 위로 슬라이드 리빌) ── */
+  (function () {
+    const el   = document.getElementById('preloader');
+    const num  = document.getElementById('loader-num');
+    const fill = document.getElementById('loader-fill');
     let n = 0;
     const step = () => {
-      n += Math.random() * 7 + 2;
+      n += Math.random() * 4 + 1.2;
       if (n >= 100) {
-        num.textContent = '100%';
+        num.textContent = '100';
+        fill.style.width = '100%';
         setTimeout(() => {
-          el.style.transition = 'opacity 0.8s';
-          el.style.opacity = '0';
-          setTimeout(() => el.style.display = 'none', 800);
-        }, 250);
+          el.classList.add('is-done');
+          setTimeout(() => { el.style.display = 'none'; }, 1050);
+        }, 400);
       } else {
-        num.textContent = Math.floor(n) + '%';
+        num.textContent = Math.floor(n);
+        fill.style.width = n + '%';
         requestAnimationFrame(step);
       }
     };
