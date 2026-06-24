@@ -60,7 +60,7 @@
       letter-spacing: 0.25em;
     }
 
-    /* ── 헤더 ── */
+    /* ── 헤더 (mix-blend로 밝은/어두운 배경 모두에서 보이게) ── */
     #site-header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -70,6 +70,7 @@
       justify-content: flex-end;
       padding: 2.4vh 4vw;
       pointer-events: none;
+      mix-blend-mode: difference;
     }
     #site-header .nav {
       display: flex;
@@ -82,12 +83,12 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #15151a;
+      color: #fff;
       text-decoration: none;
       display: inline-block;
       overflow: hidden;
       height: 1.4em;
-      opacity: 0.5;
+      opacity: 0.6;
       transition: opacity 0.3s;
     }
     #site-header .nav a:hover { opacity: 1; }
@@ -165,6 +166,50 @@
       opacity: 0.7;
     }
 
+    /* ── 오른쪽 세로 섹션 타임라인 (lukebaffait 참고: 분할 세그먼트 + 현재 섹션 라벨) ── */
+    #scroll-progress {
+      position: fixed;
+      right: 26px; top: 50%;
+      transform: translateY(-50%);
+      height: 56vh;
+      z-index: 45;
+      pointer-events: none;
+      mix-blend-mode: difference;   /* 밝은/어두운 배경 모두에서 보임 */
+    }
+    #scroll-progress .sp-segs {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      height: 100%;
+      width: 2px;
+      margin-left: auto;
+    }
+    #scroll-progress .sp-seg {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.22);
+    }
+    #scroll-progress .sp-seg .f {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 0%;
+      background: #fff;
+    }
+    #scroll-progress .sp-label {
+      position: absolute;
+      right: 16px;
+      top: 0;
+      transform: translateY(-50%);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      white-space: nowrap;
+      transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     /* ── 프리로더 (캔버스 플로우 + loading 카운터, neoleaf 참고) ── */
     #preloader {
       position: fixed;
@@ -200,12 +245,207 @@
     .lenis.lenis-stopped { overflow: hidden; }
     .lenis.lenis-smooth iframe { pointer-events: none; }
 
-    #next-section {
+    /* ── ABOUT 섹션 (영상 아래, 어두운 톤으로 자연스럽게 이어짐) ── */
+    #about {
+      position: relative;
+      z-index: 2;
+      background: #0a0a0b;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 16vh 4vw;
+    }
+    /* 영상 → ABOUT 섹션으로 번지듯 섞이는 그라데이션 블렌드 */
+    #about::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      top: -48vh;
+      height: 48vh;
+      background: linear-gradient(
+        to bottom,
+        rgba(10, 10, 11, 0) 0%,
+        rgba(10, 10, 11, 0.55) 50%,
+        rgba(10, 10, 11, 0.9) 80%,
+        #0a0a0b 100%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+    #about .about-inner {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    #about .about-eyebrow {
+      position: absolute;
+      left: 4vw;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+    }
+    /* 스크롤하며 단어별로 색이 채워지는 ABOUT 문장 */
+    #about .about-fill {
+      margin-top: 0;
+      font-size: clamp(1.5rem, 3.6vw, 3.2rem);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+    }
+    #about .about-fill .w {
+      color: rgba(255, 255, 255, 0.16);
+      will-change: color;
+    }
+    #about .about-support {
+      margin-top: 2.6rem;
+      max-width: 640px;
+      font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+      line-height: 1.85;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    #about .about-foot {
+      position: absolute;
+      left: 4vw; right: 4vw; bottom: 6vh;
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+    }
+    @media (max-width: 760px) {
+      #about .about-foot { position: static; flex-direction: column; gap: 0.5rem; margin-top: 3rem; }
+    }
+    /* 좁은 화면: About 라벨을 본문 위로 쌓음 (겹침 방지) */
+    @media (max-width: 1200px) {
+      #about .about-eyebrow {
+        position: static;
+        transform: none;
+        display: block;
+        margin-bottom: 1.6rem;
+      }
+    }
+
+    /* ── 블라인드 와이프 전환 (다크 ABOUT → 화이트 ABOUT ME) ── */
+    #wipe {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      background: #0a0a0b;
+      overflow: hidden;
+    }
+    #wipe .wipe-bars {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #wipe .wipe-bar {
+      flex: 1;
+      background: #fff;
+      transform: scaleY(0);
+      will-change: transform;
+    }
+    #wipe .wipe-bar:nth-child(odd)  { transform-origin: top; }
+    #wipe .wipe-bar:nth-child(even) { transform-origin: bottom; }
+
+    /* ── ABOUT ME (화이트 배경 이력 섹션) ── */
+    #about-me {
       position: relative;
       z-index: 2;
       background: #fff;
-      min-height: 100vh;
+      color: #111;
+      padding: 12vh 4vw 14vh;
     }
+    #about-me .me-inner { max-width: 1200px; margin: 0 auto; }
+    #about-me .me-eyebrow {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #999;
+    }
+    #about-me .me-title {
+      font-size: clamp(2.6rem, 8vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin: 0.6rem 0 1.4rem;
+    }
+    #about-me .me-sub {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      font-weight: 700;
+    }
+    #about-me .me-sub span { color: #b3b3b3; font-weight: 500; }
+    #about-me .me-head { border-bottom: 1px solid #ececec; padding-bottom: 4vh; margin-bottom: 6vh; }
+    #about-me .me-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 0.8fr;
+      gap: 4vw;
+    }
+    #about-me .me-block { margin-bottom: 3.2rem; }
+    #about-me .me-block h3 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+    #about-me .me-block > p { font-size: 0.95rem; line-height: 1.6; color: #333; }
+    #about-me .me-muted { color: #9a9a9a !important; font-size: 0.82rem !important; letter-spacing: 0.03em; }
+    #about-me .me-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    #about-me .me-tags li {
+      font-size: 0.82rem;
+      padding: 0.45rem 0.95rem;
+      border: 1px solid #e4e4e4;
+      border-radius: 999px;
+      color: #333;
+    }
+    #about-me .me-cert { margin-bottom: 1.6rem; }
+    #about-me .me-cert-label {
+      display: block;
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 0.5rem;
+    }
+    #about-me .me-cert p { font-size: 0.92rem; line-height: 1.55; color: #333; }
+    #about-me .me-photo {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: linear-gradient(135deg, #dcdcdc, #b8b8b8);
+      border-radius: 8px;
+      margin-bottom: 1.4rem;
+    }
+    #about-me .me-name { font-size: 1.5rem; font-weight: 800; margin-bottom: 1.8rem; }
+    #about-me .me-info { display: flex; flex-direction: column; gap: 1rem; }
+    #about-me .me-info > div {
+      display: flex; justify-content: space-between; gap: 1rem;
+      border-bottom: 1px solid #eee; padding-bottom: 0.65rem;
+    }
+    #about-me .me-info dt { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: #aaa; }
+    #about-me .me-info dd { font-size: 0.88rem; color: #222; text-align: right; }
+    @media (max-width: 900px) {
+      #about-me .me-grid { grid-template-columns: 1fr; gap: 3rem; }
+    }
+    /* ABOUT ME 콘텐츠 등장 모션 (첫 페인트부터 숨김 → 스크롤 시 is-in으로 등장) */
+    #about-me .me-head > *,
+    #about-me .me-block,
+    #about-me .me-profile {
+      opacity: 0;
+      transform: translateY(45px);
+      transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #about-me .is-in { opacity: 1 !important; transform: none !important; }
   </style>
 </head>
 <body>
@@ -222,6 +462,11 @@
     <a href="#contact"><span class="nav-link-inner"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
   </nav>
 </header>
+
+<div id="scroll-progress" aria-hidden="true">
+  <span class="sp-label">Intro</span>
+  <div class="sp-segs"></div>
+</div>
 
 <div id="scene">
 
@@ -248,7 +493,104 @@
 </div>
 
 <div id="scroll-space"></div>
-<div id="next-section"></div>
+
+<section id="about">
+  <div class="about-inner">
+    <span class="about-eyebrow">About</span>
+    <p class="about-fill">
+      <span class="w">Passionate</span> <span class="w">about</span> <span class="w">learning,</span> <span class="w">growing,</span><br>
+      <span class="w">and</span> <span class="w">taking</span> <span class="w">on</span> <span class="w">new</span> <span class="w">challenges.</span>
+    </p>
+    <p class="about-support">새로운 도구와 방식을 빠르게 익히고, 작은 디테일까지 챙겨 끝까지 완성하는 것을 좋아합니다. 보기 좋은 화면을 넘어 실제로 작동하는 경험을 만드는 데 집중합니다.</p>
+  </div>
+  <div class="about-foot">
+    <span>UX / UI Designer &amp; Publisher</span>
+    <span>Seoul, Korea</span>
+    <span>Portfolio 2025</span>
+  </div>
+</section>
+
+<section id="wipe">
+  <div class="wipe-bars">
+    <div class="wipe-bar"></div>
+    <div class="wipe-bar"></div>
+    <div class="wipe-bar"></div>
+    <div class="wipe-bar"></div>
+    <div class="wipe-bar"></div>
+    <div class="wipe-bar"></div>
+  </div>
+</section>
+
+<section id="about-me">
+  <div class="me-inner">
+    <header class="me-head">
+      <span class="me-eyebrow">UX / UI Designer &amp; Publisher</span>
+      <h2 class="me-title">ABOUT ME</h2>
+      <p class="me-sub">경험을 설계하는 <span>사람입니다.</span></p>
+    </header>
+    <div class="me-grid">
+      <div class="me-col">
+        <div class="me-block">
+          <h3>Education</h3>
+          <p>단국대학교(죽전) 졸업</p>
+        </div>
+        <div class="me-block">
+          <h3>Work Experience</h3>
+          <p class="me-muted">2022.08 – 2026.02 &nbsp;(주) 샘시크코스메틱</p>
+          <p>해외영업 / 이커머스 MD</p>
+        </div>
+        <div class="me-block">
+          <h3>Languages</h3>
+          <p>영어 · 중국어 · 한국어 · 말레이시아어</p>
+        </div>
+        <div class="me-block">
+          <h3>Skills</h3>
+          <ul class="me-tags">
+            <li>AI 활용 기술</li><li>컨텐츠 기획</li><li>UX/UI 디자인</li><li>웹퍼블리싱</li>
+            <li>SNS 운영</li><li>인플루언서 마케팅</li><li>이커머스 MD</li><li>해외 영업</li>
+          </ul>
+        </div>
+      </div>
+      <div class="me-col">
+        <div class="me-block">
+          <h3>Certificate</h3>
+          <div class="me-cert">
+            <span class="me-cert-label">Web &amp; Development</span>
+            <p>웹개발기능사 (취득 예정)</p>
+            <p>프로그래밍 기능사 (취득 예정)</p>
+          </div>
+          <div class="me-cert">
+            <span class="me-cert-label">Design</span>
+            <p>2026 GTQ 1급</p>
+            <p>2026 GTQi 1급</p>
+          </div>
+          <div class="me-cert">
+            <span class="me-cert-label">Language</span>
+            <p>2025 TOPIK 6급</p>
+            <p>2024 무역영어 1급</p>
+            <p>2022 ITT 비즈니스 영어 번역 2급</p>
+            <p>2021 TOEIC 910</p>
+          </div>
+          <div class="me-cert">
+            <span class="me-cert-label">Others</span>
+            <p>2025 네트워크관리사 2급</p>
+            <p>2025 운전면허 2종</p>
+          </div>
+        </div>
+      </div>
+      <div class="me-col me-profile">
+        <div class="me-photo" aria-hidden="true"></div>
+        <p class="me-name">장수빈</p>
+        <dl class="me-info">
+          <div><dt>D.O.B</dt><dd>1997.03.01</dd></div>
+          <div><dt>Email</dt><dd>itsmauvely@gmail.com</dd></div>
+          <div><dt>Tel</dt><dd>010-4580-2999</dd></div>
+          <div><dt>Nationality</dt><dd>말레이시아 (F-2)</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -299,6 +641,106 @@
     };
     window.addEventListener('scroll', sync, { passive: true });
     sync();
+  })();
+
+  /* ── 3) 오른쪽 세로 섹션 타임라인: 섹션별 세그먼트 채움 + 현재 섹션 라벨 ── */
+  (function () {
+    const root    = document.getElementById('scroll-progress');
+    const segWrap = root.querySelector('.sp-segs');
+    const label   = root.querySelector('.sp-label');
+    const aboutEl = document.getElementById('about');
+
+    // 페이지 섹션 정의 (스크롤 시작 위치 기준) — 섹션 추가 시 여기에 등록
+    // (Projects 섹션 추가되면 { name: 'Projects', top: projectsEl.offsetTop } 등록)
+    const sectionDefs = () => [
+      { name: 'Intro', top: 0 },
+      // About 구간을 한 화면 앞당겨 시작 → Passionate 문구가 보이기 전에 라벨이 ABOUT으로 전환
+      { name: 'About', top: Math.max(1, aboutEl.offsetTop - window.innerHeight) },
+    ];
+
+    // 세그먼트 DOM 생성 (섹션 수만큼)
+    const fills = sectionDefs().map(() => {
+      const seg = document.createElement('div');
+      seg.className = 'sp-seg';
+      const f = document.createElement('div');
+      f.className = 'f';
+      seg.appendChild(f);
+      segWrap.appendChild(seg);
+      return f;
+    });
+
+    const update = () => {
+      const secs = sectionDefs();
+      const max  = document.documentElement.scrollHeight - window.innerHeight;
+      const y    = window.scrollY;
+      let cur = 0;
+      for (let i = 0; i < secs.length; i++) if (y >= secs[i].top - 1) cur = i;
+
+      for (let i = 0; i < fills.length; i++) {
+        let h = 0;
+        if (i < cur) h = 100;
+        else if (i === cur) {
+          const start = secs[i].top;
+          const end   = (i + 1 < secs.length) ? secs[i + 1].top : max;
+          h = end > start ? Math.min(100, Math.max(0, (y - start) / (end - start) * 100)) : 100;
+        }
+        fills[i].style.height = h + '%';
+      }
+
+      // 라벨을 현재 세그먼트 중앙에 위치 + 섹션명 표시
+      const segEl = segWrap.children[cur];
+      const sr = segEl.getBoundingClientRect();
+      const rr = root.getBoundingClientRect();
+      label.style.top = (sr.top - rr.top + sr.height / 2) + 'px';
+      label.textContent = secs[cur].name;
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+
+  /* ── 4) ABOUT 문장: 스크롤하며 단어별 색 채우기 (Trionn 참고) ── */
+  (function () {
+    const words = document.querySelectorAll('.about-fill .w');
+    if (!words.length) return;
+    gsap.to(words, {
+      color: '#ffffff',
+      ease: 'none',
+      stagger: 1,
+      scrollTrigger: {
+        trigger: '#about',
+        start: 'top 70%',
+        end: 'bottom 65%',
+        scrub: true,
+      },
+    });
+  })();
+
+  /* ── 6) 블라인드 와이프: 가로 띠가 위/아래 번갈아 자라며 다크→화이트 전환 ── */
+  (function () {
+    const bars = document.querySelectorAll('#wipe .wipe-bar');
+    if (!bars.length) return;
+    gsap.to(bars, {
+      scaleY: 1,
+      ease: 'none',
+      stagger: 0.06,
+      scrollTrigger: { trigger: '#wipe', start: 'top top', end: '+=80%', scrub: true, pin: true, anticipatePin: 1 },
+    });
+  })();
+
+  /* ── 7) ABOUT ME 콘텐츠 등장 모션 (흰 배경이 정적이지 않게) ── */
+  (function () {
+    const me = document.getElementById('about-me');
+    if (!me) return;
+    const items = me.querySelectorAll('.me-head > *, .me-block, .me-profile');
+    items.forEach((el) => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 88%',
+        onEnter: () => el.classList.add('is-in'),
+      });
+    });
   })();
 
   /* ── 프리로더 (텍스트 안에 물이 차오르는 효과 + loading 카운터) ── 첫 방문 시에만 ── */
