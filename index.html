@@ -354,29 +354,25 @@
       }
     }
 
-    /* ── 블라인드 와이프 전환 (다크 ABOUT → 화이트 ABOUT ME) ── */
-    #wipe {
-      position: relative;
-      z-index: 2;
-      height: 100vh;
-      background: #0a0a0b;
-      overflow: hidden;
-    }
-    #wipe .wipe-bars {
+    /* ── ABOUT → PROFILE 블라인드 리빌: 검은 띠가 PROFILE을 덮었다가 걷히며 드러냄 ── */
+    #about-me .me-blinds {
       position: absolute;
-      inset: 0;
+      top: 0; left: 0; right: 0;          /* 패딩 박스 전체 폭 = 풀폭 (여백 없음) */
+      height: 100vh;
+      z-index: 10;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      pointer-events: none;
     }
-    #wipe .wipe-bar {
+    #about-me .mb-bar {
       flex: 1;
-      background: #fff;
-      transform: scaleY(0);
+      background: #0a0a0b;
+      transform: scaleY(1);     /* 처음엔 꽉 덮음(검정) → 스크롤하며 0으로 걷힘 */
       will-change: transform;
     }
-    #wipe .wipe-bar:nth-child(odd)  { transform-origin: top; }
-    #wipe .wipe-bar:nth-child(even) { transform-origin: bottom; }
+    #about-me .mb-bar:nth-child(odd)  { transform-origin: top; }
+    #about-me .mb-bar:nth-child(even) { transform-origin: bottom; }
 
     /* ── ABOUT ME (화이트 배경 이력 섹션) ── */
     #about-me {
@@ -384,7 +380,7 @@
       z-index: 2;
       background: #fff;
       color: #111;
-      padding: 12vh 4vw 14vh;
+      padding: 12vh 4vw 16vh;
     }
     #about-me .me-inner { max-width: 1200px; margin: 0 auto; }
     #about-me .me-eyebrow {
@@ -492,6 +488,105 @@
                   transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
     }
     #about-me .is-in { opacity: 1 !important; transform: none !important; }
+
+
+
+    /* ── SELECTED WORKS (좌측 목록 + 우측 프리뷰, lukebaffait 참고) ── */
+    #projects {
+      position: relative;
+      z-index: 2;
+      background: #0a0a0b;
+      color: #fff;
+      padding: 11vh 4vw 22vh;
+    }
+    #projects .pj-inner { max-width: 1300px; margin: 0 auto; }
+    /* 다크 섹션 올라올 때 내용 페이드업 */
+    #projects .pj-eyebrow,
+    #projects .pj-item,
+    #projects .pj-preview {
+      opacity: 0;
+      transform: translateY(45px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #projects .pj-in { opacity: 1 !important; transform: none !important; }
+    #projects .pj-eyebrow {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 5vh;
+    }
+    #projects .pj-layout {
+      display: grid;
+      grid-template-columns: 1fr 0.72fr;
+      gap: 5vw;
+      align-items: start;
+    }
+    #projects .pj-list { list-style: none; }
+    #projects .pj-item { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+    #projects .pj-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+    #projects .pj-item a {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 3.6vh 0;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.32);
+      transition: color 0.35s ease, padding-left 0.35s ease;
+    }
+    #projects .pj-name {
+      font-size: clamp(2.4rem, 5.6vw, 75px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    #projects .pj-role {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      white-space: nowrap;
+    }
+    #projects .pj-item.is-active a,
+    #projects .pj-item a:hover {
+      color: #fff;
+      padding-left: 1.1rem;
+    }
+    #projects .pj-preview { position: sticky; top: 16vh; }
+    #projects .pj-preview-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 1rem;
+    }
+    #projects .pj-preview-box {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(135deg, #26262b, #141416);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #projects .pj-preview-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #projects .pj-preview-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+    }
+    @media (max-width: 860px) {
+      #projects .pj-layout { grid-template-columns: 1fr; gap: 3rem; }
+      #projects .pj-preview { display: none; }
+      #projects .pj-name { font-size: clamp(1.5rem, 7vw, 2.2rem); }
+    }
   </style>
 </head>
 <body>
@@ -503,7 +598,7 @@
 
 <header id="site-header">
   <nav class="nav">
-    <a href="#work"><span class="nav-link-inner"><span>Work</span><span aria-hidden="true">Work</span></span></a>
+    <a href="#projects"><span class="nav-link-inner"><span>Work</span><span aria-hidden="true">Work</span></span></a>
     <a href="#about"><span class="nav-link-inner"><span>About</span><span aria-hidden="true">About</span></span></a>
     <a href="#contact"><span class="nav-link-inner"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
   </nav>
@@ -559,18 +654,15 @@
   </div>
 </section>
 
-<section id="wipe">
-  <div class="wipe-bars">
-    <div class="wipe-bar"></div>
-    <div class="wipe-bar"></div>
-    <div class="wipe-bar"></div>
-    <div class="wipe-bar"></div>
-    <div class="wipe-bar"></div>
-    <div class="wipe-bar"></div>
-  </div>
-</section>
-
 <section id="about-me">
+  <div class="me-blinds" aria-hidden="true">
+    <div class="mb-bar"></div>
+    <div class="mb-bar"></div>
+    <div class="mb-bar"></div>
+    <div class="mb-bar"></div>
+    <div class="mb-bar"></div>
+    <div class="mb-bar"></div>
+  </div>
   <div class="me-inner">
     <header class="me-head">
       <span class="me-eyebrow">UX / UI Designer &amp; Publisher</span>
@@ -645,6 +737,32 @@
   </div>
 </section>
 
+<section id="projects">
+  <div class="pj-inner">
+    <span class="pj-eyebrow">Selected Works</span>
+    <div class="pj-layout">
+      <ul class="pj-list">
+        <li class="pj-item is-active" data-date="2025" data-role="Personal" data-label="Project One">
+          <a href="#"><span class="pj-name">Project One</span><span class="pj-role">Personal</span></a>
+        </li>
+        <li class="pj-item" data-date="2025" data-role="Personal" data-label="Project Two">
+          <a href="#"><span class="pj-name">Project Two</span><span class="pj-role">Personal</span></a>
+        </li>
+        <li class="pj-item" data-date="2024" data-role="Team" data-label="Project Three">
+          <a href="#"><span class="pj-name">Project Three</span><span class="pj-role">Team</span></a>
+        </li>
+        <li class="pj-item" data-date="2024" data-role="Team" data-label="Project Four">
+          <a href="#"><span class="pj-name">Project Four</span><span class="pj-role">Team</span></a>
+        </li>
+      </ul>
+      <div class="pj-preview" aria-hidden="true">
+        <div class="pj-preview-meta"><span class="pj-date">2025</span><span>Preview</span></div>
+        <div class="pj-preview-box"><span class="pj-preview-label">Project One</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
@@ -701,16 +819,17 @@
     const root    = document.getElementById('scroll-progress');
     const segWrap = root.querySelector('.sp-segs');
     const label   = root.querySelector('.sp-label');
-    const aboutEl   = document.getElementById('about');
-    const profileEl = document.getElementById('about-me');
+    const aboutEl    = document.getElementById('about');
+    const profileEl  = document.getElementById('about-me');
+    const projectsEl = document.getElementById('projects');
 
     // 페이지 섹션 정의 (스크롤 시작 위치 기준) — 섹션 추가 시 여기에 등록
-    // (Projects 섹션 만들면 { name: 'Projects', top: projectsEl.offsetTop - innerHeight*0.5 } 추가)
     const sectionDefs = () => [
-      { name: 'Intro',   top: 0 },
+      { name: 'Intro',    top: 0 },
       // About 구간을 한 화면 앞당겨 시작 → Passionate 문구가 보이기 전에 라벨이 ABOUT으로 전환
-      { name: 'About',   top: Math.max(1, aboutEl.offsetTop - window.innerHeight) },
-      { name: 'Profile', top: profileEl.offsetTop - window.innerHeight * 0.5 },
+      { name: 'About',    top: Math.max(1, aboutEl.offsetTop - window.innerHeight) },
+      { name: 'Profile',  top: profileEl.offsetTop - window.innerHeight * 0.5 },
+      { name: 'Projects', top: projectsEl.offsetTop - window.innerHeight * 0.5 },
     ];
 
     // 세그먼트 DOM 생성 (섹션 수만큼)
@@ -772,15 +891,15 @@
     });
   })();
 
-  /* ── 6) 블라인드 와이프: 가로 띠가 위/아래 번갈아 자라며 다크→화이트 전환 ── */
+  /* ── 6) ABOUT → PROFILE 블라인드 리빌: 검은 띠가 걷히며 PROFILE이 드러남 ── */
   (function () {
-    const bars = document.querySelectorAll('#wipe .wipe-bar');
+    const bars = document.querySelectorAll('#about-me .mb-bar');
     if (!bars.length) return;
     gsap.to(bars, {
-      scaleY: 1,
+      scaleY: 0,
       ease: 'none',
       stagger: 0.06,
-      scrollTrigger: { trigger: '#wipe', start: 'top top', end: '+=80%', scrub: true, pin: true, anticipatePin: 1 },
+      scrollTrigger: { trigger: '#about-me', start: 'top top', end: '+=70%', scrub: true, pin: true, anticipatePin: 1 },
     });
   })();
 
@@ -798,6 +917,36 @@
     });
   })();
 
+  /* ── 8-0) SELECTED WORKS 내용 등장: 다크 섹션 올라올 때 같이 페이드업 ── */
+  (function () {
+    const items = document.querySelectorAll('#projects .pj-eyebrow, #projects .pj-item, #projects .pj-preview');
+    if (!items.length) return;
+    items.forEach((el, i) => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 90%',
+        onEnter: () => { el.style.transitionDelay = (i * 0.05) + 's'; el.classList.add('pj-in'); },
+      });
+    });
+  })();
+
+  /* ── 8) SELECTED WORKS: 목록 호버 → 우측 프리뷰 전환 ── */
+  (function () {
+    const items = [...document.querySelectorAll('#projects .pj-item')];
+    if (!items.length) return;
+    const dateEl  = document.querySelector('#projects .pj-date');
+    const labelEl = document.querySelector('#projects .pj-preview-label');
+    const box     = document.querySelector('#projects .pj-preview-box');
+    const setActive = (it) => {
+      items.forEach((i) => i.classList.toggle('is-active', i === it));
+      if (dateEl)  dateEl.textContent  = it.dataset.date || '';
+      if (labelEl) labelEl.textContent = it.dataset.label || '';
+      // 실제 이미지 적용 시: it.dataset.img 로 box 내부 <img> src 교체(크로스페이드)
+      const img = it.dataset.img;
+      if (img && box) { box.innerHTML = '<img src="' + img + '" alt="">'; }
+    };
+    items.forEach((it) => it.addEventListener('mouseenter', () => setActive(it)));
+  })();
 
   /* ── 프리로더 (텍스트 안에 물이 차오르는 효과 + loading 카운터) ── 첫 방문 시에만 ── */
   (function () {
