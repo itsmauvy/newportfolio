@@ -7,12 +7,14 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { background: #fff; }
-    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; overflow-x: hidden; }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+    }
 
-    /* 스크롤 공간 */
     #scroll-space { height: 300vh; }
 
-    /* 고정 씬 — overflow:hidden 으로 scale 넘침 클리핑 */
+    /* 고정 씬 */
     #scene {
       position: fixed;
       inset: 0;
@@ -20,20 +22,19 @@
       background: #fff;
       z-index: 1;
       pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    /* 영상 컨테이너 — 이 요소가 scale로 확대됨 */
+    /* ── 영상 (화면 중앙) ── */
     #video-wrap {
-      position: relative;
-      width: 38vw;
+      position: absolute;
+      top: 50%; left: 50%;
+      translate: -50% -50%;
+      width: 42vw;
       aspect-ratio: 16 / 9;
       flex-shrink: 0;
       will-change: transform;
+      overflow: hidden;
 
-      /* 彬 글자 마스크 */
       -webkit-mask-image: url('assets/img/bin v1.png');
               mask-image: url('assets/img/bin v1.png');
       -webkit-mask-size: contain;
@@ -44,7 +45,7 @@
               mask-position: center;
     }
 
-    video {
+    #hero-video {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
@@ -53,40 +54,85 @@
     #video-placeholder {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, #111 0%, #282828 100%);
+      background: linear-gradient(135deg, #111 0%, #2a2a2a 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       color: rgba(255,255,255,0.2);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       letter-spacing: 0.25em;
     }
 
-    /* 히어로 텍스트 */
-    #hero-text {
-      position: fixed;
-      bottom: 4vw;
-      left: 4vw;
-      z-index: 10;
-      pointer-events: none;
+    /* ── 텍스트 레이아웃 (영상 주변) ── */
+
+    /* 좌상단 — 이름 */
+    .txt-topleft {
+      position: absolute;
+      top: 7vh; left: 4vw;
+      will-change: transform, opacity;
     }
-    #hero-text h1 {
-      font-size: clamp(1.8rem, 4vw, 5rem);
+    .txt-topleft h1 {
+      font-size: clamp(2rem, 5vw, 6rem);
       font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 0.9;
       color: #000;
-      letter-spacing: -0.02em;
     }
 
-    #scroll-hint {
-      position: fixed;
-      bottom: 4vw;
-      right: 4vw;
-      z-index: 10;
-      font-size: 0.68rem;
+    /* 우상단 — 직함 */
+    .txt-topright {
+      position: absolute;
+      top: 7vh; right: 4vw;
+      text-align: right;
+      will-change: transform, opacity;
+    }
+    .txt-topright p {
+      font-size: clamp(0.7rem, 1.1vw, 1rem);
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #000;
-      writing-mode: vertical-rl;
+      color: #888;
+      line-height: 1.8;
+    }
+
+    /* 좌하단 — 연도 */
+    .txt-botleft {
+      position: absolute;
+      bottom: 7vh; left: 4vw;
+      will-change: transform, opacity;
+    }
+    .txt-botleft p {
+      font-size: clamp(0.7rem, 1vw, 0.9rem);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+
+    /* 우하단 — 태그라인 */
+    .txt-botright {
+      position: absolute;
+      bottom: 7vh; right: 4vw;
+      text-align: right;
+      will-change: transform, opacity;
+    }
+    .txt-botright p {
+      font-size: clamp(0.7rem, 1.1vw, 1rem);
+      letter-spacing: 0.05em;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    /* 스크롤 힌트 */
+    #scroll-hint {
+      position: fixed;
+      bottom: 3.5vh;
+      left: 50%;
+      translate: -50% 0;
+      z-index: 10;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #aaa;
+      pointer-events: none;
     }
 
     /* 프리로더 */
@@ -121,15 +167,43 @@
 <div id="preloader"><span id="loader-num">0%</span></div>
 
 <div id="scene">
+
+  <!-- 텍스트: 좌상단 -->
+  <div class="txt-topleft">
+    <h1>수빈</h1>
+  </div>
+
+  <!-- 텍스트: 우상단 -->
+  <div class="txt-topright">
+    <p>UX / Product Designer<br>Portfolio 2025</p>
+  </div>
+
+  <!-- Layer 1: 전체화면 영상 (스크롤 후반에 페이드인) -->
+  <video id="video-full" muted loop playsinline
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;z-index:0;">
+    <source src="assets/video/13820343_3840_2160_30fps.mp4" type="video/mp4">
+  </video>
+
+  <!-- Layer 2: 彬 마스크 영상 (중앙에서 확대) -->
   <div id="video-wrap">
     <div id="video-placeholder">VIDEO</div>
     <video id="hero-video" muted loop playsinline>
       <source src="assets/video/13820343_3840_2160_30fps.mp4" type="video/mp4">
     </video>
   </div>
+
+  <!-- 텍스트: 좌하단 -->
+  <div class="txt-botleft">
+    <p>Seoul, Korea</p>
+  </div>
+
+  <!-- 텍스트: 우하단 -->
+  <div class="txt-botright">
+    <p>문제를 디자인으로<br>해결하는 사람</p>
+  </div>
+
 </div>
 
-<div id="hero-text"><h1>수빈</h1></div>
 <div id="scroll-hint">Scroll</div>
 
 <div id="scroll-space"></div>
@@ -142,51 +216,80 @@
   gsap.registerPlugin(ScrollTrigger);
 
   /* 영상 */
-  const vid = document.getElementById('hero-video');
-  const ph  = document.getElementById('video-placeholder');
-  vid.addEventListener('canplaythrough', () => { vid.play(); ph.style.display = 'none'; }, { once: true });
-  vid.load();
+  const vid  = document.getElementById('hero-video');
+  const vidF = document.getElementById('video-full');
+  const ph   = document.getElementById('video-placeholder');
+  [vid, vidF].forEach(v => {
+    v.addEventListener('canplaythrough', () => { v.play(); }, { once: true });
+    v.load();
+  });
+  vid.addEventListener('canplaythrough', () => { ph.style.display = 'none'; }, { once: true });
 
-  /* 스크롤 → 확대해서 화면 채우기
-     scene에 overflow:hidden 이 있어서 넘치는 부분 잘림
-     → 자연스럽게 화면을 채우는 느낌 */
+  /* ── 공통 ScrollTrigger 설정 ── */
+  const ST = {
+    trigger: '#scroll-space',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 1,
+  };
+
+  /* ── 1) 영상 확대 → 화면 채우기 ── */
   function getScale() {
     const wrap = document.getElementById('video-wrap');
-    const sw = window.innerWidth,  sh = window.innerHeight;
-    const ww = wrap.offsetWidth,   wh = wrap.offsetHeight;
-    return Math.max(sw / ww, sh / wh) * 1.05;
+    const sw = window.innerWidth, sh = window.innerHeight;
+    return Math.max(sw / wrap.offsetWidth, sh / wrap.offsetHeight) * 1.05;
   }
 
-  let st;
-  function buildST() {
-    if (st) st.kill();
+  let stVideo;
+  function buildVideo() {
+    if (stVideo) stVideo.kill();
     gsap.set('#video-wrap', { scale: 1 });
-    st = gsap.to('#video-wrap', {
+    stVideo = gsap.to('#video-wrap', {
       scale: getScale(),
       ease: 'none',
-      scrollTrigger: {
-        trigger: '#scroll-space',
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 0.8,
-      },
+      scrollTrigger: ST,
     });
   }
-  buildST();
-  window.addEventListener('resize', () => { ScrollTrigger.refresh(); buildST(); });
+  buildVideo();
+  window.addEventListener('resize', () => { ScrollTrigger.refresh(); buildVideo(); });
 
-  /* 텍스트/힌트 페이드 */
-  gsap.to(['#scroll-hint', '#hero-text'], {
-    opacity: 0,
-    scrollTrigger: {
-      trigger: '#scroll-space',
-      start: 'top top',
-      end: '20% top',
-      scrub: true,
-    },
+  /* ── 2) 텍스트 → 멀어지며 사라짐 (parallax) ── */
+  // 각 텍스트를 바깥 방향으로 보내면서 opacity 0
+  gsap.to('.txt-topleft', {
+    x: '-8vw', y: '-6vh', scale: 0.7, opacity: 0,
+    ease: 'none',
+    scrollTrigger: { ...ST, end: '50% bottom' },
+  });
+  gsap.to('.txt-topright', {
+    x: '8vw', y: '-6vh', scale: 0.7, opacity: 0,
+    ease: 'none',
+    scrollTrigger: { ...ST, end: '50% bottom' },
+  });
+  gsap.to('.txt-botleft', {
+    x: '-8vw', y: '6vh', scale: 0.7, opacity: 0,
+    ease: 'none',
+    scrollTrigger: { ...ST, end: '50% bottom' },
+  });
+  gsap.to('.txt-botright', {
+    x: '8vw', y: '6vh', scale: 0.7, opacity: 0,
+    ease: 'none',
+    scrollTrigger: { ...ST, end: '50% bottom' },
   });
 
-  /* 프리로더 */
+  /* ── 3) 전체화면 영상 페이드인 (70% 이후) ── */
+  gsap.to('#video-full', {
+    opacity: 1,
+    ease: 'none',
+    scrollTrigger: { ...ST, start: '65% top', end: 'bottom bottom' },
+  });
+
+  /* ── 4) 스크롤 힌트 페이드 ── */
+  gsap.to('#scroll-hint', {
+    opacity: 0,
+    scrollTrigger: { trigger: '#scroll-space', start: 'top top', end: '10% top', scrub: true },
+  });
+
+  /* ── 프리로더 ── */
   (function () {
     const el  = document.getElementById('preloader');
     const num = document.getElementById('loader-num');
