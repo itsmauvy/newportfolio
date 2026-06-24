@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "newportfolio",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", ".", "-p", "5502", "--no-clipboard"],
+      "port": 5502
+    }
+  ]
+}

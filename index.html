@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>수빈 포트폴리오</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { background: #fff; }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; overflow-x: hidden; }
+
+    /* 스크롤 공간 */
+    #scroll-space { height: 300vh; }
+
+    /* 고정 씬 — overflow:hidden 으로 scale 넘침 클리핑 */
+    #scene {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #fff;
+      z-index: 1;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 영상 컨테이너 — 이 요소가 scale로 확대됨 */
+    #video-wrap {
+      position: relative;
+      width: 38vw;
+      aspect-ratio: 16 / 9;
+      flex-shrink: 0;
+      will-change: transform;
+
+      /* 彬 글자 마스크 */
+      -webkit-mask-image: url('assets/img/bin v1.png');
+              mask-image: url('assets/img/bin v1.png');
+      -webkit-mask-size: contain;
+              mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+              mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+              mask-position: center;
+    }
+
+    video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    #video-placeholder {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #111 0%, #282828 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.2);
+      font-size: 0.9rem;
+      letter-spacing: 0.25em;
+    }
+
+    /* 히어로 텍스트 */
+    #hero-text {
+      position: fixed;
+      bottom: 4vw;
+      left: 4vw;
+      z-index: 10;
+      pointer-events: none;
+    }
+    #hero-text h1 {
+      font-size: clamp(1.8rem, 4vw, 5rem);
+      font-weight: 300;
+      color: #000;
+      letter-spacing: -0.02em;
+    }
+
+    #scroll-hint {
+      position: fixed;
+      bottom: 4vw;
+      right: 4vw;
+      z-index: 10;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #000;
+      writing-mode: vertical-rl;
+    }
+
+    /* 프리로더 */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 100;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 3vw;
+    }
+    #preloader span {
+      font-size: clamp(3rem, 8vw, 10rem);
+      font-weight: 300;
+      color: #000;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #next-section {
+      position: relative;
+      z-index: 2;
+      background: #fff;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+<div id="preloader"><span id="loader-num">0%</span></div>
+
+<div id="scene">
+  <div id="video-wrap">
+    <div id="video-placeholder">VIDEO</div>
+    <video id="hero-video" muted loop playsinline>
+      <source src="assets/video/13820343_3840_2160_30fps.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<div id="hero-text"><h1>수빈</h1></div>
+<div id="scroll-hint">Scroll</div>
+
+<div id="scroll-space"></div>
+<div id="next-section"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* 영상 */
+  const vid = document.getElementById('hero-video');
+  const ph  = document.getElementById('video-placeholder');
+  vid.addEventListener('canplaythrough', () => { vid.play(); ph.style.display = 'none'; }, { once: true });
+  vid.load();
+
+  /* 스크롤 → 확대해서 화면 채우기
+     scene에 overflow:hidden 이 있어서 넘치는 부분 잘림
+     → 자연스럽게 화면을 채우는 느낌 */
+  function getScale() {
+    const wrap = document.getElementById('video-wrap');
+    const sw = window.innerWidth,  sh = window.innerHeight;
+    const ww = wrap.offsetWidth,   wh = wrap.offsetHeight;
+    return Math.max(sw / ww, sh / wh) * 1.05;
+  }
+
+  let st;
+  function buildST() {
+    if (st) st.kill();
+    gsap.set('#video-wrap', { scale: 1 });
+    st = gsap.to('#video-wrap', {
+      scale: getScale(),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#scroll-space',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.8,
+      },
+    });
+  }
+  buildST();
+  window.addEventListener('resize', () => { ScrollTrigger.refresh(); buildST(); });
+
+  /* 텍스트/힌트 페이드 */
+  gsap.to(['#scroll-hint', '#hero-text'], {
+    opacity: 0,
+    scrollTrigger: {
+      trigger: '#scroll-space',
+      start: 'top top',
+      end: '20% top',
+      scrub: true,
+    },
+  });
+
+  /* 프리로더 */
+  (function () {
+    const el  = document.getElementById('preloader');
+    const num = document.getElementById('loader-num');
+    let n = 0;
+    const step = () => {
+      n += Math.random() * 7 + 2;
+      if (n >= 100) {
+        num.textContent = '100%';
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.8s';
+          el.style.opacity = '0';
+          setTimeout(() => el.style.display = 'none', 800);
+        }, 250);
+      } else {
+        num.textContent = Math.floor(n) + '%';
+        requestAnimationFrame(step);
+      }
+    };
+    step();
+  })();
+})();
+</script>
+</body>
+</html>
