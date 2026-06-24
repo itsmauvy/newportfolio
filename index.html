@@ -521,7 +521,7 @@
       z-index: 2;
       pointer-events: none;
     }
-    #projects .pj-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 20vw; align-items: center; }
+    #projects .pj-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 11vw; align-items: center; }
 
     /* LEFT: 키네틱 휠 인디케이터 + 리스트 */
     #projects .pj-left { position: relative; }
@@ -537,6 +537,7 @@
       color: rgba(255, 255, 255, 0.3); transition: color 0.4s ease;
     }
     #projects .pj-name { font-size: clamp(2rem, 3.4vw, 3.6rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.04; white-space: nowrap; }
+    #projects .pjp-title .ch { display: inline-block; will-change: transform; transition: transform 0.25s ease-out; }
     #projects .pj-role { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.5; white-space: nowrap; align-self: center; }
     #projects .pj-item.is-active a, #projects .pj-item a:hover { color: #fff; }
     #projects .pj-item.is-active a .pj-role, #projects .pj-item a:hover .pj-role { opacity: 0.85; }
@@ -546,9 +547,9 @@
     #projects .pjp-top { display: flex; justify-content: space-between; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); margin-bottom: 1.4rem; }
     #projects .pjp-num { font-size: 0.8rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); font-variant-numeric: tabular-nums; margin-bottom: 1rem; }
     #projects .pjp-num b { font-size: 1.5rem; font-weight: 500; color: #fff; }
-    #projects .pjp-frame { width: 100%; aspect-ratio: 16 / 9; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 10px; background: rgba(255, 255, 255, 0.02); }
+    #projects .pjp-frame { width: 100%; aspect-ratio: 16 / 9; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 10px; background: rgba(255, 255, 255, 0.02); transform-style: preserve-3d; will-change: transform; }
     #projects .pjp-media { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #26262b, #141416); display: flex; align-items: center; justify-content: center; }
-    #projects .pjp-media img { width: 100%; height: 100%; object-fit: cover; }
+    #projects .pjp-media img, #projects .pjp-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
     #projects .pjp-media span { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255, 255, 255, 0.3); }
     #projects .pjp-title { font-size: clamp(2.2rem, 4vw, 4.2rem); font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; text-align: center; margin: 1.8rem 0 1rem; line-height: 1; white-space: nowrap; }
     #projects .pjp-foot { display: flex; justify-content: space-between; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
@@ -570,84 +571,118 @@
       overflow: hidden;
     }
     #pj-viewer.is-open { opacity: 1; visibility: visible; }
-    #pj-viewer .pjv-top {
-      position: absolute; top: 0; left: 0; right: 0; z-index: 12;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 3vh 4vw; pointer-events: none;
+    /* 닫기 버튼 (전 프로젝트 공통 · hover 시 채워지며 90° 회전) */
+    .pjv-close {
+      position: absolute; top: 3vh; right: 4vw; z-index: 14;
+      width: 52px; height: 52px; border-radius: 100px; cursor: pointer;
+      background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff;
+      display: flex; align-items: center; justify-content: center; padding: 0;
+      transition: border-color 0.4s ease, transform 0.5s cubic-bezier(0.65,0,0.35,1);
+      overflow: hidden;
     }
-    #pj-viewer .pjv-top > * { pointer-events: auto; }
-    #pj-viewer .pjv-progress { font-size: 0.78rem; letter-spacing: 0.18em; color: rgba(255, 255, 255, 0.6); font-variant-numeric: tabular-nums; }
-    #pj-viewer .pjv-close {
-      background: none; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff;
-      border-radius: 100px; width: 44px; height: 44px; cursor: pointer; font-size: 1rem;
-      transition: background 0.3s ease, color 0.3s ease;
+    .pjv-close::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      background: #fff; transform: scale(0); transition: transform 0.45s cubic-bezier(0.65,0,0.35,1);
     }
-    #pj-viewer .pjv-close:hover { background: #fff; color: #0a0a0b; }
-    #pj-viewer .pjv-index {
-      position: absolute; top: 50%; left: 4vw; transform: translateY(-50%); z-index: 12;
-      list-style: none; display: flex; flex-direction: column; gap: 0.9rem;
+    .pjv-close svg { position: relative; z-index: 1; width: 16px; height: 16px; transition: color 0.4s ease; }
+    .pjv-close:hover { border-color: #fff; transform: rotate(90deg); }
+    .pjv-close:hover::before { transform: scale(1); }
+    .pjv-close:hover svg { color: #0a0a0b; }
+    #pj-viewer .pjv-stage {
+      display: grid; grid-template-columns: 0.66fr 1.34fr; gap: 5vw;
+      height: 100%; padding: 9vh 4vw 11vh;
+      transition: opacity 0.25s ease;
     }
+    #pj-viewer .pjv-info { position: relative; display: flex; flex-direction: column; height: 100%; min-height: 0; }
+    #pj-viewer .pjv-main { margin-top: auto; display: flex; flex-direction: column; }
+    #pj-viewer .pjv-num { font-size: 0.8rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); font-variant-numeric: tabular-nums; margin-bottom: 3vh; }
+    #pj-viewer .pjv-num b { font-size: 1.6rem; font-weight: 500; color: #fff; }
+    #pj-viewer .pjv-eyebrow { font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); }
+    #pj-viewer .pjv-title { font-size: clamp(2.1rem, 3.4vw, 3.3rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.02; margin: 1.2vh 0 0.7rem; }
+    #pj-viewer .pjv-sub { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
+    #pj-viewer .pjv-desc { font-size: 0.95rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); margin-top: 2.6vh; max-width: 42ch; }
+    #pj-viewer .pjv-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 3vh; }
+    #pj-viewer .pjv-tags span { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 100px; padding: 0.5rem 1rem; }
+    /* View Site CTA — 테두리를 도는 빛 + 반짝임, hover 시 채워짐 */
+    @property --pjla { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+    #pj-viewer .pjv-live {
+      position: relative; isolation: isolate;
+      display: inline-flex; align-items: center; gap: 0.6rem; width: max-content; margin-top: 3.2vh;
+      padding: 0.95rem 2rem; border-radius: 100px;
+      font-size: 1rem; letter-spacing: 0.04em; color: #fff; text-decoration: none;
+      background: rgba(255, 255, 255, 0.03);
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+    #pj-viewer .pjv-live-arrow { width: 16px; height: 16px; flex: 0 0 auto; transition: transform 0.35s cubic-bezier(0.65,0,0.35,1); }
+    #pj-viewer .pjv-live:hover .pjv-live-arrow { transform: translate(3px, -3px); }
+    #pj-viewer .pjv-live::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.18); pointer-events: none; z-index: -1;
+    }
+    #pj-viewer .pjv-live::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
+      background: conic-gradient(from var(--pjla), transparent 0deg 215deg, rgba(255,255,255,0.35) 290deg, #fff 335deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
+      animation: pjlaSpin 3.2s linear infinite; pointer-events: none; z-index: -1;
+    }
+    @keyframes pjlaSpin { to { --pjla: 360deg; } }
+    #pj-viewer .pjv-live:hover { background: #fff; color: #0a0a0b; }
+    #pj-viewer .pjv-live:hover::before { animation-duration: 1s; }
+    @media (prefers-reduced-motion: reduce) { #pj-viewer .pjv-live::before { animation: none; } }
+    /* 목차 = 키네틱 휠 (밖과 동일 컨셉, 활성=중앙, 마우스로 드래그해 다이얼처럼 돌림) */
+    #pj-viewer .pjv-index { list-style: none; margin-top: auto; position: relative; width: 100%; height: 250px; perspective: 850px; perspective-origin: 0 50%; cursor: grab; touch-action: none; }
+    #pj-viewer .pjv-index::before {
+      content: ''; position: absolute; left: 2px; top: 50%; transform: translateY(-50%); z-index: 3; pointer-events: none;
+      border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid rgba(255, 255, 255, 0.9);
+    }
+    #pj-viewer .pjv-index li { position: absolute; left: 0; top: 50%; transform-origin: left center; backface-visibility: hidden; will-change: transform, opacity; }
     #pj-viewer .pjv-index button {
-      background: none; border: none; cursor: pointer; padding: 0; font: inherit;
-      font-size: 0.78rem; letter-spacing: 0.05em; color: rgba(255, 255, 255, 0.3);
-      display: flex; gap: 0.55rem; align-items: baseline; text-align: left;
+      background: none; border: none; cursor: inherit; padding: 0.2rem 0; font: inherit;
+      font-size: 1.25rem; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.45);
+      display: flex; gap: 0.85rem; align-items: baseline; text-align: left; white-space: nowrap;
       transition: color 0.3s ease;
     }
-    #pj-viewer .pjv-index .i-num { font-size: 0.6rem; opacity: 0.7; font-variant-numeric: tabular-nums; }
-    #pj-viewer .pjv-index button:hover { color: rgba(255, 255, 255, 0.7); }
+    #pj-viewer .pjv-index .i-num { font-size: 0.7rem; opacity: 0.7; font-variant-numeric: tabular-nums; }
+    #pj-viewer .pjv-index button:hover { color: rgba(255, 255, 255, 0.8); }
     #pj-viewer .pjv-index li.is-active button { color: #fff; }
-    #pj-viewer .pjv-track {
-      display: flex; height: 100%;
-      transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
-      will-change: transform;
-    }
-    #pj-viewer .pjv-slide { flex: 0 0 100%; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; }
-    #pj-viewer .pjv-inner { max-width: 880px; margin: 0 auto; padding: 16vh 6vw 16vh; }
-    #pj-viewer .pjv-eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); }
-    #pj-viewer .pjv-title { font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.03; margin: 1.4vh 0 3vh; }
-    #pj-viewer .pjv-summary { font-size: clamp(1.05rem, 1.6vw, 1.3rem); line-height: 1.6; color: rgba(255, 255, 255, 0.7); max-width: 640px; }
-    #pj-viewer .pjv-meta {
-      display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 4vh; padding: 3vh 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.12); border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    }
-    #pj-viewer .pjv-meta div { display: flex; flex-direction: column; gap: 0.4rem; }
-    #pj-viewer .pjv-meta dt { font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
-    #pj-viewer .pjv-meta dd { font-size: 0.92rem; }
-    #pj-viewer .pjv-live {
-      display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 4vh;
-      padding: 0.9rem 1.6rem; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 100px;
-      color: #fff; text-decoration: none; font-size: 0.82rem; letter-spacing: 0.06em;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    #pj-viewer .pjv-live:hover { background: #fff; color: #0a0a0b; }
+    #pj-viewer .pjv-case { overflow-y: auto; overflow-x: hidden; padding-right: 1.4vw; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.22) transparent; }
+    #pj-viewer .pjv-case::-webkit-scrollbar { width: 4px; }
+    #pj-viewer .pjv-case::-webkit-scrollbar-track { background: transparent; }
+    #pj-viewer .pjv-case::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.22); border-radius: 100px; }
+    #pj-viewer .pjv-case::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.45); }
     #pj-viewer .pjv-hero, #pj-viewer .pjv-figure {
       width: 100%; border-radius: 10px; overflow: hidden;
       background: linear-gradient(135deg, #26262b, #141416);
       display: flex; align-items: center; justify-content: center;
       color: rgba(255, 255, 255, 0.25); font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
     }
-    #pj-viewer .pjv-hero { aspect-ratio: 16 / 9; margin: 6vh 0; }
-    #pj-viewer .pjv-figure { aspect-ratio: 4 / 3; margin-top: 3vh; }
+    #pj-viewer .pjv-hero { aspect-ratio: 16 / 9; margin-bottom: 5vh; }
+    #pj-viewer .pjv-figure { aspect-ratio: 16 / 10; margin-top: 3vh; }
     #pj-viewer .pjv-hero img, #pj-viewer .pjv-figure img { width: 100%; height: 100%; object-fit: cover; }
-    #pj-viewer .pjv-section { margin: 6vh 0; }
+    #pj-viewer .pjv-section { margin-bottom: 6vh; }
     #pj-viewer .pjv-section h3 { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); margin-bottom: 1.4vh; }
-    #pj-viewer .pjv-section p { font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.7; color: rgba(255, 255, 255, 0.82); }
+    #pj-viewer .pjv-section p { font-size: 1rem; line-height: 1.7; color: rgba(255, 255, 255, 0.82); }
     #pj-viewer .pjv-nav {
-      position: absolute; bottom: 0; left: 0; right: 0; z-index: 12;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 3vh 4vw; pointer-events: none;
+      position: absolute; bottom: 0; right: 4vw; z-index: 12;
+      display: flex; align-items: center; gap: 2.2rem; padding: 3vh 0;
     }
-    #pj-viewer .pjv-nav button { pointer-events: auto; }
     #pj-viewer .pjv-btn {
-      background: none; border: none; color: rgba(255, 255, 255, 0.55); cursor: pointer; font: inherit;
+      background: none; border: none; color: rgba(255, 255, 255, 0.5); cursor: pointer; font: inherit;
       font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
-      display: inline-flex; align-items: center; gap: 0.6rem; transition: color 0.3s ease;
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      transition: color 0.3s ease, letter-spacing 0.3s ease;
     }
-    #pj-viewer .pjv-btn:hover:not(:disabled) { color: #fff; }
-    #pj-viewer .pjv-btn:disabled { opacity: 0.25; cursor: default; }
+    #pj-viewer .pjv-btn span { display: inline-block; transition: transform 0.35s cubic-bezier(0.65,0,0.35,1); }
+    #pj-viewer .pjv-btn:hover:not(:disabled) { color: #fff; letter-spacing: 0.2em; }
+    #pj-viewer #pjvPrev:hover:not(:disabled) span { transform: translateX(-5px); }
+    #pj-viewer #pjvNext:hover:not(:disabled) span { transform: translateX(5px); }
+    #pj-viewer .pjv-btn:disabled { opacity: 0.22; cursor: default; }
     @media (max-width: 860px) {
-      #pj-viewer .pjv-index { display: none; }
-      #pj-viewer .pjv-inner { padding: 14vh 7vw 14vh; }
+      #pj-viewer .pjv-stage { grid-template-columns: 1fr; gap: 4vh; padding: 10vh 6vw 12vh; overflow-y: auto; }
+      #pj-viewer .pjv-info { height: auto; }
+      #pj-viewer .pjv-case { overflow: visible; }
     }
   </style>
 </head>
@@ -819,12 +854,22 @@
 
 <!-- 풀스크린 케이스 스터디 뷰어 (밖 리스트 클릭 시 열림) -->
 <div id="pj-viewer" aria-hidden="true">
-  <div class="pjv-top">
-    <span class="pjv-progress" id="pjvProgress">01 / 06</span>
-    <button class="pjv-close" id="pjvClose" aria-label="닫기">✕</button>
+  <button class="pjv-close" id="pjvClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+  <div class="pjv-stage">
+    <div class="pjv-info">
+      <div class="pjv-main">
+        <div class="pjv-num"><b id="pjvNum">01</b> / <span id="pjvTotal">06</span></div>
+        <span class="pjv-eyebrow" id="pjvEyebrow">Personal Project</span>
+        <h2 class="pjv-title" id="pjvTitle">Project One</h2>
+        <span class="pjv-sub" id="pjvSub">Tagline</span>
+        <p class="pjv-desc" id="pjvDesc">설명 placeholder</p>
+        <div class="pjv-tags" id="pjvTags"></div>
+        <a class="pjv-live" id="pjvLive" href="#" target="_blank" rel="noopener"><span>View Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+      </div>
+      <ul class="pjv-index" id="pjvIndex" aria-label="프로젝트 목차"></ul>
+    </div>
+    <div class="pjv-case" id="pjvCase" data-lenis-prevent></div>
   </div>
-  <ul class="pjv-index" id="pjvIndex" aria-label="프로젝트 목차"></ul>
-  <div class="pjv-track" id="pjvTrack"></div>
   <div class="pjv-nav">
     <button class="pjv-btn" id="pjvPrev" type="button"><span aria-hidden="true">←</span> Prev</button>
     <button class="pjv-btn" id="pjvNext" type="button">Next <span aria-hidden="true">→</span></button>
@@ -1006,15 +1051,15 @@
     /* ⬇️ 프로젝트 데이터 (단일 소스 — 여기만 고치면 리스트·뷰어·인덱스 전부 반영)
        thumb: 리스트 호버 썸네일(없으면 이름만), live: 라이브 사이트 URL(새 탭) */
     const PROJECTS = [
-      { name: 'Project One',   year: '2025', role: 'Personal', type: 'Web · UX/UI', live: '#', thumb: '',
-        summary: '한 줄 소개 placeholder — 프로젝트가 무엇인지 적어주세요.',
+      { name: 'Sledding Game', year: '2025', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Web-based Sledding Mini Game', tags: ['UX/UI Design', 'Interaction', 'Web'],
+        summary: '한 줄 소개 placeholder — 썰매 게임 프로젝트 설명을 적어주세요.',
         sections: [
           { h: 'Overview', p: '프로젝트 개요 placeholder. 무엇을, 왜 만들었는지.' },
           { h: 'Problem',  p: '해결하려던 문제 placeholder.' },
           { h: 'Process',  p: '진행 과정·역할·의사결정 placeholder.' },
           { h: 'Outcome',  p: '결과·배운 점 placeholder.' },
         ] },
-      { name: 'Project Two',   year: '2025', role: 'Personal', type: 'Web · UX/UI', live: '#', thumb: '',
+      { name: 'Project Two',   year: '2025', role: 'Personal', type: 'Web · UX/UI', live: '#', thumb: '', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
         summary: '한 줄 소개 placeholder.',
         sections: [
           { h: 'Overview', p: '프로젝트 개요 placeholder.' },
@@ -1022,7 +1067,7 @@
           { h: 'Process',  p: '진행 과정 placeholder.' },
           { h: 'Outcome',  p: '결과 placeholder.' },
         ] },
-      { name: 'Project Three', year: '2024', role: 'Team',     type: 'Mobile · UI', live: '#', thumb: '',
+      { name: 'Project Three', year: '2024', role: 'Team',     type: 'Mobile · UI', live: '#', thumb: '', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
         summary: '한 줄 소개 placeholder.',
         sections: [
           { h: 'Overview', p: '프로젝트 개요 placeholder.' },
@@ -1030,7 +1075,7 @@
           { h: 'Process',  p: '진행 과정 placeholder.' },
           { h: 'Outcome',  p: '결과 placeholder.' },
         ] },
-      { name: 'Project Four',  year: '2024', role: 'Team',     type: 'Branding', live: '#', thumb: '',
+      { name: 'Project Four',  year: '2024', role: 'Team',     type: 'Branding', live: '#', thumb: '', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
         summary: '한 줄 소개 placeholder.',
         sections: [
           { h: 'Overview', p: '프로젝트 개요 placeholder.' },
@@ -1038,7 +1083,7 @@
           { h: 'Process',  p: '진행 과정 placeholder.' },
           { h: 'Outcome',  p: '결과 placeholder.' },
         ] },
-      { name: 'Project Five',  year: '2024', role: 'Team',     type: 'Web · Dev', live: '#', thumb: '',
+      { name: 'Project Five',  year: '2024', role: 'Team',     type: 'Web · Dev', live: '#', thumb: '', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
         summary: '한 줄 소개 placeholder.',
         sections: [
           { h: 'Overview', p: '프로젝트 개요 placeholder.' },
@@ -1046,7 +1091,7 @@
           { h: 'Process',  p: '진행 과정 placeholder.' },
           { h: 'Outcome',  p: '결과 placeholder.' },
         ] },
-      { name: 'Project Six',   year: '2023', role: 'Personal', type: 'Graphic', live: '#', thumb: '',
+      { name: 'Project Six',   year: '2023', role: 'Personal', type: 'Graphic', live: '#', thumb: '', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
         summary: '한 줄 소개 placeholder.',
         sections: [
           { h: 'Overview', p: '프로젝트 개요 placeholder.' },
@@ -1058,9 +1103,7 @@
 
     const listEl     = document.getElementById('pjList');
     const viewer     = document.getElementById('pj-viewer');
-    const trackEl    = document.getElementById('pjvTrack');
     const indexEl    = document.getElementById('pjvIndex');
-    const progressEl = document.getElementById('pjvProgress');
     const prevBtn    = document.getElementById('pjvPrev');
     const nextBtn    = document.getElementById('pjvNext');
     const closeBtn   = document.getElementById('pjvClose');
@@ -1070,7 +1113,10 @@
     const pad2  = (n) => String(n).padStart(2, '0');
     const esc   = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-    /* 1) 밖 리스트 (왼쪽) */
+    /* 글자 단위 span 분해 (오른쪽 대형 타이틀 흩어짐 효과용) */
+    const splitChars = (s) => s.split('').map((c) =>
+      '<span class="ch">' + (c === ' ' ? '&nbsp;' : esc(c)) + '</span>').join('');
+    /* 1) 밖 리스트 (왼쪽) — 일반 텍스트 (가독성·클릭 위해 모션 없음) */
     listEl.innerHTML = PROJECTS.map((p, i) => `
       <li class="pj-item" data-i="${i}">
         <a href="${esc(p.live)}">
@@ -1088,6 +1134,7 @@
     const prevTotal = document.getElementById('pjPrevTotal');
     const wheelEl   = document.getElementById('pjWheel');
     const countEl   = document.getElementById('pjCount');
+    const pjpFrame  = document.querySelector('#projects .pjp-frame');
     if (countEl)   countEl.textContent   = '(' + pad2(total) + ')';
     if (prevTotal) prevTotal.textContent = pad2(total);
 
@@ -1098,14 +1145,47 @@
       items.forEach((li, idx) => li.classList.toggle('is-active', idx === i));
       const p = PROJECTS[i];
       if (prevNum)   prevNum.textContent   = pad2(i + 1);
-      if (prevTitle) prevTitle.textContent = p.name;
+      if (prevTitle) prevTitle.innerHTML   = splitChars(p.name);
       if (prevMeta)  prevMeta.textContent  = p.role + ' · ' + p.year;
-      if (prevImg)   prevImg.innerHTML     = p.thumb ? `<img src="${esc(p.thumb)}" alt="">` : `<span>${esc(p.name)}</span>`;
+      if (prevImg) {
+        if (p.video) {
+          prevImg.innerHTML = '<video src="' + esc(p.video) + '" muted loop playsinline preload="auto"' + (p.poster ? ' poster="' + esc(p.poster) + '"' : '') + '></video>';
+          const v = prevImg.querySelector('video');
+          if (v) { v.muted = true; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); }
+        } else if (p.thumb) prevImg.innerHTML = '<img src="' + esc(p.thumb) + '" alt="">';
+        else                prevImg.innerHTML = '<span>' + esc(p.name) + '</span>';
+        if (prevImg.animate) prevImg.animate(
+          [{ opacity: 0.3, transform: 'scale(1.06)' }, { opacity: 1, transform: 'scale(1)' }],
+          { duration: 520, easing: 'cubic-bezier(0.22,1,0.36,1)' });
+      }
     }
     items.forEach((li) => {
       const i = +li.dataset.i;
       li.addEventListener('mouseenter', () => applyActive(i));
       li.querySelector('a').addEventListener('click', (e) => { e.preventDefault(); openViewer(i); });
+    });
+
+    /* 오른쪽 대형 타이틀: 전역 마우스 근접 시 글자가 상하좌우로 흩어지며 꼬불거림 */
+    let mpx = -9999, mpy = -9999, mpRaf = null;
+    function applyTitleProx() {
+      mpRaf = null;
+      if (!prevTitle) return;
+      const chs = prevTitle.querySelectorAll('.ch');
+      const R = 220, PUSH = 50;
+      chs.forEach((c, k) => {
+        const r = c.getBoundingClientRect();
+        const dx = (r.left + r.width / 2) - mpx;
+        const dy = (r.top + r.height / 2) - mpy;
+        const dist = Math.hypot(dx, dy) || 1;
+        const f = Math.max(0, 1 - dist / R);
+        if (f <= 0) { if (c.style.transform) c.style.transform = ''; return; }
+        const e = f * f;
+        c.style.transform = 'translate(' + ((dx / dist) * e * PUSH).toFixed(1) + 'px,' + ((dy / dist) * e * PUSH).toFixed(1) + 'px) rotate(' + (e * (k % 2 ? 12 : -12)).toFixed(1) + 'deg)';
+      });
+    }
+    window.addEventListener('mousemove', (e) => {
+      mpx = e.clientX; mpy = e.clientY;
+      if (!mpRaf) mpRaf = requestAnimationFrame(applyTitleProx);
     });
 
     /* 스크롤로 프로젝트 전환 + 키네틱 휠 인디케이터 회전 (번호가 원통처럼 굴러감) */
@@ -1146,50 +1226,128 @@
       },
     });
 
-    /* 3) 안 뷰어 슬라이드 ([data-lenis-prevent]로 내부 세로 스크롤 허용) */
-    trackEl.innerHTML = PROJECTS.map((p) => `
-      <article class="pjv-slide" data-lenis-prevent>
-        <div class="pjv-inner">
-          <span class="pjv-eyebrow">${esc(p.type)} · ${esc(p.year)}</span>
-          <h2 class="pjv-title">${esc(p.name)}</h2>
-          <p class="pjv-summary">${esc(p.summary)}</p>
-          <div class="pjv-meta">
-            <div><dt>Year</dt><dd>${esc(p.year)}</dd></div>
-            <div><dt>Role</dt><dd>${esc(p.role)}</dd></div>
-            <div><dt>Type</dt><dd>${esc(p.type)}</dd></div>
-          </div>
-          <a class="pjv-live" href="${esc(p.live)}" target="_blank" rel="noopener">Live Site <span aria-hidden="true">↗</span></a>
-          <div class="pjv-hero">Hero Image</div>
-          ${p.sections.map((s, si) => `
-            <div class="pjv-section">
-              <h3>${esc(s.h)}</h3>
-              <p>${esc(s.p)}</p>
-              ${si % 2 === 1 ? '<div class="pjv-figure">Figure</div>' : ''}
-            </div>`).join('')}
-        </div>
-      </article>`).join('');
-    const slides = [...trackEl.querySelectorAll('.pjv-slide')];
+    /* 프리뷰 카드 3D 틸트 (전역 마우스 따라 입체적으로 기울어짐, CSS 트랜지션으로 부드럽게) */
+    if (pjpFrame) {
+      const MAXT = 12;
+      let tgX = 0, tgY = 0, curX = 0, curY = 0, tRaf = null;
+      function tiltLoop() {
+        curX += (tgX - curX) * 0.12;
+        curY += (tgY - curY) * 0.12;
+        pjpFrame.style.transform = 'perspective(1200px) rotateY(' + curX.toFixed(2) + 'deg) rotateX(' + curY.toFixed(2) + 'deg)';
+        if (Math.abs(tgX - curX) > 0.04 || Math.abs(tgY - curY) > 0.04) tRaf = requestAnimationFrame(tiltLoop);
+        else tRaf = null;
+      }
+      window.addEventListener('mousemove', (e) => {
+        const r = pjpFrame.getBoundingClientRect();
+        if (!r.width) return;
+        const px = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2)));
+        const py = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
+        tgX = px * MAXT; tgY = -py * MAXT;
+        if (!tRaf) tRaf = requestAnimationFrame(tiltLoop);
+      });
+    }
 
-    /* 4) 사이드 인덱스 (프로젝트 점프) */
+    /* 3) 안 뷰어: 좌(프로젝트 설명) + 우(케이스 스터디), 하단 인덱스/이전·다음으로 전환 */
+    const infoNum     = document.getElementById('pjvNum');
+    const infoTotal   = document.getElementById('pjvTotal');
+    const infoEyebrow = document.getElementById('pjvEyebrow');
+    const infoTitle   = document.getElementById('pjvTitle');
+    const infoSub     = document.getElementById('pjvSub');
+    const infoDesc    = document.getElementById('pjvDesc');
+    const infoTags    = document.getElementById('pjvTags');
+    const infoLive    = document.getElementById('pjvLive');
+    const caseEl      = document.getElementById('pjvCase');
+    const stageEl     = viewer.querySelector('.pjv-stage');
+    if (infoTotal) infoTotal.textContent = pad2(total);
+
     indexEl.innerHTML = PROJECTS.map((p, i) => `
       <li data-i="${i}"><button type="button"><span class="i-num">${pad2(i + 1)}</span><span>${esc(p.name)}</span></button></li>`).join('');
     const indexItems = [...indexEl.querySelectorAll('li')];
     indexItems.forEach((li) => li.querySelector('button').addEventListener('click', () => goTo(+li.dataset.i)));
-
-    /* 5) 상태/이동 */
-    let current = 0;
-    function render() {
-      trackEl.style.transform = `translateX(-${current * 100}%)`;
-      progressEl.textContent  = pad2(current + 1) + ' / ' + pad2(total);
-      indexItems.forEach((li, i) => li.classList.toggle('is-active', i === current));
-      prevBtn.disabled = current === 0;
-      nextBtn.disabled = current === total - 1;
-      if (slides[current]) slides[current].scrollTop = 0;
+    const IXSTEP = 24, IXR = 120, IXPAD = 28;
+    function placeIndexWheel(cf) {
+      indexItems.forEach((li, i) => {
+        const ang = (i - cf) * IXSTEP;
+        li.style.transform = 'translate(' + IXPAD + 'px, -50%) rotateX(' + ang + 'deg) translateZ(' + IXR + 'px)';
+        li.style.opacity = Math.max(0, 1 - Math.abs(ang) / (IXSTEP * 2.6)).toFixed(3);
+      });
     }
-    function goTo(i) { current = Math.max(0, Math.min(total - 1, i)); render(); }
+    /* 마우스 드래그로 휠 돌리기 (자물쇠 다이얼) → 놓으면 가까운 프로젝트로 잠김 */
+    let ixDrag = false, ixStartY = 0, ixStartCf = 0, ixCf = 0, ixMoved = 0;
+    indexEl.addEventListener('pointerdown', (e) => {
+      ixDrag = true; ixStartY = e.clientY; ixStartCf = current; ixCf = current; ixMoved = 0;
+      indexEl.style.cursor = 'grabbing';
+      try { indexEl.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    indexEl.addEventListener('pointermove', (e) => {
+      if (!ixDrag) return;
+      const dy = e.clientY - ixStartY;
+      ixMoved = Math.max(ixMoved, Math.abs(dy));
+      ixCf = Math.max(0, Math.min(total - 1, ixStartCf - dy / 46));
+      placeIndexWheel(ixCf);
+      const idx = Math.round(ixCf);
+      if (idx !== current) { current = idx; loadProject(idx); }   // 드래그하는 동안 실시간 전환
+    });
+    function ixEnd() {
+      if (!ixDrag) return;
+      ixDrag = false; indexEl.style.cursor = 'grab';
+      if (ixMoved > 6) {
+        const target = Math.round(ixCf);
+        current = target; loadProject(target);
+        const proxy = { v: ixCf };
+        gsap.to(proxy, { v: target, duration: 0.4, ease: 'power3.out', onUpdate: () => placeIndexWheel(proxy.v) });
+      } else {
+        placeIndexWheel(current);
+      }
+    }
+    indexEl.addEventListener('pointerup', ixEnd);
+    indexEl.addEventListener('pointercancel', ixEnd);
+    indexEl.addEventListener('click', (e) => {
+      if (ixMoved > 6) { e.stopPropagation(); e.preventDefault(); ixMoved = 0; }
+    }, true);
+
+    function caseHTML(p) {
+      const hero = p.hero
+        ? `<div class="pjv-hero"><img src="${esc(p.hero)}" alt=""></div>`
+        : '<div class="pjv-hero">Hero Image</div>';
+      return hero +
+        p.sections.map((s, si) => `
+          <div class="pjv-section">
+            <h3>${esc(s.h)}</h3>
+            <p>${esc(s.p)}</p>
+            ${s.img ? `<div class="pjv-figure"><img src="${esc(s.img)}" alt=""></div>` : (si % 2 === 1 ? '<div class="pjv-figure">Figure</div>' : '')}
+          </div>`).join('');
+    }
+
+    let current = 0;
+    function loadProject(i) {
+      const p = PROJECTS[i];
+      if (infoNum)     infoNum.textContent     = pad2(i + 1);
+      if (infoEyebrow) infoEyebrow.textContent = (p.role || '') + ' Project';
+      if (infoTitle)   infoTitle.textContent   = p.name;
+      if (infoSub)     infoSub.textContent     = p.tagline || p.type || '';
+      if (infoDesc)    infoDesc.textContent    = p.summary || '';
+      if (infoTags)    infoTags.innerHTML      = (p.tags || []).map((t) => '<span>' + esc(t) + '</span>').join('');
+      if (infoLive)    infoLive.setAttribute('href', p.live || '#');
+      if (caseEl)    { caseEl.innerHTML = caseHTML(p); caseEl.scrollTop = 0; }
+      indexItems.forEach((li, k) => li.classList.toggle('is-active', k === i));
+      prevBtn.disabled = i === 0;
+      nextBtn.disabled = i === total - 1;
+    }
+    function renderViewer() { loadProject(current); placeIndexWheel(current); }
+    function goTo(i) {
+      const n = Math.max(0, Math.min(total - 1, i));
+      if (n === current) return;
+      current = n;
+      if (stageEl) {
+        stageEl.style.opacity = '0';
+        setTimeout(() => { renderViewer(); stageEl.style.opacity = '1'; }, 220);
+      } else { renderViewer(); }
+    }
     function openViewer(i) {
       current = Math.max(0, Math.min(total - 1, i));
-      render();
+      renderViewer();
+      if (stageEl) stageEl.style.opacity = '1';
       viewer.classList.add('is-open');
       viewer.setAttribute('aria-hidden', 'false');
       if (typeof lenis !== 'undefined' && lenis) lenis.stop();
@@ -1208,7 +1366,7 @@
       else if (e.key === 'ArrowRight') goTo(current + 1);
       else if (e.key === 'ArrowLeft') goTo(current - 1);
     });
-    render();
+    renderViewer();
 
     /* 6) 밖 리스트 등장(reveal) — 렌더 후 등록 */
     const reveals = [...items];
