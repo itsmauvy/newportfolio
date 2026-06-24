@@ -823,13 +823,16 @@
     const profileEl  = document.getElementById('about-me');
     const projectsEl = document.getElementById('projects');
 
+    // pin된 요소는 offsetTop이 pin-spacer 기준이라 0이 됨 → offsetParent 체인 합산으로 실제 문서 위치 계산
+    const docTop = (el) => { let y = 0, n = el; while (n) { y += n.offsetTop; n = n.offsetParent; } return y; };
+
     // 페이지 섹션 정의 (스크롤 시작 위치 기준) — 섹션 추가 시 여기에 등록
     const sectionDefs = () => [
       { name: 'Intro',    top: 0 },
       // About 구간을 한 화면 앞당겨 시작 → Passionate 문구가 보이기 전에 라벨이 ABOUT으로 전환
-      { name: 'About',    top: Math.max(1, aboutEl.offsetTop - window.innerHeight) },
-      { name: 'Profile',  top: profileEl.offsetTop - window.innerHeight * 0.5 },
-      { name: 'Projects', top: projectsEl.offsetTop - window.innerHeight * 0.5 },
+      { name: 'About',    top: Math.max(1, docTop(aboutEl) - window.innerHeight) },
+      { name: 'Profile',  top: docTop(profileEl) - window.innerHeight * 0.5 },
+      { name: 'Projects', top: docTop(projectsEl) - window.innerHeight * 0.5 },
     ];
 
     // 세그먼트 DOM 생성 (섹션 수만큼)
