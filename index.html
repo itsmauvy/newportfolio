@@ -165,58 +165,40 @@
       opacity: 0.7;
     }
 
-    /* ── 프리로더 (시네마틱 카운터 + 슬라이드 리빌) ── */
+    /* ── 프리로더 (캔버스 플로우 + loading 카운터, neoleaf 참고) ── */
     #preloader {
       position: fixed;
       inset: 0;
-      background: #0a0a0b;
       z-index: 100;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-      transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
+      background: #0a0a0b;
+      will-change: opacity;
+      transition: opacity 0.9s ease;
     }
-    #preloader.is-done { transform: translateY(-100%); }
-    #preloader .pl-count {
-      display: flex;
-      align-items: baseline;
-      color: #fff;
-      font-weight: 200;
-      letter-spacing: -0.05em;
-      line-height: 0.9;
-      font-variant-numeric: tabular-nums;
-      font-size: clamp(4.5rem, 16vw, 15rem);
-    }
-    #preloader .pl-count .pct {
-      font-size: 0.26em;
-      font-weight: 400;
-      letter-spacing: 0;
-      margin-left: 0.45em;
-      color: rgba(255, 255, 255, 0.45);
-    }
-    #preloader .pl-track {
-      width: min(64vw, 460px);
-      height: 1px;
-      background: rgba(255, 255, 255, 0.15);
-      position: relative;
-      overflow: hidden;
-    }
-    #preloader .pl-fill {
+    #preloader.is-done { opacity: 0; pointer-events: none; }
+    #preloader #pl-canvas {
       position: absolute;
-      left: 0; top: 0;
+      inset: 0;
+      width: 100%;
       height: 100%;
-      width: 0%;
-      background: #fff;
-      transition: width 0.2s ease;
+      display: block;
     }
-    #preloader .pl-label {
-      font-size: 0.66rem;
-      letter-spacing: 0.34em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.45);
+    #preloader .pl-meta {
+      position: absolute;
+      right: 4vw; bottom: 7vh;
+      z-index: 2;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      font-variant-numeric: tabular-nums;
     }
+    #preloader .pl-meta .pl-num { display: inline-block; min-width: 2.2ch; text-align: right; }
+
+    /* ── Lenis 스무스 스크롤 ── */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
+    .lenis.lenis-smooth iframe { pointer-events: none; }
 
     #next-section {
       position: relative;
@@ -229,9 +211,8 @@
 <body>
 
 <div id="preloader">
-  <div class="pl-count"><span id="loader-num">0</span><span class="pct">%</span></div>
-  <div class="pl-track"><span class="pl-fill" id="loader-fill"></span></div>
-  <span class="pl-label">Loading</span>
+  <canvas id="pl-canvas"></canvas>
+  <div class="pl-meta">loading... <span class="pl-num" id="loader-num">0</span>%</div>
 </div>
 
 <header id="site-header">
@@ -271,9 +252,16 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
 (function () {
   gsap.registerPlugin(ScrollTrigger);
+
+  /* ── Lenis 스무스 스크롤 + ScrollTrigger 연동 ── */
+  const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
 
   /* 영상 */
   const vid  = document.getElementById('hero-video');
@@ -313,28 +301,100 @@
     sync();
   })();
 
-  /* ── 프리로더 (카운트업 → 완료 시 위로 슬라이드 리빌) ── */
+  /* ── 프리로더 (텍스트 안에 물이 차오르는 효과 + loading 카운터) ── 첫 방문 시에만 ── */
   (function () {
-    const el   = document.getElementById('preloader');
-    const num  = document.getElementById('loader-num');
-    const fill = document.getElementById('loader-fill');
-    let n = 0;
-    const step = () => {
-      n += Math.random() * 4 + 1.2;
-      if (n >= 100) {
-        num.textContent = '100';
-        fill.style.width = '100%';
-        setTimeout(() => {
-          el.classList.add('is-done');
-          setTimeout(() => { el.style.display = 'none'; }, 1050);
-        }, 400);
-      } else {
-        num.textContent = Math.floor(n);
-        fill.style.width = n + '%';
-        requestAnimationFrame(step);
-      }
+    const el = document.getElementById('preloader');
+    const SEEN_KEY = 'subin-portfolio-intro-seen';
+
+    // 재방문(같은 세션)이면 로더 건너뜀
+    if (sessionStorage.getItem(SEEN_KEY)) {
+      el.style.display = 'none';
+      return;
+    }
+    sessionStorage.setItem(SEEN_KEY, '1');
+
+    const TEXT = 'SOOBIN';                // 로더 워드마크 (원하면 'LOADING' / '수빈' / '彬' 으로 변경)
+    const cv    = document.getElementById('pl-canvas');
+    const ctx   = cv.getContext('2d');
+    const numEl = document.getElementById('loader-num');
+    let W, H, dpr, fontPx, cx, cy, textTop, textBottom, rafId;
+
+    const setFont = () => {
+      ctx.font = '900 ' + fontPx + 'px "Helvetica Neue", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
     };
-    step();
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = cv.width  = Math.floor(innerWidth  * dpr);
+      H = cv.height = Math.floor(innerHeight * dpr);
+      cv.style.width  = innerWidth  + 'px';
+      cv.style.height = innerHeight + 'px';
+      // 가로폭의 ~80%에 맞춰 폰트 크기 산정
+      fontPx = 200 * dpr; setFont();
+      fontPx *= (W * 0.8) / ctx.measureText(TEXT).width;
+      fontPx = Math.min(fontPx, H * 0.34);
+      setFont();
+      const m = ctx.measureText(TEXT);
+      cx = W / 2; cy = H / 2;
+      textTop    = cy - m.actualBoundingBoxAscent;
+      textBottom = cy + m.actualBoundingBoxDescent;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    let n = 0, phase = 0, finished = false;
+    const render = () => {
+      ctx.clearRect(0, 0, W, H);
+      // 빈 텍스트 (회색)
+      setFont();
+      ctx.fillStyle = '#3c3c43';
+      ctx.fillText(TEXT, cx, cy);
+      // 물 (흰색) — 텍스트 모양 안쪽에만 (source-atop)
+      ctx.save();
+      ctx.globalCompositeOperation = 'source-atop';
+      ctx.fillStyle = '#ffffff';
+      const pad = 14 * dpr;
+      const top = textTop - pad, bot = textBottom + pad;
+      const level = bot - (bot - top) * (n / 100);
+      const amp = 10 * dpr, k = (Math.PI * 2) / (W * 0.5);
+      ctx.beginPath();
+      ctx.moveTo(0, H);
+      ctx.lineTo(0, level + Math.sin(phase) * amp);
+      for (let x = 0; x <= W; x += 8 * dpr) {
+        ctx.lineTo(x, level + Math.sin(x * k + phase) * amp);
+      }
+      ctx.lineTo(W, H);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const tick = () => {
+      if (n < 100) n = Math.min(100, n + (Math.random() * 1.3 + 0.6));
+      phase += 0.06;
+      numEl.textContent = Math.floor(n);
+      render();
+      if (n >= 100 && !finished) { finished = true; setTimeout(finish, 650); }
+      rafId = requestAnimationFrame(tick);
+    };
+    tick();
+
+    function finish() {
+      // 부드러운 reveal: 로더가 페이드아웃되며 히어로가 페이드인
+      gsap.fromTo('#scene',
+        { opacity: 0 },
+        { opacity: 1, duration: 1.1, ease: 'power2.out' });
+      gsap.fromTo('#site-header',
+        { y: -18, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.9, delay: 0.4, ease: 'power3.out' });
+      el.classList.add('is-done');          // 페이드 리빌
+      setTimeout(() => {
+        cancelAnimationFrame(rafId);
+        window.removeEventListener('resize', resize);
+        el.style.display = 'none';
+      }, 1200);
+    }
   })();
 })();
 </script>
