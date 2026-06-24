@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { background: #fff; }
+    html, body { background: #0a0a0b; }
     body {
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       overflow-x: hidden;
@@ -491,7 +491,7 @@
 
 
 
-    /* ── SELECTED WORKS (좌측 목록 + 우측 프리뷰, lukebaffait 참고) ── */
+    /* ── SELECTED WORKS (밖: 좌=리스트+흐르는 라인(lukebaffait) / 우=프리뷰(mescubook)) ── */
     #projects {
       position: relative;
       z-index: 2;
@@ -499,93 +499,155 @@
       color: #fff;
       padding: 11vh 4vw 22vh;
     }
-    #projects .pj-inner { max-width: 1300px; margin: 0 auto; }
-    /* 다크 섹션 올라올 때 내용 페이드업 */
-    #projects .pj-eyebrow,
-    #projects .pj-item,
-    #projects .pj-preview {
+    #projects .pj-inner { max-width: 1600px; margin: 0 auto; position: relative; z-index: 1; }
+    #projects .pj-item {
       opacity: 0;
       transform: translateY(45px);
       transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
                   transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    #projects .pj-in { opacity: 1 !important; transform: none !important; }
+    #projects .pj-item.pj-in { opacity: 1 !important; transform: none !important; }
     #projects .pj-eyebrow {
-      display: block;
-      font-size: 0.72rem;
-      letter-spacing: 0.22em;
+      position: absolute;
+      left: 2vw;
+      top: 50%;
+      transform: translateY(-50%) rotate(180deg);
+      writing-mode: vertical-rl;
+      font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+      font-weight: 500;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.45);
-      margin-bottom: 5vh;
+      color: rgba(255, 255, 255, 0.85);
+      z-index: 2;
+      pointer-events: none;
     }
-    #projects .pj-layout {
-      display: grid;
-      grid-template-columns: 1fr 0.72fr;
-      gap: 5vw;
-      align-items: start;
-    }
-    #projects .pj-list { list-style: none; }
+    #projects .pj-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 20vw; align-items: center; }
+
+    /* LEFT: 키네틱 휠 인디케이터 + 리스트 */
+    #projects .pj-left { position: relative; }
+    #projects .pj-count { position: absolute; top: -3rem; left: 0; font-size: 0.7rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.4); }
+    #projects .pj-wheel { position: absolute; left: 0; top: 0; bottom: 0; width: 84px; perspective: 700px; pointer-events: none; z-index: 0; }
+    #projects .pj-wheel .pw-item { position: absolute; left: 50%; top: 50%; font-size: 1.5rem; font-weight: 500; color: #fff; font-variant-numeric: tabular-nums; backface-visibility: hidden; will-change: transform, opacity; }
+    #projects .pj-list { list-style: none; position: relative; z-index: 1; padding-left: 96px; }
     #projects .pj-item { border-top: 1px solid rgba(255, 255, 255, 0.12); }
     #projects .pj-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
     #projects .pj-item a {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 3.6vh 0;
-      text-decoration: none;
-      color: rgba(255, 255, 255, 0.32);
-      transition: color 0.35s ease, padding-left 0.35s ease;
+      display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+      padding: 3.6vh 0.2rem; text-decoration: none;
+      color: rgba(255, 255, 255, 0.3); transition: color 0.4s ease;
     }
-    #projects .pj-name {
-      font-size: clamp(2.4rem, 5.6vw, 75px);
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-    #projects .pj-role {
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      opacity: 0.6;
-      white-space: nowrap;
-    }
-    #projects .pj-item.is-active a,
-    #projects .pj-item a:hover {
-      color: #fff;
-      padding-left: 1.1rem;
-    }
-    #projects .pj-preview { position: sticky; top: 16vh; }
-    #projects .pj-preview-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.66rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.5);
-      margin-bottom: 1rem;
-    }
-    #projects .pj-preview-box {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      background: linear-gradient(135deg, #26262b, #141416);
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #projects .pj-preview-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    #projects .pj-preview-label {
-      font-size: 0.85rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.4);
-    }
+    #projects .pj-name { font-size: clamp(2rem, 3.4vw, 3.6rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.04; white-space: nowrap; }
+    #projects .pj-role { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.5; white-space: nowrap; align-self: center; }
+    #projects .pj-item.is-active a, #projects .pj-item a:hover { color: #fff; }
+    #projects .pj-item.is-active a .pj-role, #projects .pj-item a:hover .pj-role { opacity: 0.85; }
+
+    /* RIGHT: mescubook 스타일 프리뷰 패널 */
+    #projects .pj-preview { position: static; display: flex; flex-direction: column; }
+    #projects .pjp-top { display: flex; justify-content: space-between; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); margin-bottom: 1.4rem; }
+    #projects .pjp-num { font-size: 0.8rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); font-variant-numeric: tabular-nums; margin-bottom: 1rem; }
+    #projects .pjp-num b { font-size: 1.5rem; font-weight: 500; color: #fff; }
+    #projects .pjp-frame { width: 100%; aspect-ratio: 16 / 9; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 10px; background: rgba(255, 255, 255, 0.02); }
+    #projects .pjp-media { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #26262b, #141416); display: flex; align-items: center; justify-content: center; }
+    #projects .pjp-media img { width: 100%; height: 100%; object-fit: cover; }
+    #projects .pjp-media span { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255, 255, 255, 0.3); }
+    #projects .pjp-title { font-size: clamp(2.2rem, 4vw, 4.2rem); font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; text-align: center; margin: 1.8rem 0 1rem; line-height: 1; white-space: nowrap; }
+    #projects .pjp-foot { display: flex; justify-content: space-between; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
+
     @media (max-width: 860px) {
-      #projects .pj-layout { grid-template-columns: 1fr; gap: 3rem; }
+      #projects .pj-grid { grid-template-columns: 1fr; gap: 3rem; }
+      #projects .pj-line { display: none; }
+      #projects .pj-list { padding-left: 0; }
       #projects .pj-preview { display: none; }
       #projects .pj-name { font-size: clamp(1.5rem, 7vw, 2.2rem); }
+    }
+
+    /* ── 풀스크린 케이스 스터디 뷰어 (안) ── */
+    #pj-viewer {
+      position: fixed; inset: 0; z-index: 200;
+      background: #0a0a0b; color: #fff;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      overflow: hidden;
+    }
+    #pj-viewer.is-open { opacity: 1; visibility: visible; }
+    #pj-viewer .pjv-top {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 12;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 3vh 4vw; pointer-events: none;
+    }
+    #pj-viewer .pjv-top > * { pointer-events: auto; }
+    #pj-viewer .pjv-progress { font-size: 0.78rem; letter-spacing: 0.18em; color: rgba(255, 255, 255, 0.6); font-variant-numeric: tabular-nums; }
+    #pj-viewer .pjv-close {
+      background: none; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff;
+      border-radius: 100px; width: 44px; height: 44px; cursor: pointer; font-size: 1rem;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    #pj-viewer .pjv-close:hover { background: #fff; color: #0a0a0b; }
+    #pj-viewer .pjv-index {
+      position: absolute; top: 50%; left: 4vw; transform: translateY(-50%); z-index: 12;
+      list-style: none; display: flex; flex-direction: column; gap: 0.9rem;
+    }
+    #pj-viewer .pjv-index button {
+      background: none; border: none; cursor: pointer; padding: 0; font: inherit;
+      font-size: 0.78rem; letter-spacing: 0.05em; color: rgba(255, 255, 255, 0.3);
+      display: flex; gap: 0.55rem; align-items: baseline; text-align: left;
+      transition: color 0.3s ease;
+    }
+    #pj-viewer .pjv-index .i-num { font-size: 0.6rem; opacity: 0.7; font-variant-numeric: tabular-nums; }
+    #pj-viewer .pjv-index button:hover { color: rgba(255, 255, 255, 0.7); }
+    #pj-viewer .pjv-index li.is-active button { color: #fff; }
+    #pj-viewer .pjv-track {
+      display: flex; height: 100%;
+      transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+      will-change: transform;
+    }
+    #pj-viewer .pjv-slide { flex: 0 0 100%; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; }
+    #pj-viewer .pjv-inner { max-width: 880px; margin: 0 auto; padding: 16vh 6vw 16vh; }
+    #pj-viewer .pjv-eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); }
+    #pj-viewer .pjv-title { font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.03; margin: 1.4vh 0 3vh; }
+    #pj-viewer .pjv-summary { font-size: clamp(1.05rem, 1.6vw, 1.3rem); line-height: 1.6; color: rgba(255, 255, 255, 0.7); max-width: 640px; }
+    #pj-viewer .pjv-meta {
+      display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 4vh; padding: 3vh 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.12); border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    #pj-viewer .pjv-meta div { display: flex; flex-direction: column; gap: 0.4rem; }
+    #pj-viewer .pjv-meta dt { font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
+    #pj-viewer .pjv-meta dd { font-size: 0.92rem; }
+    #pj-viewer .pjv-live {
+      display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 4vh;
+      padding: 0.9rem 1.6rem; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 100px;
+      color: #fff; text-decoration: none; font-size: 0.82rem; letter-spacing: 0.06em;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    #pj-viewer .pjv-live:hover { background: #fff; color: #0a0a0b; }
+    #pj-viewer .pjv-hero, #pj-viewer .pjv-figure {
+      width: 100%; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(135deg, #26262b, #141416);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255, 255, 255, 0.25); font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    #pj-viewer .pjv-hero { aspect-ratio: 16 / 9; margin: 6vh 0; }
+    #pj-viewer .pjv-figure { aspect-ratio: 4 / 3; margin-top: 3vh; }
+    #pj-viewer .pjv-hero img, #pj-viewer .pjv-figure img { width: 100%; height: 100%; object-fit: cover; }
+    #pj-viewer .pjv-section { margin: 6vh 0; }
+    #pj-viewer .pjv-section h3 { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); margin-bottom: 1.4vh; }
+    #pj-viewer .pjv-section p { font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.7; color: rgba(255, 255, 255, 0.82); }
+    #pj-viewer .pjv-nav {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 12;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 3vh 4vw; pointer-events: none;
+    }
+    #pj-viewer .pjv-nav button { pointer-events: auto; }
+    #pj-viewer .pjv-btn {
+      background: none; border: none; color: rgba(255, 255, 255, 0.55); cursor: pointer; font: inherit;
+      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 0.6rem; transition: color 0.3s ease;
+    }
+    #pj-viewer .pjv-btn:hover:not(:disabled) { color: #fff; }
+    #pj-viewer .pjv-btn:disabled { opacity: 0.25; cursor: default; }
+    @media (max-width: 860px) {
+      #pj-viewer .pjv-index { display: none; }
+      #pj-viewer .pjv-inner { padding: 14vh 7vw 14vh; }
     }
   </style>
 </head>
@@ -738,36 +800,36 @@
 </section>
 
 <section id="projects">
+  <span class="pj-eyebrow">Selected Works</span>
   <div class="pj-inner">
-    <span class="pj-eyebrow">Selected Works</span>
-    <div class="pj-layout">
-      <ul class="pj-list">
-        <li class="pj-item is-active" data-date="2025" data-role="Personal" data-label="Project One">
-          <a href="#"><span class="pj-name">Project One</span><span class="pj-role">Personal</span></a>
-        </li>
-        <li class="pj-item" data-date="2025" data-role="Personal" data-label="Project Two">
-          <a href="#"><span class="pj-name">Project Two</span><span class="pj-role">Personal</span></a>
-        </li>
-        <li class="pj-item" data-date="2024" data-role="Team" data-label="Project Three">
-          <a href="#"><span class="pj-name">Project Three</span><span class="pj-role">Team</span></a>
-        </li>
-        <li class="pj-item" data-date="2024" data-role="Team" data-label="Project Four">
-          <a href="#"><span class="pj-name">Project Four</span><span class="pj-role">Team</span></a>
-        </li>
-        <li class="pj-item" data-date="2024" data-role="Team" data-label="Project Five">
-          <a href="#"><span class="pj-name">Project Five</span><span class="pj-role">Team</span></a>
-        </li>
-        <li class="pj-item" data-date="2023" data-role="Personal" data-label="Project Six">
-          <a href="#"><span class="pj-name">Project Six</span><span class="pj-role">Personal</span></a>
-        </li>
-      </ul>
-      <div class="pj-preview" aria-hidden="true">
-        <div class="pj-preview-meta"><span class="pj-date">2025</span><span>Preview</span></div>
-        <div class="pj-preview-box"><span class="pj-preview-label">Project One</span></div>
+    <div class="pj-grid">
+      <div class="pj-left">
+        <div class="pj-wheel" id="pjWheel" aria-hidden="true"></div>
+        <ul class="pj-list" id="pjList"></ul>
+      </div>
+      <div class="pj-preview" id="pjPreview" aria-hidden="true">
+        <div class="pjp-num"><b id="pjPrevNum">01</b> / <span id="pjPrevTotal">06</span></div>
+        <div class="pjp-frame"><div class="pjp-media" id="pjPrevImg"><span>Preview</span></div></div>
+        <h3 class="pjp-title" id="pjPrevTitle">Project One</h3>
+        <div class="pjp-foot"><span id="pjPrevMeta">Personal · 2025</span></div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- 풀스크린 케이스 스터디 뷰어 (밖 리스트 클릭 시 열림) -->
+<div id="pj-viewer" aria-hidden="true">
+  <div class="pjv-top">
+    <span class="pjv-progress" id="pjvProgress">01 / 06</span>
+    <button class="pjv-close" id="pjvClose" aria-label="닫기">✕</button>
+  </div>
+  <ul class="pjv-index" id="pjvIndex" aria-label="프로젝트 목차"></ul>
+  <div class="pjv-track" id="pjvTrack"></div>
+  <div class="pjv-nav">
+    <button class="pjv-btn" id="pjvPrev" type="button"><span aria-hidden="true">←</span> Prev</button>
+    <button class="pjv-btn" id="pjvNext" type="button">Next <span aria-hidden="true">→</span></button>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -778,6 +840,7 @@
 
   /* ── Lenis 스무스 스크롤 + ScrollTrigger 연동 ── */
   const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+  window.lenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => { lenis.raf(time * 1000); });
   gsap.ticker.lagSmoothing(0);
@@ -908,7 +971,19 @@
       scaleY: 0,
       ease: 'none',
       stagger: 0.06,
-      scrollTrigger: { trigger: '#about-me', start: 'top 80%', end: 'top 20%', scrub: true },
+      scrollTrigger: { trigger: '#about-me', start: 'top top', end: '+=70%', scrub: true, pin: true, anticipatePin: 1 },
+    });
+  })();
+
+  /* ── 6-1) 히어로 #scene 숨김: PROFILE 도달 후 (섹션 사이 갭으로 뒤 영상이 비치는 것 방지, pin과 함께 사용) ── */
+  (function () {
+    const scene = document.getElementById('scene');
+    if (!scene) return;
+    ScrollTrigger.create({
+      trigger: '#about-me',
+      start: 'top top',
+      onEnter:     () => gsap.set(scene, { autoAlpha: 0 }),
+      onLeaveBack: () => gsap.set(scene, { autoAlpha: 1 }),
     });
   })();
 
@@ -926,35 +1001,224 @@
     });
   })();
 
-  /* ── 8-0) SELECTED WORKS 내용 등장: 다크 섹션 올라올 때 같이 페이드업 ── */
+  /* ── 8) SELECTED WORKS: 데이터 → 밖 리스트 + 커서 플로팅 프리뷰 + 안 풀스크린 뷰어 ── */
   (function () {
-    const items = document.querySelectorAll('#projects .pj-eyebrow, #projects .pj-item, #projects .pj-preview');
-    if (!items.length) return;
-    items.forEach((el, i) => {
+    /* ⬇️ 프로젝트 데이터 (단일 소스 — 여기만 고치면 리스트·뷰어·인덱스 전부 반영)
+       thumb: 리스트 호버 썸네일(없으면 이름만), live: 라이브 사이트 URL(새 탭) */
+    const PROJECTS = [
+      { name: 'Project One',   year: '2025', role: 'Personal', type: 'Web · UX/UI', live: '#', thumb: '',
+        summary: '한 줄 소개 placeholder — 프로젝트가 무엇인지 적어주세요.',
+        sections: [
+          { h: 'Overview', p: '프로젝트 개요 placeholder. 무엇을, 왜 만들었는지.' },
+          { h: 'Problem',  p: '해결하려던 문제 placeholder.' },
+          { h: 'Process',  p: '진행 과정·역할·의사결정 placeholder.' },
+          { h: 'Outcome',  p: '결과·배운 점 placeholder.' },
+        ] },
+      { name: 'Project Two',   year: '2025', role: 'Personal', type: 'Web · UX/UI', live: '#', thumb: '',
+        summary: '한 줄 소개 placeholder.',
+        sections: [
+          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
+          { h: 'Problem',  p: '문제 정의 placeholder.' },
+          { h: 'Process',  p: '진행 과정 placeholder.' },
+          { h: 'Outcome',  p: '결과 placeholder.' },
+        ] },
+      { name: 'Project Three', year: '2024', role: 'Team',     type: 'Mobile · UI', live: '#', thumb: '',
+        summary: '한 줄 소개 placeholder.',
+        sections: [
+          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
+          { h: 'Problem',  p: '문제 정의 placeholder.' },
+          { h: 'Process',  p: '진행 과정 placeholder.' },
+          { h: 'Outcome',  p: '결과 placeholder.' },
+        ] },
+      { name: 'Project Four',  year: '2024', role: 'Team',     type: 'Branding', live: '#', thumb: '',
+        summary: '한 줄 소개 placeholder.',
+        sections: [
+          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
+          { h: 'Problem',  p: '문제 정의 placeholder.' },
+          { h: 'Process',  p: '진행 과정 placeholder.' },
+          { h: 'Outcome',  p: '결과 placeholder.' },
+        ] },
+      { name: 'Project Five',  year: '2024', role: 'Team',     type: 'Web · Dev', live: '#', thumb: '',
+        summary: '한 줄 소개 placeholder.',
+        sections: [
+          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
+          { h: 'Problem',  p: '문제 정의 placeholder.' },
+          { h: 'Process',  p: '진행 과정 placeholder.' },
+          { h: 'Outcome',  p: '결과 placeholder.' },
+        ] },
+      { name: 'Project Six',   year: '2023', role: 'Personal', type: 'Graphic', live: '#', thumb: '',
+        summary: '한 줄 소개 placeholder.',
+        sections: [
+          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
+          { h: 'Problem',  p: '문제 정의 placeholder.' },
+          { h: 'Process',  p: '진행 과정 placeholder.' },
+          { h: 'Outcome',  p: '결과 placeholder.' },
+        ] },
+    ];
+
+    const listEl     = document.getElementById('pjList');
+    const viewer     = document.getElementById('pj-viewer');
+    const trackEl    = document.getElementById('pjvTrack');
+    const indexEl    = document.getElementById('pjvIndex');
+    const progressEl = document.getElementById('pjvProgress');
+    const prevBtn    = document.getElementById('pjvPrev');
+    const nextBtn    = document.getElementById('pjvNext');
+    const closeBtn   = document.getElementById('pjvClose');
+    if (!listEl || !viewer) return;
+
+    const total = PROJECTS.length;
+    const pad2  = (n) => String(n).padStart(2, '0');
+    const esc   = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    /* 1) 밖 리스트 (왼쪽) */
+    listEl.innerHTML = PROJECTS.map((p, i) => `
+      <li class="pj-item" data-i="${i}">
+        <a href="${esc(p.live)}">
+          <span class="pj-name">${esc(p.name)}</span>
+          <span class="pj-role">${esc(p.role)}</span>
+        </a>
+      </li>`).join('');
+    const items = [...listEl.querySelectorAll('.pj-item')];
+
+    /* 2) 오른쪽 프리뷰(mescubook) + 왼쪽 흐르는 라인(lukebaffait) + 클릭 → 뷰어 */
+    const prevImg   = document.getElementById('pjPrevImg');
+    const prevTitle = document.getElementById('pjPrevTitle');
+    const prevNum   = document.getElementById('pjPrevNum');
+    const prevMeta  = document.getElementById('pjPrevMeta');
+    const prevTotal = document.getElementById('pjPrevTotal');
+    const wheelEl   = document.getElementById('pjWheel');
+    const countEl   = document.getElementById('pjCount');
+    if (countEl)   countEl.textContent   = '(' + pad2(total) + ')';
+    if (prevTotal) prevTotal.textContent = pad2(total);
+
+    let activeOut = -1;
+    function applyActive(i) {
+      if (i === activeOut) return;
+      activeOut = i;
+      items.forEach((li, idx) => li.classList.toggle('is-active', idx === i));
+      const p = PROJECTS[i];
+      if (prevNum)   prevNum.textContent   = pad2(i + 1);
+      if (prevTitle) prevTitle.textContent = p.name;
+      if (prevMeta)  prevMeta.textContent  = p.role + ' · ' + p.year;
+      if (prevImg)   prevImg.innerHTML     = p.thumb ? `<img src="${esc(p.thumb)}" alt="">` : `<span>${esc(p.name)}</span>`;
+    }
+    items.forEach((li) => {
+      const i = +li.dataset.i;
+      li.addEventListener('mouseenter', () => applyActive(i));
+      li.querySelector('a').addEventListener('click', (e) => { e.preventDefault(); openViewer(i); });
+    });
+
+    /* 스크롤로 프로젝트 전환 + 키네틱 휠 인디케이터 회전 (번호가 원통처럼 굴러감) */
+    if (wheelEl) {
+      wheelEl.innerHTML = PROJECTS.map((p, i) => '<span class="pw-item">' + pad2(i + 1) + '</span>').join('');
+    }
+    const wItems = wheelEl ? [...wheelEl.querySelectorAll('.pw-item')] : [];
+    const WSTEP = 26, WRADIUS = 120;
+    function placeWheel(cf) {
+      wItems.forEach((el, i) => {
+        const ang = (i - cf) * WSTEP;
+        el.style.transform = 'translate(-50%, -50%) rotateX(' + ang + 'deg) translateZ(' + WRADIUS + 'px)';
+        el.style.opacity = Math.max(0, 1 - Math.abs(ang) / (WSTEP * 2.4)).toFixed(3);
+      });
+    }
+    /* 리스트를 스크롤 따라 세로로 흘려서 한 번에 다 안 보이게 (활성=중앙, 위아래 페이드) */
+    function placeList(cf) {
+      const rowH = (listEl.scrollHeight / total) || 80;
+      listEl.style.transform = 'translateY(' + (rowH * (total / 2 - 0.5 - cf)) + 'px)';
+      items.forEach((li, i) => {
+        li.style.opacity = Math.max(0.06, 1 - Math.abs(i - cf) * 0.5).toFixed(3);
+      });
+    }
+    applyActive(0);
+    placeWheel(0);
+    placeList(0);
+    ScrollTrigger.create({
+      trigger: '#projects',
+      start: 'top top',
+      end: '+=' + (total * 60) + '%',
+      pin: true,
+      scrub: true,
+      onUpdate: (self) => {
+        const cf = self.progress * (total - 1);
+        placeWheel(cf);
+        placeList(cf);
+        applyActive(Math.max(0, Math.min(total - 1, Math.round(cf))));
+      },
+    });
+
+    /* 3) 안 뷰어 슬라이드 ([data-lenis-prevent]로 내부 세로 스크롤 허용) */
+    trackEl.innerHTML = PROJECTS.map((p) => `
+      <article class="pjv-slide" data-lenis-prevent>
+        <div class="pjv-inner">
+          <span class="pjv-eyebrow">${esc(p.type)} · ${esc(p.year)}</span>
+          <h2 class="pjv-title">${esc(p.name)}</h2>
+          <p class="pjv-summary">${esc(p.summary)}</p>
+          <div class="pjv-meta">
+            <div><dt>Year</dt><dd>${esc(p.year)}</dd></div>
+            <div><dt>Role</dt><dd>${esc(p.role)}</dd></div>
+            <div><dt>Type</dt><dd>${esc(p.type)}</dd></div>
+          </div>
+          <a class="pjv-live" href="${esc(p.live)}" target="_blank" rel="noopener">Live Site <span aria-hidden="true">↗</span></a>
+          <div class="pjv-hero">Hero Image</div>
+          ${p.sections.map((s, si) => `
+            <div class="pjv-section">
+              <h3>${esc(s.h)}</h3>
+              <p>${esc(s.p)}</p>
+              ${si % 2 === 1 ? '<div class="pjv-figure">Figure</div>' : ''}
+            </div>`).join('')}
+        </div>
+      </article>`).join('');
+    const slides = [...trackEl.querySelectorAll('.pjv-slide')];
+
+    /* 4) 사이드 인덱스 (프로젝트 점프) */
+    indexEl.innerHTML = PROJECTS.map((p, i) => `
+      <li data-i="${i}"><button type="button"><span class="i-num">${pad2(i + 1)}</span><span>${esc(p.name)}</span></button></li>`).join('');
+    const indexItems = [...indexEl.querySelectorAll('li')];
+    indexItems.forEach((li) => li.querySelector('button').addEventListener('click', () => goTo(+li.dataset.i)));
+
+    /* 5) 상태/이동 */
+    let current = 0;
+    function render() {
+      trackEl.style.transform = `translateX(-${current * 100}%)`;
+      progressEl.textContent  = pad2(current + 1) + ' / ' + pad2(total);
+      indexItems.forEach((li, i) => li.classList.toggle('is-active', i === current));
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+      if (slides[current]) slides[current].scrollTop = 0;
+    }
+    function goTo(i) { current = Math.max(0, Math.min(total - 1, i)); render(); }
+    function openViewer(i) {
+      current = Math.max(0, Math.min(total - 1, i));
+      render();
+      viewer.classList.add('is-open');
+      viewer.setAttribute('aria-hidden', 'false');
+      if (typeof lenis !== 'undefined' && lenis) lenis.stop();
+    }
+    function closeViewer() {
+      viewer.classList.remove('is-open');
+      viewer.setAttribute('aria-hidden', 'true');
+      if (typeof lenis !== 'undefined' && lenis) lenis.start();
+    }
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+    closeBtn.addEventListener('click', closeViewer);
+    document.addEventListener('keydown', (e) => {
+      if (!viewer.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closeViewer();
+      else if (e.key === 'ArrowRight') goTo(current + 1);
+      else if (e.key === 'ArrowLeft') goTo(current - 1);
+    });
+    render();
+
+    /* 6) 밖 리스트 등장(reveal) — 렌더 후 등록 */
+    const reveals = [...items];
+    reveals.forEach((el, i) => {
       ScrollTrigger.create({
         trigger: el,
         start: 'top 90%',
         onEnter: () => { el.style.transitionDelay = (i * 0.05) + 's'; el.classList.add('pj-in'); },
       });
     });
-  })();
-
-  /* ── 8) SELECTED WORKS: 목록 호버 → 우측 프리뷰 전환 ── */
-  (function () {
-    const items = [...document.querySelectorAll('#projects .pj-item')];
-    if (!items.length) return;
-    const dateEl  = document.querySelector('#projects .pj-date');
-    const labelEl = document.querySelector('#projects .pj-preview-label');
-    const box     = document.querySelector('#projects .pj-preview-box');
-    const setActive = (it) => {
-      items.forEach((i) => i.classList.toggle('is-active', i === it));
-      if (dateEl)  dateEl.textContent  = it.dataset.date || '';
-      if (labelEl) labelEl.textContent = it.dataset.label || '';
-      // 실제 이미지 적용 시: it.dataset.img 로 box 내부 <img> src 교체(크로스페이드)
-      const img = it.dataset.img;
-      if (img && box) { box.innerHTML = '<img src="' + img + '" alt="">'; }
-    };
-    items.forEach((it) => it.addEventListener('mouseenter', () => setActive(it)));
   })();
 
   /* ── 프리로더 (텍스트 안에 물이 차오르는 효과 + loading 카운터) ── 첫 방문 시에만 ── */
