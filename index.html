@@ -533,7 +533,7 @@
     #banner-design .bd-title { position: absolute; top: 50vh; left: 0; right: 0; transform: translateY(-50%); margin: 0; display: flex; justify-content: center; align-items: baseline; gap: 0.3em; z-index: 3; pointer-events: none; }
     #banner-design .bd-word { display: inline-block; font-size: clamp(2.4rem, 7vw, 6rem); font-weight: 700; letter-spacing: -0.02em; color: #111; white-space: nowrap; will-change: transform; }
     #banner-design .bd-stage { position: absolute; inset: 0; z-index: 2; }
-    #banner-design .bd-banner { position: absolute; left: 50%; top: 50vh; transform: translate(-50%, -50%); width: min(40vh, 80vw); aspect-ratio: 4 / 5; opacity: 0; will-change: transform, opacity; }
+    #banner-design .bd-banner { position: absolute; left: 50%; top: 50vh; width: min(40vh, 80vw); aspect-ratio: 4 / 5; opacity: 0; will-change: transform, opacity; }
     #banner-design .bd-banner img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 10px; box-shadow: 0 26px 60px rgba(0, 0, 0, 0.22); pointer-events: none; user-select: none; -webkit-user-drag: none; }
     #banner-design .bd-banner.is-active { cursor: grab; }
     #banner-design .bd-banner.is-dragging { cursor: grabbing; z-index: 20; }
@@ -2048,7 +2048,8 @@
              - (word.offsetLeft + word.offsetWidth / 2);
     };
 
-    gsap.set(banners, { yPercent: 130, opacity: 0, scale: 1, x: 0, y: 0 });
+    // xPercent/yPercent로 CSS transform 없이 센터링 — GSAP이 직접 관리
+    gsap.set(banners, { xPercent: -50, yPercent: 150, opacity: 0, scale: 1, x: 0, y: 0 });
 
     let dragEnabled = false;
     let dragging    = false;
@@ -2063,11 +2064,11 @@
       .to(wR, { x: () => splitX(wR,  1), scale: S, ease: 'none', duration: SPLIT }, 0);
     banners.forEach((b, i) => {
       const t = SPLIT + i * STEP;
-      tl.fromTo(b, { yPercent: 130, opacity: 0 },
-                   { yPercent: 0, opacity: 1, ease: 'power2.out', duration: RISE }, t);
+      tl.fromTo(b, { xPercent: -50, yPercent: 150, opacity: 0 },
+                   { xPercent: -50, yPercent: -50, opacity: 1, ease: 'power2.out', duration: RISE }, t);
       for (let j = 0; j < i; j++) {
         const d = i - j;
-        tl.to(banners[j], { yPercent: -8 * d, scale: 1 - 0.05 * d, opacity: Math.max(0, 1 - 0.28 * d), ease: 'power2.out', duration: RISE }, t);
+        tl.to(banners[j], { yPercent: -50 - 8 * d, scale: 1 - 0.05 * d, opacity: Math.max(0, 1 - 0.28 * d), ease: 'power2.out', duration: RISE }, t);
       }
     });
 
