@@ -900,6 +900,65 @@
     }
     #pj-viewer .ode-mp-annot.cs-in .ode-mp-arrow-tip { opacity: 1; }
 
+    /* ABOUT 섹션 — 스크린샷 + 라이브 주석 */
+    #pj-viewer .ode-about { background: #f5f1ed; padding: clamp(3rem,6vw,5rem) clamp(2rem,4vw,4rem) clamp(4rem,8vw,7rem); }
+    #pj-viewer .ode-about .ode-mp-header { margin-bottom: clamp(2rem,4vw,3.5rem); }
+    #pj-viewer .ode-about-stage { position: relative; width: 100%; max-width: 1100px; margin: 0 auto; }
+    #pj-viewer .ode-about-shot { width: 100%; display: block; }
+    #pj-viewer .ode-about-note { position: absolute; display: flex; align-items: flex-start; gap: 0.5rem; z-index: 2; }
+    /* 주석 화살표 reveal (about 전용 스코프) */
+    #pj-viewer .ode-about-note.cs-in .ode-mp-arrow-line { transform: scaleX(1); }
+    #pj-viewer .ode-about-note.cs-in .ode-mp-arrow-tip  { opacity: 1; }
+    #pj-viewer .ode-about-note.cs-in .ode-about-vline   { transform: scaleY(1); }
+    /* 왼쪽: 컬렉션 — 가로 화살표 */
+    #pj-viewer .ode-about-note .ode-mp-annot-text { word-break: keep-all; }
+    #pj-viewer .ode-about-note .ode-mp-annot-text p { font-size: 0.68rem; }
+    #pj-viewer .ode-about-note--left  { left: 2%; right: 70%; top: 54%; }
+    #pj-viewer .ode-about-note--left .ode-mp-annot-text { flex: 0 0 75%; }
+    /* 오른쪽: Parallax — 세로 화살표 */
+    #pj-viewer .ode-about-note--right { right: 4%; top: 36%; flex-direction: column; align-items: flex-start; width: 19%; }
+    #pj-viewer .ode-about-varrow { display: flex; flex-direction: column; align-items: center; margin-bottom: 0.9rem; }
+    #pj-viewer .ode-about-vline { width: 1px; height: clamp(48px,6vw,84px); background: #2b2420; transform: scaleY(0); transform-origin: top center; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
+
+    /* SHOP 섹션 — 스크린샷 + 제품 카드 + 장바구니 + 라이브 주석 */
+    #pj-viewer .ode-shop { position: relative; background: #f5f1ed; padding: clamp(3rem,6vw,5rem) clamp(2rem,4vw,4rem) clamp(4rem,8vw,7rem); overflow: hidden; }
+    #pj-viewer .ode-shop .ode-mp-header { margin-bottom: clamp(2.5rem,5vw,4rem); }
+    /* mobile shop 은은한 배경 */
+    #pj-viewer .ode-shop-bg { position: absolute; left: -1%; top: clamp(0rem,2vw,1.5rem); width: clamp(250px,27vw,370px); opacity: 0.9; z-index: 3; pointer-events: none; user-select: none; }
+    #pj-viewer .ode-shop > .ode-mp-header,
+    #pj-viewer .ode-shop > .ode-shop-page,
+    #pj-viewer .ode-shop > .ode-shop-cards,
+    #pj-viewer .ode-shop > .ode-shop-cart { position: relative; z-index: 1; }
+    #pj-viewer .ode-shop-page { max-width: 680px; margin: 0 auto clamp(3.5rem,7vw,6rem); }
+    #pj-viewer .ode-shop-page img { width: 100%; display: block; border-radius: 4px; box-shadow: 0 12px 50px rgba(43,36,32,0.12); }
+    /* block 2: 제품 카드 + 주석 */
+    #pj-viewer .ode-shop-cards { position: relative; max-width: 1080px; margin: 0 auto clamp(3.5rem,8vw,6.5rem); padding-bottom: clamp(2.5rem,6vw,4.5rem); }
+    #pj-viewer .ode-shop-cardrow { display: flex; justify-content: center; gap: clamp(0.8rem,1.6vw,1.5rem); }
+    #pj-viewer .ode-shop-cardrow figure { margin: 0; width: clamp(160px,17vw,250px); }
+    #pj-viewer .ode-shop-cardrow img { width: 100%; display: block; }
+    /* block 3: 장바구니 */
+    #pj-viewer .ode-shop-cart { display: flex; align-items: center; justify-content: center; gap: clamp(1.2rem,3vw,3rem); max-width: 1080px; margin: 0 auto; }
+    #pj-viewer .ode-shop-cart > img { width: clamp(340px,42vw,540px); display: block; border-radius: 4px; box-shadow: 0 12px 50px rgba(43,36,32,0.12); }
+    /* 주석 공통 */
+    #pj-viewer .ode-shop-note { display: flex; align-items: flex-start; gap: 0.5rem; }
+    #pj-viewer .ode-shop-note .ode-mp-annot-text { word-break: keep-all; }
+    #pj-viewer .ode-shop-note.cs-in .ode-mp-arrow-line { transform: scaleX(1); }
+    #pj-viewer .ode-shop-note.cs-in .ode-mp-arrow-tip  { opacity: 1; }
+    /* 제품 경험 중심의 탐색 — 아래-왼쪽, 꺾인 화살표 위로 (Fig Mousse 가리킴) */
+    #pj-viewer .ode-shop-note--explore { position: absolute; left: 4%; bottom: 0; width: 250px; align-items: flex-end; }
+    #pj-viewer .ode-shop-note--explore .ode-mp-annot-text { flex: 1 1 auto; }
+    /* 꺾인 커넥터 (JS로 실제 요소 위치에 맞춰 배치 — 반응형) */
+    #pj-viewer .ode-shop-connectors { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+    #pj-viewer .cn-line { position: absolute; background: #2b2420; }
+    #pj-viewer .cn-dot { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #2b2420; }
+    /* 간편한 구매 경험 — 오른쪽 중앙 */
+    #pj-viewer .ode-shop-note--cartadd { position: absolute; right: 3%; top: 36%; width: 260px; }
+    #pj-viewer .ode-shop-note--cartadd .ode-mp-annot-text { flex: 0 0 74%; }
+    /* 구매 경험 최적화 — 블록3 오른쪽 */
+    #pj-viewer .ode-shop-note--right { flex: 1 1 0; max-width: 300px; }
+    #pj-viewer .ode-shop-note--right .ode-mp-annot-text { flex: 0 0 80%; }
+    #pj-viewer .ode-shop-note--right .ode-mp-annot-text p + p { margin-top: 0.7em; }
+
     /* ODE Design System 섹션 */
     #pj-viewer .ode-ds {
       background: #2b2420; padding: clamp(3rem,6vw,5rem) clamp(2.5rem,5vw,4.5rem);
@@ -1691,6 +1750,8 @@
         caseOdeBrandNaming: true,
         caseOdeDesignSystem: true,
         caseOdeMainPage: true,
+        caseOdeAbout: true,
+        caseOdeShop: true,
         caseTitle: '실무의 경험에서 시작한\n데일리 포켓 뷰티',
         caseLead: '뷰티 실무에서 발견한 니즈를 바탕으로,\n포켓 뷰티 브랜드 ODE를 기획했습니다.',
         period: '5 Days',
@@ -2099,7 +2160,7 @@
             <div class="ode-mp-annot reveal" style="--d:0.6s">
               <div class="ode-mp-annot-text">
                 <strong>라이프스타일 속 제품 발견</strong>
-                <p>실제 사용자의 라이프스타일 이미지를 활용하고<br>이미지에 사용된 제품 정보를 함께 제공하여<br>브랜드 경험과 제품 탐색이 자연스럽게<br>이어질 수 있도록 설계했습니다.</p>
+                <p><b>실제 사용자의 라이프스타일 이미지</b>를 활용하고<br><b>이미지에 사용된 제품 정보</b>를 함께 제공하여<br>브랜드 경험과 제품 탐색이 자연스럽게<br>이어질 수 있도록 설계했습니다.</p>
               </div>
               <div class="ode-mp-arrow ode-mp-arrow--right"><div class="ode-mp-arrow-line"></div><div class="ode-mp-arrow-tip"></div></div>
             </div>
@@ -2121,10 +2182,85 @@
               <div class="ode-mp-arrow ode-mp-arrow--left"><div class="ode-mp-arrow-tip ode-mp-arrow-tip--left"></div><div class="ode-mp-arrow-line"></div></div>
               <div class="ode-mp-annot-text">
                 <strong>제품 탐색 경험</strong>
-                <p>마우스 호버 시 제품을 사용하는 모델 컷과<br>빠른 장바구니 추가 버튼을 제공하여 구매 행동으로<br>자연스럽게 이어질 수 있도록 설계했습니다.</p>
+                <p>마우스 호버 시 제품을 사용하는 <b>모델 컷</b>과<br><b>빠른 장바구니 추가</b> 버튼을 제공하여 <b>구매 행동</b>으로<br>자연스럽게 이어질 수 있도록 설계했습니다.</p>
               </div>
             </div>
           </div>
+        </div>
+      </section>`;
+    }
+
+    function odeAboutHTML() {
+      return `
+      <section class="ode-about">
+        <header class="ode-mp-header reveal" style="--d:0s">
+          <p class="ode-mp-title">· ABOUT ·</p>
+          <p class="ode-mp-desc">일상 속 작은 순간과 감정에서 영감을 받은<br>이미지와 메시지를 통해 브랜드 아이덴티티를<br>자연스럽게 경험할 수 있도록 설계했습니다.</p>
+        </header>
+        <div class="ode-about-stage">
+          <img class="ode-about-shot reveal" style="--d:0.1s" src="ode/about.png" alt="ODE About">
+          <div class="ode-about-note ode-about-note--left reveal" style="--d:0.3s">
+            <div class="ode-mp-annot-text">
+              <strong>컬렉션 무드 경험</strong>
+              <p>마우스 호버 시 <b>컬러가 드러나도록</b> 설계하여<br>각 <b>컬렉션이 가진 계절의 분위기와 감성</b>을<br>자연스럽게 경험할 수 있도록 구성했습니다.</p>
+            </div>
+            <div class="ode-mp-arrow ode-mp-arrow--right"><div class="ode-mp-arrow-line"></div><div class="ode-mp-arrow-tip"></div></div>
+          </div>
+          <div class="ode-about-note ode-about-note--right reveal" style="--d:0.45s">
+            <div class="ode-about-varrow"><div class="ode-mp-arrow-tip"></div><div class="ode-about-vline"></div></div>
+            <div class="ode-mp-annot-text">
+              <strong>Parallax Scrolling</strong>
+              <p>부드러운 속도의 Y축 패럴랙스 스크롤링을 사용하여 <b>감각적인 브랜드의<br>분위기</b>를 전달합니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>`;
+    }
+
+    function odeShopHTML() {
+      return `
+      <section class="ode-shop">
+        <img class="ode-shop-bg" src="ode/mobile shop.png" alt="" aria-hidden="true">
+        <header class="ode-mp-header reveal" style="--d:0s">
+          <p class="ode-mp-title">· SHOP ·</p>
+          <p class="ode-mp-desc">카테고리 탐색부터 제품 확인, 장바구니까지<br>자연스럽고 직관적인 구매 흐름을 제공합니다.</p>
+        </header>
+        <div class="ode-shop-page reveal" style="--d:0.1s">
+          <img src="ode/shop page.jpg" alt="ODE Shop">
+        </div>
+        <div class="ode-shop-cards">
+          <div class="ode-shop-cardrow">
+            <figure class="reveal" style="--d:0.15s"><img src="ode/shop card1.jpg" alt="POCKET BLUSH Fig Mousse"></figure>
+            <figure class="reveal" style="--d:0.3s"><img src="ode/shop card2.jpg" alt="POCKET BLUSH Cherry Kiss"></figure>
+          </div>
+          <div class="ode-shop-note ode-shop-note--explore reveal" style="--d:0.2s">
+            <div class="ode-mp-annot-text">
+              <strong>제품 경험 중심의 탐색</strong>
+              <p>마우스 호버 시 <b>모델 착용 이미지</b>를 자동으로 노출하여 제품의 색상과 사용 모습을 직관적으로 확인할 수 있도록 설계했습니다.</p>
+            </div>
+          </div>
+          <div class="ode-shop-note ode-shop-note--cartadd reveal" style="--d:0.35s">
+            <div class="ode-mp-arrow ode-mp-arrow--left"><div class="ode-mp-arrow-tip ode-mp-arrow-tip--left"></div><div class="ode-mp-arrow-line"></div></div>
+            <div class="ode-mp-annot-text">
+              <strong>간편한 구매 경험</strong>
+              <p>제품 탐색 중에도 <b>즉시 장바구니에<br>담을 수 있도록</b> 기능을 적용하여<br>구매 편의성을 높였습니다.</p>
+            </div>
+          </div>
+        </div>
+        <div class="ode-shop-cart">
+          <img class="reveal" style="--d:0.1s" src="ode/cart.jpg" alt="ODE Cart Side Panel">
+          <div class="ode-shop-note ode-shop-note--right reveal" style="--d:0.3s">
+            <div class="ode-mp-arrow ode-mp-arrow--left"><div class="ode-mp-arrow-tip ode-mp-arrow-tip--left"></div><div class="ode-mp-arrow-line"></div></div>
+            <div class="ode-mp-annot-text">
+              <strong>구매 경험 최적화</strong>
+              <p><b>사이드 패널 형태의 장바구니</b>를 적용하여<br>페이지 이동 없이 상품을 관리할 수 있도록 설계했습니다.</p>
+              <p>전체 선택, 수량 변경, 무료 배송 안내,<br>연관 상품 추천 기능을 통합하여 구매 편의성을 높였습니다.</p>
+            </div>
+          </div>
+        </div>
+        <div class="ode-shop-connectors">
+          <span class="cn-line el-top"></span><span class="cn-line el-v"></span><span class="cn-line el-bot"></span><span class="cn-dot el-dot"></span>
+          <span class="cn-line bl-top"></span><span class="cn-line bl-v"></span><span class="cn-line bl-bot"></span><span class="cn-dot bl-dot"></span>
         </div>
       </section>`;
     }
@@ -2240,6 +2376,8 @@
       if (p.caseOdeBrandNaming) body += odeBrandNamingHTML();
       if (p.caseOdeDesignSystem) body += odeDesignSystemHTML();
       if (p.caseOdeMainPage) body += odeMainPageHTML();
+      if (p.caseOdeAbout) body += odeAboutHTML();
+      if (p.caseOdeShop) body += odeShopHTML();
       if (p.caseBackground) body += bgSectionHTML();
       if (p.caseDesignSystem) body += dsSectionHTML();
       if (p.caseKeyInteraction) body += kiSectionHTML();
@@ -2270,6 +2408,41 @@
       caseEl.querySelectorAll('.reveal, .cs-deco-rise, .cs-deco-fade, .ki__point, .ode-naming-circle').forEach((el) => caseObserver.observe(el));
     }
 
+    /* SHOP 꺾인 커넥터: 실제 요소 위치에 맞춰 선을 그림 (반응형) */
+    function positionShopConnectors() {
+      const sec = caseEl && caseEl.querySelector('.ode-shop');
+      if (!sec) return;
+      const cont = sec.querySelector('.ode-shop-connectors');
+      const pageImg = sec.querySelector('.ode-shop-page img');
+      const explore = sec.querySelector('.ode-shop-note--explore');
+      const optimize = sec.querySelector('.ode-shop-cart .ode-shop-note--right');
+      const cartadd = sec.querySelector('.ode-shop-note--cartadd');
+      if (!cont || !pageImg || !explore || !optimize || !cartadd) return;
+      // offsetLeft/Top 기반 → reveal 트랜스폼(translateY)에 영향받지 않음(레이아웃 좌표)
+      const rel = (el) => { let x = 0, y = 0, n = el; while (n && n !== sec) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; } return { x: x, y: y, w: el.offsetWidth, h: el.offsetHeight }; };
+      const p = rel(pageImg);
+      if (!p.w) return;
+      const er = rel(explore), or = rel(optimize), cr = rel(cartadd);
+      const pbX = p.x + p.w * 0.04,  pbY = p.y + p.h * 0.48;    // POCKET BLUSH(그리드 좌상단)
+      const bagX = p.x + p.w * 0.955, bagY = p.y + p.h * 0.010; // 헤더 BAG
+      const line = (cls, l, t, w, h) => { const e = cont.querySelector('.' + cls); if (e) { e.style.left = l + 'px'; e.style.top = t + 'px'; e.style.width = Math.max(0, w) + 'px'; e.style.height = Math.max(0, h) + 'px'; } };
+      const dot = (cls, x, y) => { const e = cont.querySelector('.' + cls); if (e) { e.style.left = (x - 2.5) + 'px'; e.style.top = (y - 2) + 'px'; } };
+      // 제품 경험 탐색: 주석 왼쪽 위로 → 오른쪽 → POCKET BLUSH ('ㄷ')
+      const exVertX = er.x - 80, exBotY = er.y - 8;
+      line('el-top', exVertX, pbY, pbX - exVertX, 1);
+      line('el-v',   exVertX, pbY, 1, exBotY - pbY);
+      line('el-bot', exVertX, exBotY, 72, 1);
+      dot('el-dot', pbX, pbY);
+      // 구매 경험 최적화: BAG → 오른쪽 아래로 → 주석 (오른쪽 브래킷)
+      // 세로선은 두 오른쪽 주석(간편한 구매 경험 / 구매 경험 최적화)보다 더 바깥에 둬서 겹침 방지
+      const rightMost = Math.max(or.x + or.w, cr.x + cr.w);
+      const blVertX = rightMost + 28, blBotY = or.y + or.h / 2;
+      line('bl-top', bagX, bagY, blVertX - bagX, 1);
+      line('bl-v',   blVertX, bagY, 1, blBotY - bagY);
+      line('bl-bot', or.x + or.w + 8, blBotY, blVertX - (or.x + or.w + 8), 1);
+      dot('bl-dot', bagX, bagY);
+    }
+
     let current = 0;
     function loadProject(i) {
       const p = PROJECTS[i];
@@ -2280,12 +2453,18 @@
       if (infoDesc)    infoDesc.textContent    = p.summary || '';
       if (infoTags)    infoTags.innerHTML      = (p.tags || []).map((t) => '<span>' + esc(t) + '</span>').join('');
       if (infoLive)    infoLive.setAttribute('href', p.live || '#');
-      if (caseEl)    { caseEl.innerHTML = caseHTML(p); caseEl.scrollTop = 0; revealCase(); }
+      if (caseEl)    {
+        caseEl.innerHTML = caseHTML(p); caseEl.scrollTop = 0; revealCase();
+        requestAnimationFrame(positionShopConnectors);
+        [120, 350, 700, 1200, 2000].forEach((ms) => setTimeout(positionShopConnectors, ms));
+        caseEl.querySelectorAll('.ode-shop img').forEach((im) => { if (!im.complete) im.addEventListener('load', positionShopConnectors); });
+      }
       indexItems.forEach((li, k) => li.classList.toggle('is-active', k === i));
       prevBtn.disabled = i === 0;
       nextBtn.disabled = i === total - 1;
     }
     function renderViewer() { loadProject(current); placeIndexWheel(current); }
+    window.addEventListener('resize', positionShopConnectors);
     function goTo(i) {
       const n = Math.max(0, Math.min(total - 1, i));
       if (n === current) return;
