@@ -860,16 +860,14 @@
     #pj-viewer .ode-mp-annots--left  { left: 0; }
     #pj-viewer .ode-mp-annots--right { right: 0; }
     #pj-viewer .ode-mp-screen { margin: 0 28%; }
-    #pj-viewer .ode-mp-annot { position: absolute; width: 100%; }
-    #pj-viewer .ode-mp-annots--left  .ode-mp-annot { text-align: left; }
-    #pj-viewer .ode-mp-annots--right .ode-mp-annot { text-align: left; }
-    /* 화살표: 텍스트 블록 옆에 수평으로 뻗어서 스크린샷을 가리킴 */
+    #pj-viewer .ode-mp-annot { position: absolute; display: flex; align-items: flex-start; gap: 0.5rem; }
+    #pj-viewer .ode-mp-annots--left  .ode-mp-annot { flex-direction: row; }
+    #pj-viewer .ode-mp-annots--right .ode-mp-annot { flex-direction: row-reverse; }
+    /* 화살표: 텍스트 첫 줄 높이에 맞춤 */
     #pj-viewer .ode-mp-arrow {
-      position: absolute; top: 0.6em;
       display: flex; align-items: center; pointer-events: none;
+      margin-top: 0.35em; flex-shrink: 0;
     }
-    #pj-viewer .ode-mp-annots--left  .ode-mp-arrow { left: 100%; margin-left: 0; }
-    #pj-viewer .ode-mp-annots--right .ode-mp-arrow { right: 100%; margin-right: 0; }
     #pj-viewer .ode-mp-annots--left  .ode-mp-annot:nth-child(1) { top: -1%; }
     #pj-viewer .ode-mp-annots--left  .ode-mp-annot:nth-child(2) { top: 64%; }
     #pj-viewer .ode-mp-annots--right .ode-mp-annot:nth-child(1) { top: 14%; }
