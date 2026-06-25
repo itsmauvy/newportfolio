@@ -959,6 +959,29 @@
     #pj-viewer .ode-shop-note--right .ode-mp-annot-text { flex: 0 0 80%; }
     #pj-viewer .ode-shop-note--right .ode-mp-annot-text p + p { margin-top: 0.7em; }
 
+    /* STORE 섹션 */
+    #pj-viewer .ode-store { position: relative; background: #f5f1ed; padding: clamp(3rem,6vw,5rem) clamp(2rem,4vw,4rem) clamp(5rem,10vw,9rem); overflow: hidden; }
+    #pj-viewer .ode-store .ode-mp-header { margin-bottom: clamp(2.5rem,5vw,4rem); }
+    #pj-viewer .ode-store-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.8; z-index: 0; pointer-events: none; user-select: none; }
+    /* ODE 아웃트로 브랜드 비주얼 (STORE → REFLECTION 사이) */
+    #pj-viewer .ode-outro { position: relative; width: 100%; overflow: hidden; }
+    #pj-viewer .ode-outro img { width: 100%; height: clamp(360px,46vw,760px); object-fit: cover; display: block; }
+    #pj-viewer .ode-outro-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #fff; }
+    #pj-viewer .ode-outro-text h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(2.6rem,6.5vw,5.5rem); letter-spacing: 0.34em; margin: 0 0 0 0.34em; }
+    #pj-viewer .ode-outro-en { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.05rem,2.4vw,1.9rem); letter-spacing: 0.06em; margin-top: clamp(1rem,2.2vw,1.8rem); }
+    #pj-viewer .ode-outro-ko { font-size: clamp(0.72rem,1.1vw,0.9rem); letter-spacing: 0.18em; opacity: 0.82; margin-top: clamp(0.5rem,1vw,0.9rem); }
+    #pj-viewer .ode-store > .ode-mp-header, #pj-viewer .ode-store > .ode-store-stage { position: relative; z-index: 1; }
+    #pj-viewer .ode-store-stage { position: relative; max-width: 1080px; margin: 0 auto; padding-bottom: clamp(5rem,11vw,10rem); }
+    #pj-viewer .ode-store-shot { width: 47%; margin: 0 0 0 28%; }
+    #pj-viewer .ode-store-shot img { width: 100%; display: block; border-radius: 4px; box-shadow: 0 14px 50px rgba(43,36,32,0.16); }
+    #pj-viewer .ode-store-mobile { position: absolute; right: 12%; bottom: clamp(4.5rem,10vw,8.5rem); width: 17%; z-index: 3; filter: drop-shadow(0 14px 30px rgba(43,36,32,0.2)); }
+    #pj-viewer .ode-store-note { position: absolute; display: flex; width: 200px; }
+    #pj-viewer .ode-store-note .ode-mp-annot-text { word-break: keep-all; }
+    #pj-viewer .ode-store-note--a { left: 0; top: 24%; }
+    #pj-viewer .ode-store-note--b { left: 0; top: 58%; }
+    #pj-viewer .ode-store-note--c { right: 3%; bottom: 0; width: 270px; }
+    #pj-viewer .ode-store-connectors { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
     /* ODE Design System 섹션 */
     #pj-viewer .ode-ds {
       background: #2b2420; padding: clamp(3rem,6vw,5rem) clamp(2.5rem,5vw,4.5rem);
@@ -1258,6 +1281,14 @@
     #pj-viewer .rf__card:nth-child(1) { transition-delay: 0.05s; }
     #pj-viewer .rf__card:nth-child(2) { transition-delay: 0.15s; }
     #pj-viewer .rf__card:nth-child(3) { transition-delay: 0.25s; }
+    /* REFLECTION — ODE 브랜드 무드(웜톤) */
+    #pj-viewer .rf--ode { background: linear-gradient(180deg, #f5f1ed 0%, #f0e8df 100%); }
+    #pj-viewer .rf--ode .rf__label { color: #8d775f; }
+    #pj-viewer .rf--ode .rf__title { color: #2b2420; }
+    #pj-viewer .rf--ode .rf__card { border-top-color: rgba(43,36,32,0.18); }
+    #pj-viewer .rf--ode .rf__card-en { color: #8d775f; }
+    #pj-viewer .rf--ode .rf__card-ko { color: #2b2420; }
+    #pj-viewer .rf--ode .rf__card-desc { color: rgba(43,36,32,0.62); }
     #pj-viewer .pjv-case::-webkit-scrollbar { width: 4px; }
     #pj-viewer .pjv-case::-webkit-scrollbar-track { background: transparent; }
     #pj-viewer .pjv-case::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.22); border-radius: 100px; }
@@ -1752,6 +1783,13 @@
         caseOdeMainPage: true,
         caseOdeAbout: true,
         caseOdeShop: true,
+        caseOdeStore: true,
+        caseClosing: true,
+        reflection: [
+          ['What I Learned', '사용자의 시선으로 생각하기', "'내가 소비자라면 어떤 제품을 원할까?'<br>가장 중요한 출발점이라는 것을 다시 배웠습니다."],
+          ['Room to Grow', '제품 디자인의 완성도', '손에 쥐는 경험과 패키지 아이덴티티는<br>앞으로 더 발전시키고 싶습니다.'],
+          ['Next Step', '브랜드 경험의 확장', 'ODE를 제품이 아닌,<br>일상 속 브랜드 경험으로 발전시키고 싶습니다.'],
+        ],
         caseTitle: '실무의 경험에서 시작한\n데일리 포켓 뷰티',
         caseLead: '뷰티 실무에서 발견한 니즈를 바탕으로,\n포켓 뷰티 브랜드 ODE를 기획했습니다.',
         period: '5 Days',
@@ -2119,14 +2157,15 @@
         </section>`;
     }
 
-    function rfSectionHTML() {
-      const cards = [
+    function rfSectionHTML(p) {
+      const cards = (p && p.reflection) || [
         ['What I Learned', '첫인상이 중요하다', '첫 화면에서 게임의 매력을<br>빠르게 전달하는 경험을<br>설계하는 법을 배웠습니다.'],
         ['Room to Grow', '사용자 몰입 강화', '단순한 애니메이션을 넘어<br>사용자의 행동에 반응하는<br>인터랙션을 더 구현하고 싶습니다.'],
         ['Next Step', '게임과 웹의 연결', '게임 정보와 커뮤니티를<br>실시간으로 연결하는<br>프로모션 사이트를 만들고 싶습니다.'],
       ];
+      const themeCls = (p && p.caseTheme === 'ode') ? ' rf--ode' : '';
       return `
-        <section class="rf">
+        <section class="rf${themeCls}">
           <span class="rf__label reveal">REFLECTION</span>
           <h2 class="rf__title reveal">프로젝트를 마치며</h2>
           <div class="rf__grid">
@@ -2265,6 +2304,56 @@
       </section>`;
     }
 
+    function odeStoreHTML() {
+      return `
+      <section class="ode-store">
+        <img class="ode-store-bg" src="ode/ode offline store bg.png" alt="" aria-hidden="true">
+        <header class="ode-mp-header reveal" style="--d:0s">
+          <p class="ode-mp-title">· STORE ·</p>
+          <p class="ode-mp-desc">제품과 브랜드를 가장 가까이에서 경험할 수 있는<br>공간으로 설계했습니다.</p>
+        </header>
+        <div class="ode-store-stage">
+          <div class="ode-store-shot reveal" style="--d:0.1s"><img src="ode/store page.jpg" alt="ODE Store"></div>
+          <img class="ode-store-mobile reveal" style="--d:0.25s" src="ode/mobile store.png" alt="ODE Store mobile">
+          <div class="ode-store-note ode-store-note--a reveal" style="--d:0.2s">
+            <div class="ode-mp-annot-text">
+              <strong>브랜드 무드를 담은 공간 비주얼</strong>
+              <p>쇼룸 이미지를 전면에 배치하여 방문 전<br>공간의 분위기를 직관적으로 전달했습니다.</p>
+            </div>
+          </div>
+          <div class="ode-store-note ode-store-note--b reveal" style="--d:0.3s">
+            <div class="ode-mp-annot-text">
+              <strong>방문 정보의 직관적인 구성</strong>
+              <p>위치, 운영시간, 연락처 등 핵심 정보를 한<br>영역에 정리해 빠르게 확인할 수 있도록 설계했습니다.</p>
+            </div>
+          </div>
+          <div class="ode-store-note ode-store-note--c reveal" style="--d:0.4s">
+            <div class="ode-mp-annot-text">
+              <strong>반응형 웹사이트</strong>
+              <p>노트북, 모바일, 데스크탑 등 다양한<br>기기에서 대응이 가능한 적용형 웹사이트입니다.</p>
+            </div>
+          </div>
+          <div class="ode-store-connectors">
+            <span class="cn-line sa-h"></span><span class="cn-dot sa-dot"></span>
+            <span class="cn-line sb-h"></span><span class="cn-dot sb-dot"></span>
+            <span class="cn-line sc-v"></span><span class="cn-dot sc-dot"></span>
+          </div>
+        </div>
+      </section>`;
+    }
+
+    function odeOutroHTML() {
+      return `
+      <section class="ode-outro reveal" style="--d:0s">
+        <img src="ode/ode hero.jpg" alt="ODE">
+        <div class="ode-outro-text">
+          <h2>ODE</h2>
+          <p class="ode-outro-en">An ode to everyday moments.</p>
+          <p class="ode-outro-ko">평범한 일상에 보내는 작은 찬가</p>
+        </div>
+      </section>`;
+    }
+
     function odeDesignSystemHTML() {
       return `
       <section class="ode-ds">
@@ -2378,10 +2467,12 @@
       if (p.caseOdeMainPage) body += odeMainPageHTML();
       if (p.caseOdeAbout) body += odeAboutHTML();
       if (p.caseOdeShop) body += odeShopHTML();
+      if (p.caseOdeStore) body += odeStoreHTML();
+      if (p.caseOdeStore) body += odeOutroHTML();
       if (p.caseBackground) body += bgSectionHTML();
       if (p.caseDesignSystem) body += dsSectionHTML();
       if (p.caseKeyInteraction) body += kiSectionHTML();
-      if (p.caseClosing) body += rfSectionHTML();
+      if (p.caseClosing) body += rfSectionHTML(p);
       if (Array.isArray(p.caseShots)) {
         // 수빈님이 디자인한 섹션 이미지를 풀 스택으로 (각 이미지 스크롤 reveal)
         body += '<div class="cs-shots">' + p.caseShots.map((src) =>
@@ -2443,6 +2534,40 @@
       dot('bl-dot', bagX, bagY);
     }
 
+    /* STORE 커넥터: 주석 → 스토어 스크린샷 / 모바일 목업 (offset 기반) */
+    function positionStoreConnectors() {
+      const sec = caseEl && caseEl.querySelector('.ode-store');
+      if (!sec) return;
+      const stage = sec.querySelector('.ode-store-stage');
+      const cont = sec.querySelector('.ode-store-connectors');
+      const shot = sec.querySelector('.ode-store-shot img');
+      const mobile = sec.querySelector('.ode-store-mobile');
+      const na = sec.querySelector('.ode-store-note--a');
+      const nb = sec.querySelector('.ode-store-note--b');
+      const nc = sec.querySelector('.ode-store-note--c');
+      if (!stage || !cont || !shot || !mobile || !na || !nb || !nc) return;
+      /* 커넥터 컨테이너는 stage 기준(inset:0)이므로 좌표도 stage 기준으로 계산 */
+      const rel = (el) => { let x = 0, y = 0, n = el; while (n && n !== stage) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; } return { x: x, y: y, w: el.offsetWidth, h: el.offsetHeight }; };
+      const s = rel(shot); if (!s.w) return;
+      const m = rel(mobile), a = rel(na), b = rel(nb), c = rel(nc);
+      const line = (cls, l, t, w, h) => { const e = cont.querySelector('.' + cls); if (e) { e.style.left = l + 'px'; e.style.top = t + 'px'; e.style.width = Math.max(0, w) + 'px'; e.style.height = Math.max(0, h) + 'px'; } };
+      const dot = (cls, x, y) => { const e = cont.querySelector('.' + cls); if (e) { e.style.left = (x - 2.5) + 'px'; e.style.top = (y - 2) + 'px'; } };
+      // a: 브랜드 무드 → 스토어 히어로(좌측 가장자리)
+      const ay = a.y + 9;
+      line('sa-h', a.x + a.w + 8, ay, s.x - (a.x + a.w + 8), 1);
+      dot('sa-dot', s.x, ay);
+      // b: 방문 정보 → 스토어 정보 영역
+      const by = b.y + 9;
+      line('sb-h', b.x + b.w + 8, by, s.x - (b.x + b.w + 8), 1);
+      dot('sb-dot', s.x, by);
+      // c: 반응형 → 모바일 목업(세로선). 세로선을 모바일 중앙에 두고 주석 좌측을 거기에 맞춤(좌측정렬)
+      const cx = m.x + m.w / 2, mBottom = m.y + m.h;
+      nc.style.left = cx + 'px'; nc.style.right = 'auto';
+      line('sc-v', cx, mBottom, 1, c.y - mBottom);
+      dot('sc-dot', cx, mBottom);
+    }
+    function positionCaseConnectors() { positionShopConnectors(); positionStoreConnectors(); }
+
     let current = 0;
     function loadProject(i) {
       const p = PROJECTS[i];
@@ -2455,16 +2580,16 @@
       if (infoLive)    infoLive.setAttribute('href', p.live || '#');
       if (caseEl)    {
         caseEl.innerHTML = caseHTML(p); caseEl.scrollTop = 0; revealCase();
-        requestAnimationFrame(positionShopConnectors);
-        [120, 350, 700, 1200, 2000].forEach((ms) => setTimeout(positionShopConnectors, ms));
-        caseEl.querySelectorAll('.ode-shop img').forEach((im) => { if (!im.complete) im.addEventListener('load', positionShopConnectors); });
+        requestAnimationFrame(positionCaseConnectors);
+        [120, 350, 700, 1200, 2000].forEach((ms) => setTimeout(positionCaseConnectors, ms));
+        caseEl.querySelectorAll('.ode-shop img, .ode-store img').forEach((im) => { if (!im.complete) im.addEventListener('load', positionCaseConnectors); });
       }
       indexItems.forEach((li, k) => li.classList.toggle('is-active', k === i));
       prevBtn.disabled = i === 0;
       nextBtn.disabled = i === total - 1;
     }
     function renderViewer() { loadProject(current); placeIndexWheel(current); }
-    window.addEventListener('resize', positionShopConnectors);
+    window.addEventListener('resize', positionCaseConnectors);
     function goTo(i) {
       const n = Math.max(0, Math.min(total - 1, i));
       if (n === current) return;
