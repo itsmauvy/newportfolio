@@ -1206,54 +1206,6 @@
     update();
   })();
 
-  /* ── 3.5) BANNER DESIGN: 제목 좌우 분리 → 세로 배너(도형) 한 장씩 상승 (pin + scrub) ── */
-  (function () {
-    const sec = document.getElementById('banner-design');
-    if (!sec || typeof ScrollTrigger === 'undefined') return;
-    const wL = sec.querySelector('.bd-w-l');
-    const wR = sec.querySelector('.bd-w-r');
-    const banners = gsap.utils.toArray('#banner-design .bd-banner');
-    const N = banners.length;
-    const card = banners[0];
-    const S = 0.5;       // 제목 축소 비율
-    const GAP = 60;      // 텍스트 ↔ 배너 간격(px)
-    // 단어를 중앙 배너 양옆 일정 간격(GAP)에 플랭킹시키는 x
-    const splitX = (word, side) => {
-      const cardW = card.offsetWidth || (innerHeight * 0.34);
-      const vc = innerWidth / 2;
-      const layoutCenter = word.offsetLeft + word.offsetWidth / 2;
-      const scaledHalf = word.offsetWidth * S / 2;
-      return (vc + side * (cardW / 2 + GAP + scaledHalf)) - layoutCenter;
-    };
-    gsap.set(banners, { yPercent: 130, opacity: 0, scale: 1 });
-    const SPLIT = 1, STEP = 0.72, RISE = 0.8;
-    const total = SPLIT + (N - 1) * STEP + RISE;
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#banner-design .bd-pin',
-        start: 'top top',
-        end: '+=' + Math.round(total * 60) + '%',
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-    // phase 1: 제목 좌우 분리(배너와 일정 간격) + 축소
-    tl.to(wL, { x: () => splitX(wL, -1), scale: S, ease: 'none', duration: SPLIT }, 0)
-      .to(wR, { x: () => splitX(wR, 1),  scale: S, ease: 'none', duration: SPLIT }, 0);
-    // phase 2: 배너 한 장씩 상승 + 이전 것 살짝 stack(위로+축소+페이드, 최신이 앞)
-    banners.forEach((b, i) => {
-      const t = SPLIT + i * STEP;
-      tl.fromTo(b, { yPercent: 130, opacity: 0, scale: 1 },
-                   { yPercent: 0, opacity: 1, scale: 1, ease: 'power2.out', duration: RISE }, t);
-      for (let j = 0; j < i; j++) {
-        const d = i - j;
-        tl.to(banners[j], { yPercent: -8 * d, scale: 1 - 0.05 * d, opacity: Math.max(0, 1 - 0.28 * d), ease: 'power2.out', duration: RISE }, t);
-      }
-    });
-  })();
-
   /* ── 4) ABOUT 문장: 스크롤하며 단어별 색 채우기 (Trionn 참고) ── */
   (function () {
     const words = document.querySelectorAll('.about-fill .w');
@@ -1898,6 +1850,51 @@
     });
   })();
 
+  /* ── 3.5) BANNER DESIGN: Projects 이후 초기화 — 핀 스페이서 레이아웃 확정 후 위치 계산 ── */
+  (function () {
+    const sec = document.getElementById('banner-design');
+    if (!sec || typeof ScrollTrigger === 'undefined') return;
+    const wL = sec.querySelector('.bd-w-l');
+    const wR = sec.querySelector('.bd-w-r');
+    const banners = gsap.utils.toArray('#banner-design .bd-banner');
+    const N = banners.length;
+    const card = banners[0];
+    const S = 0.5;
+    const GAP = 60;
+    const splitX = (word, side) => {
+      const cardW = card.offsetWidth || (innerHeight * 0.34);
+      const vc = innerWidth / 2;
+      const layoutCenter = word.offsetLeft + word.offsetWidth / 2;
+      const scaledHalf = word.offsetWidth * S / 2;
+      return (vc + side * (cardW / 2 + GAP + scaledHalf)) - layoutCenter;
+    };
+    gsap.set(banners, { yPercent: 130, opacity: 0, scale: 1 });
+    const SPLIT = 1, STEP = 0.72, RISE = 0.8;
+    const total = SPLIT + (N - 1) * STEP + RISE;
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#banner-design .bd-pin',
+        start: 'top top',
+        end: '+=' + Math.round(total * 60) + '%',
+        pin: true,
+        scrub: 1,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+    tl.to(wL, { x: () => splitX(wL, -1), scale: S, ease: 'none', duration: SPLIT }, 0)
+      .to(wR, { x: () => splitX(wR, 1),  scale: S, ease: 'none', duration: SPLIT }, 0);
+    banners.forEach((b, i) => {
+      const t = SPLIT + i * STEP;
+      tl.fromTo(b, { yPercent: 130, opacity: 0, scale: 1 },
+                   { yPercent: 0, opacity: 1, scale: 1, ease: 'power2.out', duration: RISE }, t);
+      for (let j = 0; j < i; j++) {
+        const d = i - j;
+        tl.to(banners[j], { yPercent: -8 * d, scale: 1 - 0.05 * d, opacity: Math.max(0, 1 - 0.28 * d), ease: 'power2.out', duration: RISE }, t);
+      }
+    });
+  })();
+
   /* ── 프리로더 (텍스트 안에 물이 차오르는 효과 + loading 카운터) ── 첫 방문 시에만 ── */
   (function () {
     const el = document.getElementById('preloader');
@@ -1993,6 +1990,9 @@
       }, 1200);
     }
   })();
+
+  // 모든 ScrollTrigger 초기화 완료 후 한 번 갱신 — 핀 스페이서 추가로 바뀐 레이아웃 반영
+  ScrollTrigger.refresh();
 })();
 </script>
 </body>
