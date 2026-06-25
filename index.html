@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>수빈 포트폴리오</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Gowun+Batang:wght@400;700&display=swap" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { background: #0a0a0b; }
@@ -699,7 +701,7 @@
     @media (prefers-reduced-motion: reduce) { #pj-viewer .cs-snow { display: none; } }
     /* Background 섹션 (수빈 디자인 매칭) */
     #pj-viewer .cs-bg { position: relative; overflow: hidden; width: 100%; margin-bottom: 0; padding: 100px 6%; text-align: center; background: linear-gradient(180deg, #d6eaf8 0%, #c5ddf0 55%, #b7d4ea 100%); }
-    #pj-viewer .cs-bg-eyebrow { display: block; font-size: 0.82rem; letter-spacing: 0.18em; color: #5f80a0; margin-bottom: 14px; }
+    #pj-viewer .cs-bg-eyebrow { display: block; font-family: 'Pretendard', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.2em; color: #1a6da8; margin-bottom: 14px; }
     #pj-viewer .cs-bg-title { font-size: clamp(1.6rem, 2.4vw, 2.1rem); font-weight: 700; letter-spacing: -0.01em; color: #15324f; }
     #pj-viewer .cs-bg-desc { max-width: 580px; margin: 18px auto 0; font-size: 0.92rem; line-height: 1.75; color: #5e7d9c; }
     #pj-viewer .cs-bg-glabel { display: block; margin-top: 64px; font-size: 1rem; letter-spacing: 0.14em; color: #46688a; }
@@ -735,7 +737,7 @@
     @font-face { font-family: 'OngleipParkDahyeon'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_ParkDaHyun.woff2') format('woff2'); font-weight: normal; font-display: swap; }
     #pj-viewer .cs-ds { position: relative; width: 100%; padding: 88px 6% 96px; background: linear-gradient(180deg, #b7d4ea 0%, #d4e8f7 12%, #eaf3fb 48%, #e6f0fa 100%); }
     #pj-viewer .cs-ds-inner { max-width: 1100px; margin: 0 auto; }
-    #pj-viewer .cs-ds-title { display: block; text-align: center; font-size: 0.82rem; font-weight: 400; letter-spacing: 0.18em; color: #5f80a0; }
+    #pj-viewer .cs-ds-title { display: block; text-align: center; font-family: 'Pretendard', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.2em; color: #1a6da8; }
     #pj-viewer .cs-ds-sub { text-align: center; margin-top: 40px; font-size: 1rem; font-weight: 700; color: #15324f; }
     #pj-viewer .cs-ds-swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; margin-top: 30px; }
     #pj-viewer .cs-ds-swatch { display: flex; flex-direction: column; align-items: center; }
@@ -769,6 +771,57 @@
     #pj-viewer .cs-ds-swatch:nth-child(3) { transition-delay: 0.20s; }
     #pj-viewer .cs-ds-swatch:nth-child(4) { transition-delay: 0.28s; }
     #pj-viewer .cs-ds-swatch:nth-child(5) { transition-delay: 0.36s; }
+    /* KEY INTERACTION (myportfolio sledding 이식 · 스코프/배경연결/reveal=cs-in) */
+    #pj-viewer .ki { position: relative; overflow: hidden; width: 100%; padding: 104px 6% 112px; background: linear-gradient(180deg, #e6f0fa 0%, #f3f9fe 16%, #ffffff 44%); font-family: 'Pretendard', sans-serif; }
+    #pj-viewer .ki__frog { position: absolute; top: 22px; right: -28px; width: 158px; pointer-events: none; z-index: 1; }
+    #pj-viewer .ki__header { text-align: center; margin-bottom: 88px; }
+    #pj-viewer .ki__label { display: block; font-size: 16px; font-weight: 700; letter-spacing: 0.24em; color: #1a6da8; margin-bottom: 14px; }
+    #pj-viewer .ki__title { font-size: clamp(28px, 2.5vw, 40px); font-weight: 800; color: #0d2d4a; letter-spacing: -0.02em; }
+    #pj-viewer .ki__points { position: relative; max-width: 1240px; margin: 0 auto; }
+    #pj-viewer .ki__point { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; margin-bottom: 130px; }
+    #pj-viewer .ki__point:last-child { margin-bottom: 0; }
+    #pj-viewer .ki__media { order: 1; position: relative; isolation: isolate; }
+    #pj-viewer .ki__media::before { content: ""; position: absolute; top: -22px; left: 0; transform: translate(-50%, -50%); width: 92px; height: 92px; border-radius: 50%; background: linear-gradient(135deg, rgba(186,219,248,1) 0%, rgba(186,219,248,0) 100%); z-index: -1; pointer-events: none; opacity: 0; transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1); }
+    #pj-viewer .ki__point--reverse .ki__media::before { left: auto; right: 0; transform: translate(50%, -50%); background: linear-gradient(225deg, rgba(186,219,248,1) 0%, rgba(186,219,248,0) 100%); }
+    #pj-viewer .ki__point.cs-in .ki__media::before { opacity: 1; }
+    #pj-viewer .ki__content { order: 2; max-width: 480px; }
+    #pj-viewer .ki__point--reverse .ki__media { order: 2; }
+    #pj-viewer .ki__point--reverse .ki__content { order: 1; margin-left: auto; }
+    #pj-viewer .ki__badge { position: absolute; top: -54px; left: 0; display: inline-flex; align-items: center; z-index: 4; pointer-events: none; }
+    #pj-viewer .ki__point--reverse .ki__badge { left: auto; right: 0; }
+    #pj-viewer .ki__point--reverse .ki__badge-text { text-align: right; }
+    #pj-viewer .ki__badge-text { font-size: 16px; font-weight: 600; letter-spacing: 0.05em; line-height: 1.4; color: #1d3a4f; }
+    #pj-viewer .ki__media-box { position: relative; aspect-ratio: 4 / 3; border-radius: 22px; background: linear-gradient(135deg, #eef9ff 0%, #e2f3fe 100%); border: 1px solid rgba(255,255,255,0.85); box-shadow: 0 10px 30px rgba(55,127,165,0.10); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    #pj-viewer .ki__media-box::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.5) 50%, transparent 62%); transform: translateX(-100%); animation: ki-shimmer 2.6s ease-in-out infinite; pointer-events: none; }
+    @keyframes ki-shimmer { 0% { transform: translateX(-100%); } 55%, 100% { transform: translateX(100%); } }
+    #pj-viewer .ki__type { font-size: 16px; font-weight: 700; letter-spacing: 0.18em; color: #3a78b4; text-transform: uppercase; margin-bottom: 16px; }
+    #pj-viewer .ki__name { font-size: 18px; font-weight: 600; color: rgba(13,45,74,0.62); margin-bottom: 10px; }
+    #pj-viewer .ki__headline { font-size: clamp(22px, 1.9vw, 28px); font-weight: 800; color: #0d2d4a; letter-spacing: -0.01em; line-height: 1.4; margin-bottom: 20px; }
+    #pj-viewer .ki__desc { font-size: 16px; line-height: 1.85; color: rgba(13,45,74,0.55); margin-bottom: 24px; }
+    #pj-viewer .ki__tags { display: flex; flex-wrap: wrap; gap: 10px; }
+    #pj-viewer .ki__tag { font-size: 16px; font-weight: 600; color: #1a6da8; background: rgba(255,255,255,0.7); border: 1px solid rgba(26,109,168,0.25); border-radius: 100px; padding: 5px 16px; }
+    #pj-viewer .ki__badge, #pj-viewer .ki__media-box, #pj-viewer .ki__content { opacity: 0; transform: translateY(36px); transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1); }
+    #pj-viewer .ki__point.cs-in .ki__badge, #pj-viewer .ki__point.cs-in .ki__media-box, #pj-viewer .ki__point.cs-in .ki__content { opacity: 1; transform: none; }
+    #pj-viewer .ki__point.cs-in .ki__media-box { transition-delay: 0.05s; }
+    #pj-viewer .ki__point.cs-in .ki__content { transition-delay: 0.12s; }
+    @media (max-width: 1024px) {
+      #pj-viewer .ki__point { grid-template-columns: 1fr; gap: 22px; margin-bottom: 96px; padding-top: 44px; }
+      #pj-viewer .ki__point .ki__badge { position: static; order: 0; margin: 0 0 18px 0; }
+      #pj-viewer .ki__point .ki__media { order: 1; }
+      #pj-viewer .ki__point .ki__content { order: 2; max-width: none; margin-left: 0; }
+    }
+    /* REFLECTION / 마무리 (myportfolio 이식 · 스코프 · 배경연결 · 중앙) */
+    #pj-viewer .rf { width: 100%; padding: 104px 6% 120px; background: linear-gradient(180deg, #ffffff 0%, #f1f8fc 34%, #e8f5fc 100%); font-family: 'Pretendard', sans-serif; }
+    #pj-viewer .rf__label { display: block; text-align: center; font-size: 16px; font-weight: 700; letter-spacing: 0.2em; color: #3a78b4; margin-bottom: 24px; }
+    #pj-viewer .rf__title { text-align: center; font-size: clamp(32px, 3.4vw, 52px); font-weight: 700; color: #0d2d4a; margin-bottom: 72px; }
+    #pj-viewer .rf__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+    #pj-viewer .rf__card { border-top: 2px solid rgba(26,109,168,0.2); padding-top: 26px; }
+    #pj-viewer .rf__card-en { font-family: 'Cormorant Garamond', serif; font-size: 16px; letter-spacing: 0.1em; color: #3a78b4; }
+    #pj-viewer .rf__card-ko { font-family: 'Gowun Batang', serif; font-size: 21px; font-weight: 700; color: #0d2d4a; margin: 12px 0 16px; }
+    #pj-viewer .rf__card-desc { font-family: 'Gowun Batang', serif; font-size: 16px; line-height: 1.95; color: rgba(13,45,74,0.6); }
+    #pj-viewer .rf__card:nth-child(1) { transition-delay: 0.05s; }
+    #pj-viewer .rf__card:nth-child(2) { transition-delay: 0.15s; }
+    #pj-viewer .rf__card:nth-child(3) { transition-delay: 0.25s; }
     #pj-viewer .pjv-case::-webkit-scrollbar { width: 4px; }
     #pj-viewer .pjv-case::-webkit-scrollbar-track { background: transparent; }
     #pj-viewer .pjv-case::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.22); border-radius: 100px; }
@@ -1182,6 +1235,8 @@
         tools: 'Figma · Photoshop · CapCut · AI (Claude · ChatGPT)',
         caseBackground: true,
         caseDesignSystem: true,
+        caseKeyInteraction: true,
+        caseClosing: true,
         caseShots: [
           // 수빈님이 디자인해 내보낸 섹션 이미지 경로를 여기 순서대로 추가
           // 예: 'sledding/case study/02-background.png',
@@ -1529,6 +1584,61 @@
         </section>`;
     }
 
+    function kiSectionHTML() {
+      const V = 'https://itsmauvy.github.io/myportfolio/assets/videos/';
+      const pts = [
+        { v: 'loading.mp4', rev: false, op: '', type: 'Loading Page', name: '로딩 화면', head: '게임이 시작되기 전, 기대감을 높이는 첫 경험', desc: '캐릭터 애니메이션을 활용해 대기 시간을 자연스럽게 연결하고,<br>게임의 분위기를 첫 화면부터 전달했습니다.', tags: ['CSS', 'GSAP'] },
+        { v: 'cta-frog.mp4', rev: true, op: 'object-position:5% center;', type: 'CTA Section', name: 'CTA 버튼 개구리', head: '버튼 위에 올라타는 개구리', desc: 'CTA 버튼에 호버하면 개구리가 버튼 위로 폴짝 뛰어올라,<br>클릭을 자연스럽게 유도하는 마이크로 인터랙션을 더했습니다.', tags: ['GSAP', 'Hover', 'back.out'] },
+        { v: 'scroll-frog.mp4', rev: false, op: '', type: 'Video Section', name: '스크롤 프로그', head: '스크롤에 맞춰 비탈을 내려오는 개구리', desc: '스크롤 진행도에 1:1로 연동해 개구리가 비탈을 따라 미끄러지며,<br>게임의 썰매 활강 감각을 웹으로 옮겼습니다.', tags: ['GSAP ScrollTrigger', 'Scrub'] },
+        { v: 'frog-mole.mp4', rev: true, op: 'object-position:100% center;', type: 'Intro Section', name: '게임 소개 카드', head: '마우스를 따라 튀어나오고 떨어지는 개구리', desc: '마우스가 닿는 모서리에서 개구리가 톡 튀어나오고,<br>빠져나가는 방향으로 쏙 떨어지듯 사라지는 두더지식 위트를 더했습니다.', tags: ['GSAP', 'Hover', 'back.out'] },
+        { v: 'frog-snow-attack.mp4', rev: false, op: '', type: 'Character Section', name: '눈덩이 맞기', head: '클릭하면 팡 터지는 눈덩이', desc: '캐릭터 영역을 클릭하면 그 자리에 눈덩이가 팡 터지며,<br>게임 속 눈싸움의 재미를 인터랙션으로 옮겼습니다.', tags: ['GSAP', 'Click', 'back.out'] },
+        { v: 'frog-scrollbar.mp4', rev: true, op: '', type: 'Media Gallery', name: 'frogback 스크롤바', head: '개구리 썰매로 보는 갤러리 진행도', desc: '갤러리를 넘길 때마다<br>개구리 썰매가 눈길 트랙을 따라 이동하며 진행도를 보여주고,<br>트랙을 직접 끌어 원하는 장면으로 미끄러질 수 있습니다.', tags: ['GSAP', 'Custom Scrollbar', 'power3.out'] },
+        { v: 'news-frog.mp4', rev: false, op: '', type: 'News Section', name: '방향키 내비게이션', head: '방향키로 카드 사이를 뛰어다니는 개구리', desc: '뉴스 섹션이 화면에 들어오면<br>←→ 방향키로 개구리가 카드 사이를 폴짝 건너뛰고,<br>↑↓ 키로 점프·착지하는 작은 게임성을 더했습니다.', tags: ['GSAP', 'Keyboard', 'Game-like'] },
+      ];
+      const points = pts.map((p, i) => `
+        <div class="ki__point${p.rev ? ' ki__point--reverse' : ''}">
+          <div class="ki__badge"><span class="ki__badge-text">INTERACTION<br>POINT ${String(i + 1).padStart(2, '0')}</span></div>
+          <div class="ki__media"><div class="ki__media-box"><video src="${V}${p.v}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;${p.op}display:block;"></video></div></div>
+          <div class="ki__content">
+            <p class="ki__type">${p.type}</p>
+            <p class="ki__name">${p.name}</p>
+            <h3 class="ki__headline">${p.head}</h3>
+            <p class="ki__desc">${p.desc}</p>
+            <div class="ki__tags">${p.tags.map((t) => `<span class="ki__tag">${t}</span>`).join('')}</div>
+          </div>
+        </div>`).join('');
+      return `
+        <section class="ki">
+          <img class="ki__frog" src="sledding/case study/frog key interaction.png" alt="">
+          <div class="ki__header">
+            <span class="ki__label">KEY INTERACTION</span>
+            <h2 class="ki__title">웹에서 게임을 경험하다</h2>
+          </div>
+          <div class="ki__points">${points}</div>
+        </section>`;
+    }
+
+    function rfSectionHTML() {
+      const cards = [
+        ['What I Learned', '첫인상이 중요하다', '첫 화면에서 게임의 매력을<br>빠르게 전달하는 경험을<br>설계하는 법을 배웠습니다.'],
+        ['Room to Grow', '사용자 몰입 강화', '단순한 애니메이션을 넘어<br>사용자의 행동에 반응하는<br>인터랙션을 더 구현하고 싶습니다.'],
+        ['Next Step', '게임과 웹의 연결', '게임 정보와 커뮤니티를<br>실시간으로 연결하는<br>프로모션 사이트를 만들고 싶습니다.'],
+      ];
+      return `
+        <section class="rf">
+          <span class="rf__label reveal">REFLECTION</span>
+          <h2 class="rf__title reveal">프로젝트를 마치며</h2>
+          <div class="rf__grid">
+            ${cards.map((c) => `
+            <div class="rf__card reveal">
+              <span class="rf__card-en">${c[0]}</span>
+              <p class="rf__card-ko">${c[1]}</p>
+              <p class="rf__card-desc">${c[2]}</p>
+            </div>`).join('')}
+          </div>
+        </section>`;
+    }
+
     function caseHTML(p) {
       const heroImg = p.caseHero || p.hero;
       const hero = `
@@ -1546,6 +1656,8 @@
       let body = '';
       if (p.caseBackground) body += bgSectionHTML();
       if (p.caseDesignSystem) body += dsSectionHTML();
+      if (p.caseKeyInteraction) body += kiSectionHTML();
+      if (p.caseClosing) body += rfSectionHTML();
       if (Array.isArray(p.caseShots)) {
         // 수빈님이 디자인한 섹션 이미지를 풀 스택으로 (각 이미지 스크롤 reveal)
         body += '<div class="cs-shots">' + p.caseShots.map((src) =>
@@ -1569,7 +1681,7 @@
           if (e.isIntersecting) { e.target.classList.add('cs-in'); caseObserver.unobserve(e.target); }
         });
       }, { root: caseEl, threshold: 0.1, rootMargin: '0px 0px 0px 0px' });
-      caseEl.querySelectorAll('.reveal, .cs-deco-rise, .cs-deco-fade').forEach((el) => caseObserver.observe(el));
+      caseEl.querySelectorAll('.reveal, .cs-deco-rise, .cs-deco-fade, .ki__point').forEach((el) => caseObserver.observe(el));
     }
 
     let current = 0;
