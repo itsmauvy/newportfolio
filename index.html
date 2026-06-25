@@ -601,7 +601,7 @@
     .pjv-close:hover::before { transform: scale(1); }
     .pjv-close:hover svg { color: #0a0a0b; }
     #pj-viewer .pjv-stage {
-      display: grid; grid-template-columns: 0.66fr 1.34fr; gap: 5vw;
+      display: grid; grid-template-columns: 420px 1fr; gap: 4vw;
       height: 100%; padding: 9vh 4vw 11vh;
       transition: opacity 0.25s ease;
     }
@@ -660,6 +660,115 @@
     #pj-viewer .pjv-index button:hover { color: rgba(255, 255, 255, 0.8); }
     #pj-viewer .pjv-index li.is-active button { color: #fff; }
     #pj-viewer .pjv-case { overflow-y: auto; overflow-x: hidden; padding-right: 1.4vw; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.22) transparent; }
+    /* 케이스 스터디 (2단 오른쪽 칼럼에 맞춤) */
+    #pj-viewer .cs-wrap { width: 100%; }
+    #pj-viewer .cs-hero { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #1a1a1f; margin-bottom: 0; display: block; }
+    #pj-viewer .cs-hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    #pj-viewer .cs-hero-text { position: absolute; left: 6%; bottom: 7%; max-width: 54%; }
+    #pj-viewer .cs-hero-title { font-size: clamp(2rem, 3.6vw, 3.4rem); font-weight: 700; line-height: 1.14; letter-spacing: -0.02em; color: #14233a; white-space: pre-line; }
+    #pj-viewer .cs-hero-lead { margin-top: 1.5rem; font-size: 0.92rem; line-height: 1.7; color: rgba(20, 35, 58, 0.72); white-space: pre-line; }
+    #pj-viewer .cs-meta { display: inline-flex; gap: 48px; margin-top: 2rem; border: 1px solid rgba(20, 35, 58, 0.28); border-radius: 10px; padding: 14px 24px; }
+    #pj-viewer .cs-meta-col span { display: block; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(20, 35, 58, 0.55); margin-bottom: 5px; }
+    #pj-viewer .cs-meta-col p { font-size: 0.85rem; color: #14233a; }
+    #pj-viewer .cs-body { width: 100%; }
+    /* 비대칭 좌(텍스트) / 우(미디어) */
+    #pj-viewer .cs-section { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: 24px; align-items: start; margin-bottom: 120px; }
+    #pj-viewer .cs-section:last-child { margin-bottom: 0; }
+    #pj-viewer .cs-text { position: sticky; top: 9vh; }
+    #pj-viewer .cs-section h3 { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); margin-bottom: 18px; }
+    #pj-viewer .cs-section p { font-size: 1.02rem; line-height: 1.75; color: rgba(255, 255, 255, 0.82); }
+    #pj-viewer .cs-figure { width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: linear-gradient(135deg, #26262b, #141416); display: flex; align-items: center; justify-content: center; }
+    #pj-viewer .cs-figure span { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.28); }
+    #pj-viewer .cs-figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* 디자인 섹션 이미지 풀 스택 */
+    #pj-viewer .cs-shots { display: flex; flex-direction: column; gap: 0; }
+    #pj-viewer .cs-shot { width: 100%; overflow: hidden; }
+    #pj-viewer .cs-shot img { vertical-align: top; }
+    #pj-viewer .cs-shot img { width: 100%; height: auto; display: block; }
+    /* 스크롤 reveal (흔히 쓰는 fade + 살짝 상승) */
+    #pj-viewer .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.8s ease, transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1); will-change: opacity, transform; }
+    #pj-viewer .reveal.cs-in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { #pj-viewer .reveal { opacity: 1; transform: none; transition: none; } }
+    /* 케이스 영역 전용: CSS 눈 + 커스텀 커서 */
+    #pjvCase, #pjvCase * { cursor: none; }
+    #pj-viewer .cs-snow { position: fixed; overflow: hidden; pointer-events: none; z-index: 6; }
+    #pj-viewer .cs-snow .flake { position: absolute; top: 0; display: block; border-radius: 50%; background: #fff; box-shadow: 0 0 4px rgba(255, 255, 255, 0.55); animation-name: csFall; animation-timing-function: linear; animation-iteration-count: infinite; will-change: transform; }
+    @keyframes csFall { from { transform: translate3d(0, -12vh, 0); } to { transform: translate3d(var(--drift, 0px), 110vh, 0); } }
+    #pj-viewer .cs-cursor { position: fixed; left: 0; top: 0; width: 64px; height: auto; pointer-events: none; z-index: 50; opacity: 0; transition: opacity 0.18s ease; transform: translate(-200px, -200px); will-change: transform, opacity; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.28)); }
+    #pj-viewer .cs-cursor.is-on { opacity: 1; }
+    @media (prefers-reduced-motion: reduce) { #pj-viewer .cs-snow { display: none; } }
+    /* Background 섹션 (수빈 디자인 매칭) */
+    #pj-viewer .cs-bg { position: relative; overflow: hidden; width: 100%; margin-bottom: 0; padding: 100px 6%; text-align: center; background: linear-gradient(180deg, #d6eaf8 0%, #c5ddf0 55%, #b7d4ea 100%); }
+    #pj-viewer .cs-bg-eyebrow { display: block; font-size: 0.82rem; letter-spacing: 0.18em; color: #5f80a0; margin-bottom: 14px; }
+    #pj-viewer .cs-bg-title { font-size: clamp(1.6rem, 2.4vw, 2.1rem); font-weight: 700; letter-spacing: -0.01em; color: #15324f; }
+    #pj-viewer .cs-bg-desc { max-width: 580px; margin: 18px auto 0; font-size: 0.92rem; line-height: 1.75; color: #5e7d9c; }
+    #pj-viewer .cs-bg-glabel { display: block; margin-top: 64px; font-size: 1rem; letter-spacing: 0.14em; color: #46688a; }
+    #pj-viewer .cs-bg-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 36px; }
+    #pj-viewer .cs-bg-card { position: relative; overflow: hidden; text-align: center; background: #fff; border: 1px solid #d3e6f5; border-radius: 18px; padding: 40px 26px; box-shadow: 0 12px 30px rgba(90, 130, 170, 0.12); }
+    #pj-viewer .cs-bg-cnum { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); z-index: 0; font-size: 6.4rem; font-weight: 800; line-height: 1; color: rgba(120, 165, 205, 0.10); font-variant-numeric: tabular-nums; pointer-events: none; }
+    #pj-viewer .cs-bg-card > *:not(.cs-bg-cnum) { position: relative; z-index: 1; }
+    #pj-viewer .cs-bg-ceyebrow { display: block; font-size: 0.72rem; letter-spacing: 0.14em; color: #5f80a0; margin-bottom: 14px; }
+    #pj-viewer .cs-bg-ctitle { font-size: 1.3rem; font-weight: 700; color: #1c3a5a; margin-bottom: 16px; }
+    #pj-viewer .cs-bg-cdesc { font-size: 0.85rem; line-height: 1.75; color: #5e7d9c; }
+    #pj-viewer .cs-bg-foot { margin-top: 48px; display: flex; flex-direction: column; align-items: center; }
+    #pj-viewer .cs-bg-line { position: relative; width: 1.5px; height: 54px; background: #7c9cbb; }
+    #pj-viewer .cs-bg-line::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 7px; height: 7px; border-radius: 50%; background: #2f6fb0; transform: translate(-50%, 40%); }
+    #pj-viewer .cs-bg-quote { margin-top: 28px; font-size: 1.05rem; line-height: 1.7; color: #5e7d9c; }
+    #pj-viewer .cs-bg-quote b { color: #15324f; font-weight: 700; }
+    #pj-viewer .cs-bg-deco { position: absolute; pointer-events: none; }
+    #pj-viewer .flake-tl { top: 24px; left: 30px; width: 70px; transform: rotate(-8deg); }
+    #pj-viewer .flake-tr { top: 30px; right: 40px; width: 58px; }
+    #pj-viewer .flake-br { bottom: 26px; right: 24px; width: 130px; }
+    #pj-viewer .cs-bg-frog { position: absolute; left: 34px; bottom: 24px; width: 156px; pointer-events: none; }
+    /* Background 내부 요소 개별 reveal (스태거) */
+    #pj-viewer .cs-deco-rise { opacity: 0; transform: translateY(24px); transition: opacity 1s ease, transform 1s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    #pj-viewer .cs-deco-rise.cs-in { opacity: 1; transform: none; }
+    #pj-viewer .cs-deco-fade { opacity: 0; transition: opacity 1.1s ease; }
+    #pj-viewer .flake-tl.cs-in { opacity: 0.32; }
+    #pj-viewer .flake-tr.cs-in { opacity: 0.28; }
+    #pj-viewer .flake-br.cs-in { opacity: 0.4; }
+    #pj-viewer .cs-bg-cards .cs-bg-card:nth-child(1) { transition-delay: 0.05s; }
+    #pj-viewer .cs-bg-cards .cs-bg-card:nth-child(2) { transition-delay: 0.16s; }
+    #pj-viewer .cs-bg-cards .cs-bg-card:nth-child(3) { transition-delay: 0.27s; }
+    #pj-viewer .cs-bg-foot .cs-bg-quote { transition-delay: 0.12s; }
+    /* DESIGN SYSTEM 섹션 (Background 배경과 연결: 상단 #b7d4ea에서 시작) */
+    @font-face { font-family: 'OngleipParkDahyeon'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_ParkDaHyun.woff2') format('woff2'); font-weight: normal; font-display: swap; }
+    #pj-viewer .cs-ds { position: relative; width: 100%; padding: 88px 6% 96px; background: linear-gradient(180deg, #b7d4ea 0%, #d4e8f7 12%, #eaf3fb 48%, #e6f0fa 100%); }
+    #pj-viewer .cs-ds-inner { max-width: 1100px; margin: 0 auto; }
+    #pj-viewer .cs-ds-title { display: block; text-align: center; font-size: 0.82rem; font-weight: 400; letter-spacing: 0.18em; color: #5f80a0; }
+    #pj-viewer .cs-ds-sub { text-align: center; margin-top: 40px; font-size: 1rem; font-weight: 700; color: #15324f; }
+    #pj-viewer .cs-ds-swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; margin-top: 30px; }
+    #pj-viewer .cs-ds-swatch { display: flex; flex-direction: column; align-items: center; }
+    #pj-viewer .cs-ds-chip { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 26px; border: 1px solid rgba(17, 49, 67, 0.06); box-shadow: 0 12px 26px rgba(80, 120, 160, 0.14); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 18px; }
+    #pj-viewer .cs-ds-hex { font-size: 0.82rem; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+    #pj-viewer .cs-ds-hex.dark { color: #1c4258; }
+    #pj-viewer .cs-ds-hex.light { color: rgba(248, 253, 255, 0.92); }
+    #pj-viewer .cs-ds-name { margin-top: 16px; font-size: 0.92rem; font-weight: 700; color: #15324f; }
+    #pj-viewer .cs-ds-rule { height: 1px; background: rgba(30, 60, 90, 0.18); margin: 56px 0 40px; }
+    #pj-viewer .cs-ds-cols { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
+    #pj-viewer .cs-ds-cols::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(30, 60, 90, 0.18); }
+    #pj-viewer .cs-ds-coltitle { font-size: 1.1rem; font-weight: 700; color: #15324f; margin-bottom: 26px; }
+    #pj-viewer .cs-ds-types { display: flex; gap: 88px; }
+    #pj-viewer .cs-ds-type-row { display: flex; flex-direction: column; gap: 12px; }
+    #pj-viewer .cs-ds-sample { color: #15324f; line-height: 1.05; }
+    #pj-viewer .cs-ds-sample.font-display { font-family: 'OngleipParkDahyeon', "Comic Sans MS", cursive; font-size: 3.2rem; }
+    #pj-viewer .cs-ds-sample.font-body { font-family: Arial, Helvetica, sans-serif; font-size: 3.2rem; }
+    #pj-viewer .cs-ds-type-meta { font-size: 0.8rem; color: #5e7d9c; line-height: 1.55; }
+    #pj-viewer .cs-ds-type-meta b { color: #1c4258; font-weight: 700; }
+    #pj-viewer .cs-ds-comps { display: flex; flex-wrap: wrap; align-items: center; gap: 28px 52px; }
+    #pj-viewer .cs-ds-comps-col { display: flex; flex-direction: column; }
+    #pj-viewer .cs-ds-comp-row { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+    #pj-viewer .cs-ds-comp-label { font-size: 0.8rem; color: #5e7d9c; white-space: nowrap; }
+    #pj-viewer .cs-ds-btn { display: inline-flex; align-items: center; justify-content: center; cursor: default; text-decoration: none; font-family: 'OngleipParkDahyeon', "Comic Sans MS", cursive; }
+    #pj-viewer .cs-ds-btn.cta-green { border: 3px solid #203723; border-radius: 14px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0 24%, transparent 25%), linear-gradient(135deg, #3f6845 0%, #2f4732 56%, #193024 100%); color: #f8fdff; padding: 11px 26px 13px; font-size: 1.15rem; box-shadow: 0 6px 0 #14291e, 0 14px 24px rgba(23, 48, 68, 0.24); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.24); }
+    #pj-viewer .cs-ds-btn.pill-light { border: 3px solid #2f4732; border-radius: 999px; background: linear-gradient(180deg, #ffffff 0%, #f8fdff 48%, #dff4ff 100%); color: #203723; padding: 9px 26px 11px; font-size: 1.1rem; box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.95), 0 5px 0 #9fd2eb, 0 12px 20px rgba(55, 127, 165, 0.2); }
+    #pj-viewer .cs-ds-iconbtn { display: inline-grid; place-items: center; width: 46px; height: 44px; border: 3px solid #2f4732; border-radius: 999px; background: linear-gradient(180deg, #ffffff 0%, #f8fdff 48%, #dff4ff 100%); color: #203723; font-size: 0.82rem; font-weight: 700; box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.95), 0 5px 0 #9fd2eb, 0 12px 20px rgba(55, 127, 165, 0.18); }
+    #pj-viewer .cs-ds-card { width: 140px; height: 84px; background: #fff; border-radius: 16px; box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.95), 0 5px 0 #9fd2eb, 0 12px 18px rgba(55, 127, 165, 0.16); }
+    #pj-viewer .cs-ds-swatch:nth-child(1) { transition-delay: 0.04s; }
+    #pj-viewer .cs-ds-swatch:nth-child(2) { transition-delay: 0.12s; }
+    #pj-viewer .cs-ds-swatch:nth-child(3) { transition-delay: 0.20s; }
+    #pj-viewer .cs-ds-swatch:nth-child(4) { transition-delay: 0.28s; }
+    #pj-viewer .cs-ds-swatch:nth-child(5) { transition-delay: 0.36s; }
     #pj-viewer .pjv-case::-webkit-scrollbar { width: 4px; }
     #pj-viewer .pjv-case::-webkit-scrollbar-track { background: transparent; }
     #pj-viewer .pjv-case::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.22); border-radius: 100px; }
@@ -1064,10 +1173,21 @@
     /* ⬇️ 프로젝트 데이터 (단일 소스 — 여기만 고치면 리스트·뷰어·인덱스 전부 반영)
        thumb: 리스트 호버 썸네일(없으면 이름만), live: 라이브 사이트 URL(새 탭) */
     const PROJECTS = [
-      { name: 'Sledding Game', year: '2025', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Web Publishing', 'Interaction', 'Localization'],
+      { name: 'Sledding Game', year: '2025', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Web Publishing', 'Interaction', 'Responsive', 'KR / EN'],
         summary: '귀여운 캐릭터와 겨울의 즐거움을 담은\n인터랙티브 게임 웹사이트',
+        caseHero: 'sledding/case study/hero.jpg',
+        caseTitle: '게임의 즐거움을\n웹으로 확장하다',
+        caseLead: 'Steam 인디 게임 Sledding Game을 기반으로,\n게임의 분위기와 즐거움을 웹에서도 자연스럽게 전달하도록 설계했습니다.',
+        period: '2 Weeks',
+        tools: 'Figma · Photoshop · CapCut · AI (Claude · ChatGPT)',
+        caseBackground: true,
+        caseDesignSystem: true,
+        caseShots: [
+          // 수빈님이 디자인해 내보낸 섹션 이미지 경로를 여기 순서대로 추가
+          // 예: 'sledding/case study/02-background.png',
+        ],
         sections: [
-          { h: 'Overview', p: '프로젝트 개요 placeholder. 무엇을, 왜 만들었는지.' },
+          { h: 'Overview', p: 'Sledding Game은 Steam에 출시된 겨울 배경의 인디 게임입니다. 저는 이 게임의 무드와 재미를 웹으로 옮겨, 다운로드 없이도 누구나 게임의 분위기를 경험할 수 있는 인터랙티브 사이트를 기획·디자인·퍼블리싱했습니다.\n\n귀여운 캐릭터와 겨울 감성을 그대로 살리고, 스크롤 인터랙션으로 게임의 즐거움이 자연스럽게 이어지도록 설계했습니다.' },
           { h: 'Problem',  p: '해결하려던 문제 placeholder.' },
           { h: 'Process',  p: '진행 과정·역할·의사결정 placeholder.' },
           { h: 'Outcome',  p: '결과·배운 점 placeholder.' },
@@ -1319,17 +1439,137 @@
       if (ixMoved > 6) { e.stopPropagation(); e.preventDefault(); ixMoved = 0; }
     }, true);
 
+    function bgSectionHTML() {
+      const flake = 'sledding/case study/background snowflake.png';
+      const frog  = 'sledding/case study/background frog.png';
+      const goals = [
+        ['01', 'FIRST IMPRESSION', '게임의 첫인상 전달', '겨울 분위기와 캐주얼한 매력을<br>직관적으로 전달하여 플레이 전<br>기대감을 높이는 랜딩 경험을 설계합니다.'],
+        ['02', 'USER FLOW',        '플레이 유도',       '게임의 특징과 콘텐츠를 자연스럽게<br>소개하여 Steam 페이지로 이어지는<br>사용자 흐름을 설계합니다.'],
+        ['03', 'INTERACTION',      '인터랙티브 경험',    '애니메이션과 인터랙션을 활용해<br>게임의 즐거움을 웹에서도<br>경험할 수 있도록 구현합니다.'],
+      ];
+      return `
+        <section class="cs-bg">
+          <img class="cs-bg-deco flake-tl cs-deco-fade" src="${flake}" alt="">
+          <img class="cs-bg-deco flake-tr cs-deco-fade" src="${flake}" alt="">
+          <img class="cs-bg-deco flake-br cs-deco-fade" src="${flake}" alt="">
+          <img class="cs-bg-frog cs-deco-rise" src="${frog}" alt="">
+          <div class="cs-bg-head reveal">
+            <span class="cs-bg-eyebrow">BACKGROUND</span>
+            <h3 class="cs-bg-title">Why Sledding Game?</h3>
+            <p class="cs-bg-desc">출시 5일 만에 100,000장 판매를 달성한 Steam 인디 게임의 매력을<br>웹에서도 자연스럽게 경험할 수 있도록 랜딩 페이지를<br>기획하고 제작했습니다.</p>
+          </div>
+          <div class="cs-bg-goals">
+            <span class="cs-bg-glabel reveal">PROJECT GOALS</span>
+            <div class="cs-bg-cards">
+              ${goals.map((g) => `
+              <article class="cs-bg-card reveal">
+                <span class="cs-bg-cnum">${g[0]}</span>
+                <span class="cs-bg-ceyebrow">${g[1]}</span>
+                <h4 class="cs-bg-ctitle">${g[2]}</h4>
+                <p class="cs-bg-cdesc">${g[3]}</p>
+              </article>`).join('')}
+            </div>
+          </div>
+          <div class="cs-bg-foot">
+            <span class="cs-bg-line reveal"></span>
+            <p class="cs-bg-quote reveal"><b>게임의 분위기를 웹으로 연결</b>하는 것이<br>이번 프로젝트의 핵심 목표였습니다.</p>
+          </div>
+        </section>`;
+    }
+
+    function dsSectionHTML() {
+      const palette = [
+        ['#F8FDFF', 'Snow White', 'dark'],
+        ['#DFF4FF', 'Ice', 'dark'],
+        ['#B8E2FB', 'Sky Blue', 'dark'],
+        ['#113143', 'Deep Navy', 'light'],
+        ['#2F4732', 'Pine Green', 'light'],
+      ];
+      return `
+        <section class="cs-ds">
+          <div class="cs-ds-inner">
+            <span class="cs-ds-title reveal">DESIGN SYSTEM</span>
+            <h4 class="cs-ds-sub reveal">Color Palette</h4>
+            <div class="cs-ds-swatches">
+              ${palette.map((c) => `
+              <div class="cs-ds-swatch reveal">
+                <div class="cs-ds-chip" style="background:${c[0]}"><span class="cs-ds-hex ${c[2]}">${c[0]}</span></div>
+                <span class="cs-ds-name">${c[1]}</span>
+              </div>`).join('')}
+            </div>
+            <div class="cs-ds-rule reveal"></div>
+            <div class="cs-ds-cols">
+              <div class="cs-ds-col reveal">
+                <h5 class="cs-ds-coltitle">Typography</h5>
+                <div class="cs-ds-types">
+                  <div class="cs-ds-type-row">
+                    <p class="cs-ds-sample font-display">Aa</p>
+                    <p class="cs-ds-type-meta"><b>Ownglyph ParkDaHyun</b><br>Display / Heading</p>
+                  </div>
+                  <div class="cs-ds-type-row">
+                    <p class="cs-ds-sample font-body">Aa</p>
+                    <p class="cs-ds-type-meta"><b>Arial</b><br>Body</p>
+                  </div>
+                </div>
+              </div>
+              <div class="cs-ds-col reveal">
+                <h5 class="cs-ds-coltitle">Components</h5>
+                <div class="cs-ds-comps">
+                  <div class="cs-ds-comps-col">
+                    <div class="cs-ds-comp-row"><a class="cs-ds-btn cta-green">플레이 하기</a><span class="cs-ds-comp-label">Primary Button</span></div>
+                    <div class="cs-ds-comp-row"><span class="cs-ds-iconbtn">KO</span><span class="cs-ds-iconbtn">EN</span><span class="cs-ds-comp-label">Language Switch</span></div>
+                  </div>
+                  <div class="cs-ds-comps-col">
+                    <div class="cs-ds-comp-row"><div class="cs-ds-card"></div><span class="cs-ds-comp-label">Card</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>`;
+    }
+
     function caseHTML(p) {
-      const hero = p.hero
-        ? `<div class="pjv-hero"><img src="${esc(p.hero)}" alt=""></div>`
-        : '<div class="pjv-hero">Hero Image</div>';
-      return hero +
-        p.sections.map((s, si) => `
-          <div class="pjv-section">
-            <h3>${esc(s.h)}</h3>
-            <p>${esc(s.p)}</p>
-            ${s.img ? `<div class="pjv-figure"><img src="${esc(s.img)}" alt=""></div>` : (si % 2 === 1 ? '<div class="pjv-figure">Figure</div>' : '')}
-          </div>`).join('');
+      const heroImg = p.caseHero || p.hero;
+      const hero = `
+        <div class="cs-hero">
+          ${heroImg ? `<img src="${esc(heroImg)}" alt="">` : ''}
+          <div class="cs-hero-text">
+            <h2 class="cs-hero-title">${esc(p.caseTitle || p.name)}</h2>
+            ${p.caseLead ? `<p class="cs-hero-lead">${esc(p.caseLead)}</p>` : ''}
+            ${(p.period || p.tools) ? `<div class="cs-meta">
+              ${p.period ? `<div class="cs-meta-col"><span>Period</span><p>${esc(p.period)}</p></div>` : ''}
+              ${p.tools ? `<div class="cs-meta-col"><span>Tools</span><p>${esc(p.tools)}</p></div>` : ''}
+            </div>` : ''}
+          </div>
+        </div>`;
+      let body = '';
+      if (p.caseBackground) body += bgSectionHTML();
+      if (p.caseDesignSystem) body += dsSectionHTML();
+      if (Array.isArray(p.caseShots)) {
+        // 수빈님이 디자인한 섹션 이미지를 풀 스택으로 (각 이미지 스크롤 reveal)
+        body += '<div class="cs-shots">' + p.caseShots.map((src) =>
+          `<div class="cs-shot reveal"><img src="${esc(src)}" alt=""></div>`).join('') + '</div>';
+      } else if (!p.caseBackground) {
+        body += '<div class="cs-body">' + (p.sections || []).map((s) => `
+          <section class="cs-section reveal">
+            <div class="cs-text"><h3>${esc(s.h)}</h3><p>${esc(s.p)}</p></div>
+            ${s.img ? `<div class="cs-figure"><img src="${esc(s.img)}" alt=""></div>` : '<div class="cs-figure cs-figure--ph"><span>Figure</span></div>'}
+          </section>`).join('') + '</div>';
+      }
+      return '<div class="cs-wrap">' + hero + body + '</div>';
+    }
+
+    let caseObserver;
+    function revealCase() {
+      if (!caseEl) return;
+      if (caseObserver) caseObserver.disconnect();
+      caseObserver = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add('cs-in'); caseObserver.unobserve(e.target); }
+        });
+      }, { root: caseEl, threshold: 0.1, rootMargin: '0px 0px 0px 0px' });
+      caseEl.querySelectorAll('.reveal, .cs-deco-rise, .cs-deco-fade').forEach((el) => caseObserver.observe(el));
     }
 
     let current = 0;
@@ -1342,7 +1582,7 @@
       if (infoDesc)    infoDesc.textContent    = p.summary || '';
       if (infoTags)    infoTags.innerHTML      = (p.tags || []).map((t) => '<span>' + esc(t) + '</span>').join('');
       if (infoLive)    infoLive.setAttribute('href', p.live || '#');
-      if (caseEl)    { caseEl.innerHTML = caseHTML(p); caseEl.scrollTop = 0; }
+      if (caseEl)    { caseEl.innerHTML = caseHTML(p); caseEl.scrollTop = 0; revealCase(); }
       indexItems.forEach((li, k) => li.classList.toggle('is-active', k === i));
       prevBtn.disabled = i === 0;
       nextBtn.disabled = i === total - 1;
@@ -1357,6 +1597,68 @@
         setTimeout(() => { renderViewer(); stageEl.style.opacity = '1'; }, 220);
       } else { renderViewer(); }
     }
+    // ===== 케이스 영역 전용: CSS 눈 + 커스텀 커서(마우스 방향 ±45° 기울기) =====
+    let csSnowEl, csCursorEl, csRAF = null, csMove = null, csResize = null;
+    let csX = 0, csY = 0, csPrevX = 0, csRot = 0, csTarget = 0;
+    function ensureCaseFX() {
+      if (csSnowEl) return;
+      csSnowEl = document.createElement('div');
+      csSnowEl.className = 'cs-snow';
+      let html = '';
+      for (let k = 0; k < 60; k++) {
+        const size = (2 + Math.random() * 4).toFixed(1);
+        const left = (Math.random() * 100).toFixed(2);
+        const dur = (6 + Math.random() * 9).toFixed(1);
+        const delay = (-Math.random() * dur).toFixed(1);
+        const drift = (Math.random() * 70 - 35).toFixed(0);
+        const op = (0.35 + Math.random() * 0.5).toFixed(2);
+        html += `<span class="flake" style="left:${left}%;width:${size}px;height:${size}px;opacity:${op};--drift:${drift}px;animation-duration:${dur}s;animation-delay:${delay}s"></span>`;
+      }
+      csSnowEl.innerHTML = html;
+      csCursorEl = document.createElement('img');
+      csCursorEl.className = 'cs-cursor';
+      csCursorEl.src = 'sledding/frog cursor.png';
+      csCursorEl.alt = '';
+      viewer.appendChild(csSnowEl);
+      viewer.appendChild(csCursorEl);
+    }
+    function placeCaseSnow() {
+      if (!csSnowEl || !caseEl) return;
+      const r = caseEl.getBoundingClientRect();
+      csSnowEl.style.left = r.left + 'px'; csSnowEl.style.top = r.top + 'px';
+      csSnowEl.style.width = r.width + 'px'; csSnowEl.style.height = r.height + 'px';
+    }
+    function startCaseFX() {
+      ensureCaseFX();
+      placeCaseSnow();
+      csMove = (e) => {
+        csX = e.clientX; csY = e.clientY;
+        const dx = csX - csPrevX; csPrevX = csX;
+        if (Math.abs(dx) > 0.4) { const dir = dx > 0 ? 1 : -1; csTarget = dir * Math.min(45, 22 + Math.abs(dx) * 4); }
+        const r = caseEl.getBoundingClientRect();
+        const inside = csX >= r.left && csX <= r.right && csY >= r.top && csY <= r.bottom;
+        csCursorEl.classList.toggle('is-on', inside);
+      };
+      csResize = () => placeCaseSnow();
+      window.addEventListener('mousemove', csMove);
+      window.addEventListener('resize', csResize);
+      if (!csRAF) {
+        const tick = () => {
+          csRot += (csTarget - csRot) * 0.22;
+          csTarget *= 0.9;   // 멈추면 0도로 복귀(조금 더 오래 유지)
+          csCursorEl.style.transform = `translate(${csX}px, ${csY}px) translate(-50%, -50%) rotate(${csRot.toFixed(2)}deg)`;
+          csRAF = requestAnimationFrame(tick);
+        };
+        csRAF = requestAnimationFrame(tick);
+      }
+    }
+    function stopCaseFX() {
+      if (csRAF) { cancelAnimationFrame(csRAF); csRAF = null; }
+      if (csMove) { window.removeEventListener('mousemove', csMove); csMove = null; }
+      if (csResize) { window.removeEventListener('resize', csResize); csResize = null; }
+      if (csCursorEl) csCursorEl.classList.remove('is-on');
+    }
+
     const ixHint = document.getElementById('pjvHint');
     function openViewer(i) {
       current = Math.max(0, Math.min(total - 1, i));
@@ -1366,11 +1668,13 @@
       viewer.classList.add('is-open');
       viewer.setAttribute('aria-hidden', 'false');
       if (typeof lenis !== 'undefined' && lenis) lenis.stop();
+      startCaseFX();
     }
     function closeViewer() {
       viewer.classList.remove('is-open');
       viewer.setAttribute('aria-hidden', 'true');
       if (typeof lenis !== 'undefined' && lenis) lenis.start();
+      stopCaseFX();
     }
     prevBtn.addEventListener('click', () => goTo(current - 1));
     nextBtn.addEventListener('click', () => goTo(current + 1));
