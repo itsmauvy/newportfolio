@@ -1916,7 +1916,7 @@
     });
   })();
 
-  /* ── 3.5) BANNER DESIGN: 드래그 → 폴더 납품 인터랙션 (Projects 이후 초기화) ── */
+  /* ── 3.5) BANNER DESIGN: scrub 스택 → 한 번에 드래그 납품 (Projects 이후 초기화) ── */
   (function () {
     const sec      = document.getElementById('banner-design');
     const bdPin    = sec && sec.querySelector('.bd-pin');
@@ -1941,85 +1941,131 @@
              - (word.offsetLeft + word.offsetWidth / 2);
     };
 
-    // 초기 상태: 배너 전부 숨김, 제목 중앙
     gsap.set(banners, { yPercent: 130, opacity: 0, scale: 1, x: 0, y: 0 });
 
-    let delivered = 0;
-    let dragging  = false;
-    let activeBanner = null;
-    let _sx = 0, _sy = 0; // 드래그 시작 포인터 좌표
+    let dragEnabled = false;
+    let dragging    = false;
+    let _sx = 0, _sy = 0;
 
-    /* ── 현재 배너 표시 ── */
-    function showBanner(i) {
-      if (i >= N) { finish(); return; }
-      activeBanner = banners[i];
-      gsap.fromTo(activeBanner,
-        { yPercent: 130, opacity: 0, x: 0, y: 0, scale: 1 },
-        { yPercent: 0, opacity: 1, scale: 1, duration: 0.65, ease: 'power2.out',
-          onComplete: () => activeBanner.classList.add('is-active') });
+    /* ── Phase 1: 스크롤로 배너 한 장씩 스택 (scrub) ── */
+    const SPLIT = 1, STEP = 0.72, RISE = 0.8;
+    const tlDur = SPLIT + (N - 1) * STEP + RISE;
+
+    const tl = gsap.timeline({ paused: true });
+    tl.to(wL, { x: () => splitX(wL, -1), scale: S, ease: 'none', duration: SPLIT }, 0)
+      .to(wR, { x: () => splitX(wR,  1), scale: S, ease: 'none', duration: SPLIT }, 0);
+    banners.forEach((b, i) => {
+      const t = SPLIT + i * STEP;
+      tl.fromTo(b, { yPercent: 130, opacity: 0 },
+                   { yPercent: 0, opacity: 1, ease: 'power2.out', duration: RISE }, t);
+      for (let j = 0; j < i; j++) {
+        const d = i - j;
+        tl.to(banners[j], { yPercent: -8 * d, scale: 1 - 0.05 * d, opacity: Math.max(0, 1 - 0.28 * d), ease: 'power2.out', duration: RISE }, t);
+      }
+    });
+
+    ScrollTrigger.create({
+      trigger: bdPin,
+      start: 'top top',
+      end: '+=' + Math.round(tlDur * 60) + '%',
+      pin: true,
+      scrub: 1,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        tl.progress(self.progress);
+        // 스택 완료(scrub 끝)에 도달하면 드래그 모드 활성화
+        if (self.progress >= 0.98 && !dragEnabled) enableDragMode();
+      },
+    });
+
+    /* ── Phase 2: 드래그 모드 활성화 ── */
+    function enableDragMode() {
+      dragEnabled = true;
+      lenis.stop();
+      folder.classList.add('is-visible');
+      if (dragHint) dragHint.classList.add('is-visible');
+
+      // 가장 위 배너(마지막)에 drag cursor
+      const top = banners[N - 1];
+      top.style.cursor = 'grab';
+
+      top.addEventListener('pointerdown', onDown);
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup',   onUp);
+      window.addEventListener('pointercancel', onUp);
     }
 
-    /* ── 드래그 ── */
+    /* ── 드래그 핸들러 ── */
     function onDown(e) {
-      if (dragging || !activeBanner || !activeBanner.classList.contains('is-active')) return;
+      if (dragging) return;
       dragging = true;
       _sx = e.clientX; _sy = e.clientY;
-      activeBanner.setPointerCapture(e.pointerId);
-      activeBanner.classList.add('is-dragging');
-      gsap.killTweensOf(activeBanner);
+      banners[N - 1].setPointerCapture(e.pointerId);
+      banners[N - 1].style.cursor = 'grabbing';
+      gsap.killTweensOf(banners);
+      if (dragHint) dragHint.classList.remove('is-visible');
     }
 
     function onMove(e) {
       if (!dragging) return;
       const dx = e.clientX - _sx, dy = e.clientY - _sy;
-      gsap.set(activeBanner, { x: dx, y: dy });
-      const over = inFolderZone(e.clientX, e.clientY);
-      folder.classList.toggle('is-over', over);
+      // 전체 스택 동시 이동
+      gsap.set(banners, { x: dx, y: dy });
+      folder.classList.toggle('is-over', inFolderZone(e.clientX, e.clientY));
     }
 
     function onUp(e) {
       if (!dragging) return;
       dragging = false;
-      activeBanner.classList.remove('is-dragging');
+      banners[N - 1].style.cursor = 'grab';
       folder.classList.remove('is-over');
 
       if (inFolderZone(e.clientX, e.clientY)) {
-        deliver(activeBanner);
+        deliverAll(e.clientX, e.clientY);
       } else {
-        // 실패 → 원위치 탄성 복귀
-        gsap.to(activeBanner, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.55)' });
+        // 원위치 탄성 복귀
+        gsap.to(banners, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.55)', stagger: 0.03 });
+        if (dragHint) dragHint.classList.add('is-visible');
       }
     }
 
     function inFolderZone(cx, cy) {
       const r = folder.getBoundingClientRect();
-      return cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
+      // 폴더 주변 여유 40px
+      return cx >= r.left - 40 && cx <= r.right + 40 && cy >= r.top - 40 && cy <= r.bottom + 40;
     }
 
-    /* ── 납품 성공 ── */
-    function deliver(b) {
-      b.classList.remove('is-active');
-      // 폴더 중심으로 날아가 사라짐
-      const fr = folder.getBoundingClientRect();
-      const br = b.getBoundingClientRect();
-      const tx = (fr.left + fr.width  / 2) - (br.left + br.width  / 2);
-      const ty = (fr.top  + fr.height / 2) - (br.top  + br.height / 2);
-      gsap.to(b, {
-        x: `+=${tx}`, y: `+=${ty}`, scale: 0.08, opacity: 0,
-        duration: 0.5, ease: 'power3.in',
-        onComplete: () => {
-          gsap.set(b, { display: 'none' });
-          addDoc();
-          delivered++;
-          if (cntEl) cntEl.textContent = delivered;
-          showBanner(delivered);
-        },
-      });
+    /* ── 전체 납품 ── */
+    function deliverAll(dropX, dropY) {
+      const fr   = folder.getBoundingClientRect();
+      const fCX  = fr.left + fr.width  / 2;
+      const fCY  = fr.top  + fr.height / 2;
+
       // 폴더 팝 피드백
-      gsap.fromTo(folder, { scale: 1 }, { scale: 1.12, yoyo: true, repeat: 1, duration: 0.18 });
+      gsap.fromTo(folder, { scale: 1 }, { scale: 1.12, yoyo: true, repeat: 1, duration: 0.15 });
+
+      // 배너 역순으로 폴더에 빨려들어감 (위에서부터)
+      banners.slice().reverse().forEach((b, ri) => {
+        const br = b.getBoundingClientRect();
+        const tx = fCX - (br.left + br.width  / 2);
+        const ty = fCY - (br.top  + br.height / 2);
+        const delay = ri * 0.05;
+
+        gsap.to(b, {
+          x: `+=${tx}`, y: `+=${ty}`, scale: 0.05, opacity: 0,
+          duration: 0.45, delay, ease: 'power3.in',
+          onComplete: () => {
+            gsap.set(b, { display: 'none' });
+            addDoc();
+            if (cntEl) cntEl.textContent = parseInt(cntEl.textContent || 0) + 1;
+            // 마지막 배너 납품 완료
+            if (ri === N - 1) onAllDelivered();
+          },
+        });
+      });
     }
 
-    /* ── 폴더 안 문서 아이콘 추가 ── */
     function addDoc() {
       const d = document.createElement('div');
       d.className = 'bd-doc';
@@ -2027,51 +2073,13 @@
       requestAnimationFrame(() => requestAnimationFrame(() => d.classList.add('in')));
     }
 
-    /* ── 전체 완료 ── */
-    function finish() {
-      // 힌트 숨기고, 제목 복귀, lenis 재개
-      if (dragHint) dragHint.classList.remove('is-visible');
+    function onAllDelivered() {
+      // 제목 복귀 후 lenis 재개 → 자연스럽게 다음 섹션으로
       gsap.to([wL, wR], {
         x: 0, scale: 1, duration: 0.9, ease: 'power2.inOut',
-        onComplete: () => { lenis.start(); },
+        onComplete: () => lenis.start(),
       });
     }
-
-    /* ── 섹션 진입 시 인터랙션 시작 ── */
-    let entered = false;
-    ScrollTrigger.create({
-      trigger: bdPin,
-      start: 'top top',
-      invalidateOnRefresh: true,
-      pin: true,
-      end: '+=' + (N * 80) + '%',   // 핀 공간 확보 (드래그 중 스크롤 방지)
-      onEnter: () => {
-        if (entered) return;
-        entered = true;
-        lenis.stop();
-        // 제목 좌우 분리
-        gsap.to(wL, { x: () => splitX(wL, -1), scale: S, duration: 0.8, ease: 'power2.out' });
-        gsap.to(wR, { x: () => splitX(wR,  1), scale: S, duration: 0.8, ease: 'power2.out',
-          onComplete: () => {
-            // 폴더 & 힌트 표시
-            folder.classList.add('is-visible');
-            if (dragHint) dragHint.classList.add('is-visible');
-            // 첫 배너 등장
-            showBanner(0);
-          },
-        });
-      },
-    });
-
-    /* ── 이벤트 바인딩 (bd-stage 전체에서 위임) ── */
-    const stage = sec.querySelector('.bd-stage');
-    stage.addEventListener('pointerdown', (e) => {
-      const b = e.target.closest('.bd-banner');
-      if (b && b === activeBanner) onDown(e);
-    });
-    stage.addEventListener('pointermove', onMove);
-    stage.addEventListener('pointerup',   onUp);
-    stage.addEventListener('pointercancel', onUp);
   })();
 
   /* ── 프리로더 (텍스트 안에 물이 차오르는 효과 + loading 카운터) ── 첫 방문 시에만 ── */
