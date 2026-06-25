@@ -849,6 +849,44 @@
     #pj-viewer .cs-hero-text { position: absolute; left: 6%; bottom: 7%; max-width: 54%; }
     #pj-viewer .cs-hero-title { font-size: clamp(2rem, 3.6vw, 3.4rem); font-weight: 700; line-height: 1.14; letter-spacing: -0.02em; color: #14233a; white-space: pre-line; }
     #pj-viewer .cs-hero-lead { margin-top: 1.5rem; font-size: 0.92rem; line-height: 1.7; color: rgba(20, 35, 58, 0.72); white-space: pre-line; }
+    /* ODE Main Page 섹션 */
+    #pj-viewer .ode-mp { background: #f5f1ed; padding: clamp(3rem,6vw,5rem) clamp(2rem,4vw,4rem); }
+    #pj-viewer .ode-mp-header { text-align: center; margin-bottom: 3rem; }
+    #pj-viewer .ode-mp-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.25em; color: #2b2420; margin-bottom: 1rem; }
+    #pj-viewer .ode-mp-desc { font-size: 0.82rem; line-height: 1.85; color: #4a3f3a; }
+    #pj-viewer .ode-mp-body { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 1.5rem; align-items: start; }
+    #pj-viewer .ode-mp-screen img { width: 100%; display: block; border-radius: 6px; box-shadow: 0 8px 40px rgba(43,36,32,0.14); }
+    #pj-viewer .ode-mp-annots { display: flex; flex-direction: column; justify-content: space-around; height: 100%; gap: 3rem; padding-top: 4rem; }
+    #pj-viewer .ode-mp-annot { display: flex; flex-direction: column; gap: 0.6rem; }
+    #pj-viewer .ode-mp-annots--left .ode-mp-annot { align-items: flex-start; }
+    #pj-viewer .ode-mp-annots--right .ode-mp-annot { align-items: flex-end; text-align: right; }
+    #pj-viewer .ode-mp-annot-text strong { font-size: 0.85rem; font-weight: 600; color: #2b2420; display: block; margin-bottom: 0.35rem; }
+    #pj-viewer .ode-mp-annot-text p { font-size: 0.72rem; line-height: 1.7; color: #7a6e69; }
+    #pj-viewer .ode-mp-annot-text b { font-weight: 600; color: #4a3f3a; }
+    /* 화살표 */
+    #pj-viewer .ode-mp-arrow { display: flex; align-items: center; margin-top: 0.4rem; }
+    #pj-viewer .ode-mp-arrow--right { flex-direction: row; }
+    #pj-viewer .ode-mp-arrow--left  { flex-direction: row-reverse; }
+    #pj-viewer .ode-mp-arrow-line {
+      height: 1px; background: #2b2420; width: 0;
+      transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+      min-width: 0; max-width: clamp(40px, 6vw, 80px);
+    }
+    #pj-viewer .ode-mp-annot.cs-in .ode-mp-arrow-line { width: clamp(40px, 6vw, 80px); }
+    #pj-viewer .ode-mp-arrow-tip {
+      width: 0; height: 0;
+      border-top: 3.5px solid transparent;
+      border-bottom: 3.5px solid transparent;
+      border-left: 5px solid #2b2420;
+      opacity: 0; transition: opacity 0.2s 0.65s;
+    }
+    #pj-viewer .ode-mp-arrow-tip--left {
+      border-left: none;
+      border-right: 5px solid #2b2420;
+      transition: opacity 0.2s 0.65s;
+    }
+    #pj-viewer .ode-mp-annot.cs-in .ode-mp-arrow-tip { opacity: 1; }
+
     /* ODE Design System 섹션 */
     #pj-viewer .ode-ds {
       background: #2b2420; padding: clamp(3rem,6vw,5rem) clamp(2.5rem,5vw,4.5rem);
@@ -1639,6 +1677,7 @@
         caseOdeOverview: true,
         caseOdeBrandNaming: true,
         caseOdeDesignSystem: true,
+        caseOdeMainPage: true,
         caseTitle: '실무의 경험에서 시작한\n데일리 포켓 뷰티',
         caseLead: '뷰티 실무에서 발견한 니즈를 바탕으로,\n포켓 뷰티 브랜드 ODE를 기획했습니다.',
         period: '5 Days',
@@ -2033,6 +2072,56 @@
         </section>`;
     }
 
+    function odeMainPageHTML() {
+      return `
+      <section class="ode-mp">
+        <header class="ode-mp-header reveal" style="--d:0s">
+          <p class="ode-mp-title">· MAIN PAGE ·</p>
+          <p class="ode-mp-desc">사용자가 브랜드의 감성과 분위기를 먼저 경험한 뒤,<br>자연스럽게 제품 탐색으로 이어질 수 있도록<br>콘텐츠 흐름과 정보 구조를 설계했습니다.</p>
+        </header>
+        <div class="ode-mp-body">
+          <!-- 왼쪽 주석 -->
+          <div class="ode-mp-annots ode-mp-annots--left">
+            <div class="ode-mp-annot reveal" style="--d:0.3s">
+              <div class="ode-mp-annot-text">
+                <strong>단순하지만 직관적인 GNB</strong>
+                <p>단순하고 <b>명료한 타이포로 구성</b>된 GNB로<br>사용자가 직관적 확인이 가능하도록<br>구성하였습니다.</p>
+              </div>
+              <div class="ode-mp-arrow ode-mp-arrow--right"><div class="ode-mp-arrow-line"></div><div class="ode-mp-arrow-tip"></div></div>
+            </div>
+            <div class="ode-mp-annot reveal" style="--d:0.6s">
+              <div class="ode-mp-annot-text">
+                <strong>라이프스타일 속 제품 발견</strong>
+                <p>실제 사용자의 라이프스타일 이미지를 활용하고<br>이미지에 사용된 제품 정보를 함께 제공하여<br>브랜드 경험과 제품 탐색이 자연스럽게<br>이어질 수 있도록 설계했습니다.</p>
+              </div>
+              <div class="ode-mp-arrow ode-mp-arrow--right"><div class="ode-mp-arrow-line"></div><div class="ode-mp-arrow-tip"></div></div>
+            </div>
+          </div>
+          <!-- 스크린샷 -->
+          <div class="ode-mp-screen reveal" style="--d:0.1s">
+            <img src="ode/main page.png" alt="ODE Main Page">
+          </div>
+          <!-- 오른쪽 주석 -->
+          <div class="ode-mp-annots ode-mp-annots--right">
+            <div class="ode-mp-annot reveal" style="--d:0.45s">
+              <div class="ode-mp-arrow ode-mp-arrow--left"><div class="ode-mp-arrow-tip ode-mp-arrow-tip--left"></div><div class="ode-mp-arrow-line"></div></div>
+              <div class="ode-mp-annot-text">
+                <strong>브랜드 첫인상 전달</strong>
+                <p>사이트에 진입하는 순간 브랜드만의<br>감성과 분위기를 경험할 수 있도록<br><b>비주얼 중심의</b> 히어로 섹션을 구성했습니다.</p>
+              </div>
+            </div>
+            <div class="ode-mp-annot reveal" style="--d:0.75s">
+              <div class="ode-mp-arrow ode-mp-arrow--left"><div class="ode-mp-arrow-tip ode-mp-arrow-tip--left"></div><div class="ode-mp-arrow-line"></div></div>
+              <div class="ode-mp-annot-text">
+                <strong>제품 탐색 경험</strong>
+                <p>마우스 호버 시 제품을 사용하는 모델 컷과<br>빠른 장바구니 추가 버튼을 제공하여 구매 행동으로<br>자연스럽게 이어질 수 있도록 설계했습니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>`;
+    }
+
     function odeDesignSystemHTML() {
       return `
       <section class="ode-ds">
@@ -2143,6 +2232,7 @@
       if (p.caseOdeOverview) body += odeOverviewHTML();
       if (p.caseOdeBrandNaming) body += odeBrandNamingHTML();
       if (p.caseOdeDesignSystem) body += odeDesignSystemHTML();
+      if (p.caseOdeMainPage) body += odeMainPageHTML();
       if (p.caseBackground) body += bgSectionHTML();
       if (p.caseDesignSystem) body += dsSectionHTML();
       if (p.caseKeyInteraction) body += kiSectionHTML();
