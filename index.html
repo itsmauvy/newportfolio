@@ -591,6 +591,95 @@
     }
     #banner-design .bd-drag-hint.is-visible { opacity: 1; }
 
+    /* ── macOS 폴더 윈도 ── */
+    #banner-design .bd-mac-win {
+      position: fixed; inset: 0; margin: auto;
+      width: min(860px, 92vw); height: min(560px, 80vh);
+      background: rgba(245,245,247,0.96);
+      backdrop-filter: blur(28px) saturate(1.8);
+      -webkit-backdrop-filter: blur(28px) saturate(1.8);
+      border-radius: 14px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.28), 0 0 0 1px rgba(0,0,0,0.1);
+      z-index: 200;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transform: scale(0.88);
+      transition: opacity 0.35s cubic-bezier(0.34,1.56,0.64,1),
+                  transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #banner-design .bd-mac-win.is-open {
+      opacity: 1; pointer-events: auto; transform: scale(1);
+    }
+    /* chrome 바 */
+    #banner-design .bd-mac-chrome {
+      display: flex; align-items: center; gap: 0; padding: 14px 18px 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      border-radius: 14px 14px 0 0;
+      background: rgba(235,235,237,0.9);
+      flex-shrink: 0;
+    }
+    #banner-design .bd-mac-dots { display: flex; gap: 7px; align-items: center; }
+    #banner-design .bd-mac-dot {
+      width: 13px; height: 13px; border-radius: 50%; border: none;
+      cursor: pointer; transition: filter 0.15s;
+    }
+    #banner-design .bd-mac-dot:hover { filter: brightness(0.85); }
+    #banner-design .dot-red    { background: #ff5f57; }
+    #banner-design .dot-yellow { background: #febc2e; }
+    #banner-design .dot-green  { background: #28c840; }
+    #banner-design .bd-mac-title {
+      flex: 1; text-align: center;
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.02em; color: #333;
+      margin-right: 60px; /* dots 너비 보정 */
+    }
+    /* 파일 그리드 */
+    #banner-design .bd-mac-body {
+      flex: 1; overflow-y: auto; padding: 24px 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 20px; align-content: start;
+    }
+    #banner-design .bd-mac-file {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      cursor: pointer; padding: 10px 6px; border-radius: 8px;
+      transition: background 0.15s;
+      user-select: none;
+    }
+    #banner-design .bd-mac-file:hover { background: rgba(0,122,255,0.12); }
+    #banner-design .bd-mac-file:active { background: rgba(0,122,255,0.22); }
+    #banner-design .bd-mac-thumb {
+      width: 100px; height: 126px; object-fit: cover;
+      border-radius: 6px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    }
+    #banner-design .bd-mac-fname {
+      font-size: 0.62rem; color: #222; text-align: center;
+      word-break: break-all; line-height: 1.3; max-width: 110px;
+    }
+    /* 라이트박스 */
+    #banner-design .bd-mac-lightbox {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,0.82);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    #banner-design .bd-mac-lightbox.is-open { opacity: 1; pointer-events: auto; }
+    #banner-design .bd-mac-lb-img {
+      max-width: 80vw; max-height: 78vh; object-fit: contain;
+      border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    #banner-design .bd-mac-lb-name {
+      font-size: 0.65rem; letter-spacing: 0.14em; color: rgba(255,255,255,0.6);
+    }
+    #banner-design .bd-mac-lb-close {
+      position: absolute; top: 24px; right: 28px;
+      background: none; border: none; color: rgba(255,255,255,0.7);
+      font-size: 1.4rem; cursor: pointer; line-height: 1;
+    }
+    #banner-design .bd-mac-lb-close:hover { color: #fff; }
+
     /* LEFT: 키네틱 휠 인디케이터 + 리스트 */
     #projects .pj-left { position: relative; }
     #projects .pj-count { position: absolute; top: -3rem; left: 0; font-size: 0.7rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.4); }
@@ -1120,6 +1209,24 @@
     </div>
     <!-- 드래그 힌트 -->
     <p class="bd-drag-hint" id="bdDragHint">DRAG TO DELIVER</p>
+    <!-- macOS 폴더 윈도 -->
+    <div class="bd-mac-win" id="bdMacWin" aria-hidden="true">
+      <div class="bd-mac-chrome">
+        <div class="bd-mac-dots">
+          <button class="bd-mac-dot dot-red"    id="bdMacClose"  aria-label="닫기" title="닫기"></button>
+          <button class="bd-mac-dot dot-yellow" aria-label="최소화" title="최소화"></button>
+          <button class="bd-mac-dot dot-green"  aria-label="전체화면" title="전체화면"></button>
+        </div>
+        <span class="bd-mac-title">Banner Design — <span id="bdMacCount">0</span> items</span>
+      </div>
+      <div class="bd-mac-body" id="bdMacBody"></div>
+    </div>
+    <!-- 파일 확대 뷰어 -->
+    <div class="bd-mac-lightbox" id="bdMacLightbox">
+      <button class="bd-mac-lb-close" id="bdMacLbClose">✕</button>
+      <img class="bd-mac-lb-img" id="bdMacLbImg" src="" alt="">
+      <p class="bd-mac-lb-name" id="bdMacLbName"></p>
+    </div>
   </div>
 </section>
 
@@ -2079,12 +2186,82 @@
     }
 
     function onAllDelivered() {
-      // 제목 복귀 후 lenis 재개 → 자연스럽게 다음 섹션으로
+      // 폴더 힌트 → "DOUBLE CLICK TO OPEN" 으로 변경
+      const hint = folder.querySelector('.bd-folder-hint');
+      if (hint) { hint.textContent = 'DOUBLE CLICK'; }
+      // 제목 복귀 후 lenis 재개
       gsap.to([wL, wR], {
         x: 0, scale: 1, duration: 0.9, ease: 'power2.inOut',
         onComplete: () => lenis.start(),
       });
     }
+
+    /* ── macOS 윈도 ── */
+    const macWin   = document.getElementById('bdMacWin');
+    const macBody  = document.getElementById('bdMacBody');
+    const macCount = document.getElementById('bdMacCount');
+    const macClose = document.getElementById('bdMacClose');
+    const lightbox = document.getElementById('bdMacLightbox');
+    const lbImg    = document.getElementById('bdMacLbImg');
+    const lbName   = document.getElementById('bdMacLbName');
+    const lbClose  = document.getElementById('bdMacLbClose');
+
+    // 폴더 더블클릭 → 윈도 열기
+    folder.addEventListener('dblclick', () => {
+      if (!dragEnabled) return; // 납품 전엔 열리지 않음
+      openMacWin();
+    });
+
+    function openMacWin() {
+      // 파일 그리드 채우기 (이미 채워진 경우 스킵)
+      if (!macBody.children.length) buildFileGrid();
+      macWin.setAttribute('aria-hidden', 'false');
+      macWin.classList.add('is-open');
+      lenis.stop();
+    }
+
+    function closeMacWin() {
+      macWin.classList.remove('is-open');
+      macWin.setAttribute('aria-hidden', 'true');
+      closeLightbox();
+      lenis.start();
+    }
+
+    function buildFileGrid() {
+      macBody.innerHTML = '';
+      const delivered = [...folderDocs.children].length;
+      if (macCount) macCount.textContent = delivered;
+      banners.slice(0, delivered).forEach((b, i) => {
+        const img  = b.querySelector('img');
+        if (!img) return;
+        const file = document.createElement('div');
+        file.className = 'bd-mac-file';
+        file.innerHTML = `
+          <img class="bd-mac-thumb" src="${img.src}" alt="" draggable="false">
+          <span class="bd-mac-fname">${b.dataset.name || 'banner_' + (i+1) + '.jpg'}</span>`;
+        file.addEventListener('click', () => openLightbox(img.src, b.dataset.name || 'banner_' + (i+1) + '.jpg'));
+        macBody.appendChild(file);
+      });
+    }
+
+    function openLightbox(src, name) {
+      lbImg.src  = src;
+      lbName.textContent = name;
+      lightbox.classList.add('is-open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+    }
+
+    if (macClose) macClose.addEventListener('click', closeMacWin);
+    if (lbClose)  lbClose.addEventListener('click', closeLightbox);
+    // 라이트박스 배경 클릭으로 닫기
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    // ESC 키
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { if (lightbox.classList.contains('is-open')) closeLightbox(); else closeMacWin(); }
+    });
   })();
 
   /* ── 프리로더 (텍스트 안에 물이 차오르는 효과 + loading 카운터) ── 첫 방문 시에만 ── */
