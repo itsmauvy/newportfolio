@@ -856,7 +856,7 @@
     #pj-viewer .ode-mp-desc { font-size: 0.82rem; line-height: 1.85; color: #4a3f3a; }
     #pj-viewer .ode-mp-body { position: relative; }
     #pj-viewer .ode-mp-screen img { width: 100%; display: block; border-radius: 6px; box-shadow: 0 8px 40px rgba(43,36,32,0.14); }
-    #pj-viewer .ode-mp-annots { position: absolute; top: 0; bottom: 0; width: 26%; }
+    #pj-viewer .ode-mp-annots { position: absolute; top: 0; bottom: 0; width: 26%; overflow: visible; }
     #pj-viewer .ode-mp-annots--left  { left: 0; }
     #pj-viewer .ode-mp-annots--right { right: 0; }
     #pj-viewer .ode-mp-screen { margin: 0 28%; }
@@ -880,7 +880,7 @@
     /* 화살표 */
     #pj-viewer .ode-mp-arrow { display: flex; align-items: center; margin-top: 0.4rem; }
     #pj-viewer .ode-mp-arrow--right { flex-direction: row; }
-    #pj-viewer .ode-mp-arrow--left  { flex-direction: row-reverse; }
+    #pj-viewer .ode-mp-arrow--left  { flex-direction: row; }
     #pj-viewer .ode-mp-arrow-line {
       height: 1px; background: #2b2420; width: 0;
       transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
