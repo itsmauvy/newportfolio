@@ -1985,9 +1985,6 @@
       // scrub ST 제거 — 배너를 GSAP 제어에서 해방해야 드래그가 동작함
       if (bdST) { bdST.kill(); bdST = null; }
 
-      // lenis 정지 (드래그 중 실수 스크롤 방지)
-      lenis.stop();
-
       folder.classList.add('is-visible');
       if (dragHint) dragHint.classList.add('is-visible');
 
@@ -2011,6 +2008,7 @@
       banners[N - 1].style.cursor = 'grabbing';
       gsap.killTweensOf(banners);
       if (dragHint) dragHint.classList.remove('is-visible');
+      lenis.stop(); // 드래그 중에만 스크롤 차단
     }
 
     function onMove(e) {
@@ -2030,7 +2028,8 @@
       if (inFolderZone(e.clientX, e.clientY)) {
         deliverAll(e.clientX, e.clientY);
       } else {
-        // 원위치 탄성 복귀
+        // 원위치 탄성 복귀 + 스크롤 재개
+        lenis.start();
         gsap.to(banners, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.55)', stagger: 0.03 });
         if (dragHint) dragHint.classList.add('is-visible');
       }
