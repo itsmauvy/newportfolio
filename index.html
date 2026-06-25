@@ -2309,7 +2309,7 @@
     let csSnowEl, csCursorEl, csRAF = null, csMove = null, csResize = null;
     let csX = 0, csY = 0, csPrevX = 0, csRot = 0, csTarget = 0;
     function ensureCaseFX() {
-      if (csSnowEl) return;
+      if (csSnowEl) { csSnowEl.style.display = ''; return; }
       csSnowEl = document.createElement('div');
       csSnowEl.className = 'cs-snow';
       let html = '';
@@ -2365,6 +2365,7 @@
       if (csMove) { window.removeEventListener('mousemove', csMove); csMove = null; }
       if (csResize) { window.removeEventListener('resize', csResize); csResize = null; }
       if (csCursorEl) csCursorEl.classList.remove('is-on');
+      if (csSnowEl) csSnowEl.style.display = 'none';
     }
 
     const ixHint = document.getElementById('pjvHint');
