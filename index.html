@@ -544,6 +544,7 @@
       position: absolute; top: 62vh; right: 6vw; z-index: 10;
       text-align: center; pointer-events: none;
       opacity: 0; transform: translateY(20px);
+      will-change: transform;
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
     #banner-design .bd-folder.is-visible { opacity: 1; transform: none; pointer-events: auto; }
@@ -2196,7 +2197,7 @@
       const fdy = vCY - fCY;
       gsap.to(folder, {
         x: `+=${fdx}`, y: `+=${fdy}`,
-        scale: 1.25, duration: 0.55, ease: 'power3.out',
+        scale: 1.25, duration: 0.55, ease: 'power3.out', force3D: true,
         onComplete: () => {
           // 2) 폴더 중앙 기준으로 배너 빨려들어감
           const fr2 = folder.getBoundingClientRect();
@@ -2235,15 +2236,12 @@
     function onAllDelivered() {
       const hint = folder.querySelector('.bd-folder-hint');
       if (hint) { hint.textContent = 'DOUBLE CLICK'; }
-      // 이벤트 리스너 제거
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup',   onUp);
       window.removeEventListener('pointercancel', onUp);
-      // pin spacer 제거 — 이 시점엔 스크롤 위치가 안정화돼 있어 점프 없음
       if (bdST) { bdST.kill(); bdST = null; }
-      // 제목 복귀 후 lenis 재개
-      gsap.to([wL, wR], {
-        x: 0, scale: 1, duration: 0.9, ease: 'power2.inOut',
+      // 타이틀 페이드아웃 — 중앙 복귀 시 폴더와 겹치므로 숨김
+      gsap.to([wL, wR], { opacity: 0, duration: 0.5, ease: 'power2.out',
         onComplete: () => lenis.start(),
       });
     }
