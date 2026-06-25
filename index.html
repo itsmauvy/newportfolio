@@ -2134,7 +2134,7 @@
       folder.classList.remove('is-over');
 
       if (inFolderZone(e.clientX, e.clientY)) {
-        deliverAll(e.clientX, e.clientY);
+        deliverAll();
       } else {
         // 원위치 탄성 복귀 + 스크롤 재개
         lenis.start();
@@ -2149,33 +2149,45 @@
       return cx >= r.left - 40 && cx <= r.right + 40 && cy >= r.top - 40 && cy <= r.bottom + 40;
     }
 
-    /* ── 전체 납품 ── */
-    function deliverAll(dropX, dropY) {
-      const fr   = folder.getBoundingClientRect();
-      const fCX  = fr.left + fr.width  / 2;
-      const fCY  = fr.top  + fr.height / 2;
+    /* ── 전체 납품 — 폴더가 먼저 화면 중앙으로 이동 후 배너 빨려들어감 ── */
+    function deliverAll() {
+      const vCX = window.innerWidth  / 2;
+      const vCY = window.innerHeight / 2;
+      const fr  = folder.getBoundingClientRect();
+      const fCX = fr.left + fr.width  / 2;
+      const fCY = fr.top  + fr.height / 2;
 
-      // 폴더 팝 피드백
-      gsap.fromTo(folder, { scale: 1 }, { scale: 1.12, yoyo: true, repeat: 1, duration: 0.15 });
+      // 1) 폴더를 화면 중앙으로 이동 (position fixed 기준 offset)
+      const fdx = vCX - fCX;
+      const fdy = vCY - fCY;
+      gsap.to(folder, {
+        x: `+=${fdx}`, y: `+=${fdy}`,
+        scale: 1.25, duration: 0.55, ease: 'power3.out',
+        onComplete: () => {
+          // 2) 폴더 중앙 기준으로 배너 빨려들어감
+          const fr2 = folder.getBoundingClientRect();
+          const fCX2 = fr2.left + fr2.width  / 2;
+          const fCY2 = fr2.top  + fr2.height / 2;
 
-      // 배너 역순으로 폴더에 빨려들어감 (위에서부터)
-      banners.slice().reverse().forEach((b, ri) => {
-        const br = b.getBoundingClientRect();
-        const tx = fCX - (br.left + br.width  / 2);
-        const ty = fCY - (br.top  + br.height / 2);
-        const delay = ri * 0.05;
+          banners.slice().reverse().forEach((b, ri) => {
+            const br = b.getBoundingClientRect();
+            const tx = fCX2 - (br.left + br.width  / 2);
+            const ty = fCY2 - (br.top  + br.height / 2);
 
-        gsap.to(b, {
-          x: `+=${tx}`, y: `+=${ty}`, scale: 0.05, opacity: 0,
-          duration: 0.45, delay, ease: 'power3.in',
-          onComplete: () => {
-            gsap.set(b, { display: 'none' });
-            addDoc();
-            if (cntEl) cntEl.textContent = parseInt(cntEl.textContent || 0) + 1;
-            // 마지막 배너 납품 완료
-            if (ri === N - 1) onAllDelivered();
-          },
-        });
+            gsap.to(b, {
+              x: `+=${tx}`, y: `+=${ty}`, scale: 0.05, opacity: 0,
+              duration: 0.4, delay: ri * 0.04, ease: 'power3.in',
+              onComplete: () => {
+                gsap.set(b, { display: 'none' });
+                addDoc();
+                if (cntEl) cntEl.textContent = parseInt(cntEl.textContent || 0) + 1;
+                if (ri === N - 1) onAllDelivered();
+              },
+            });
+          });
+          // 폴더 팝
+          gsap.fromTo(folder, { scale: 1.25 }, { scale: 1.1, yoyo: true, repeat: 1, duration: 0.12, delay: 0.1 });
+        },
       });
     }
 
