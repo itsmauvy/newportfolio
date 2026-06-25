@@ -849,6 +849,10 @@
     #pj-viewer .cs-hero-text { position: absolute; left: 6%; bottom: 7%; max-width: 54%; }
     #pj-viewer .cs-hero-title { font-size: clamp(2rem, 3.6vw, 3.4rem); font-weight: 700; line-height: 1.14; letter-spacing: -0.02em; color: #14233a; white-space: pre-line; }
     #pj-viewer .cs-hero-lead { margin-top: 1.5rem; font-size: 0.92rem; line-height: 1.7; color: rgba(20, 35, 58, 0.72); white-space: pre-line; }
+    /* ODE 브랜드 테마 */
+    #pj-viewer .cs-hero[data-theme="ode"] { background: #e8e0d8; }
+    #pj-viewer .cs-hero[data-theme="ode"] .cs-hero-title { font-family: 'Gowun Batang', 'Cormorant Garamond', serif; font-weight: 400; color: #2b2420; letter-spacing: -0.01em; }
+    #pj-viewer .cs-hero[data-theme="ode"] .cs-hero-lead { font-family: 'Jost', sans-serif; font-weight: 300; color: #7a6e69; }
     #pj-viewer .cs-meta { display: inline-flex; gap: 48px; margin-top: 2rem; border: 1px solid rgba(20, 35, 58, 0.28); border-radius: 10px; padding: 14px 24px; }
     #pj-viewer .cs-meta-col span { display: block; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(20, 35, 58, 0.55); margin-bottom: 5px; }
     #pj-viewer .cs-meta-col p { font-size: 0.85rem; color: #14233a; }
@@ -1489,6 +1493,7 @@
       { name: 'ODE',   year: '2025', role: 'Personal', type: 'Web · UX/UI', live: 'https://itsmauvy.github.io/ODE/', thumb: '', tagline: 'POCKET BEAUTY BRAND', tags: ['UX/UI Design', 'Branding', 'Web'],
         summary: '뷰티 실무에서 발견한 휴대성과 사용성의 문제를\n브랜드 기획부터 반응형 웹 구현까지 풀어냈습니다.',
         caseHero: 'ode/ode hero.jpg',
+        caseTheme: 'ode',
         caseTitle: '실무의 경험에서 시작한\n데일리 포켓 뷰티',
         caseLead: '뷰티 실무에서 발견한 니즈를 바탕으로,\n포켓 뷰티 브랜드 ODE를 기획했습니다.',
         period: '5 Days',
@@ -1886,7 +1891,7 @@
     function caseHTML(p) {
       const heroImg = p.caseHero || p.hero;
       const hero = `
-        <div class="cs-hero">
+        <div class="cs-hero" ${p.caseTheme ? `data-theme="${esc(p.caseTheme)}"` : ''}>
           ${heroImg ? `<img src="${esc(heroImg)}" alt="">` : ''}
           <div class="cs-hero-text">
             <h2 class="cs-hero-title">${esc(p.caseTitle || p.name)}</h2>
