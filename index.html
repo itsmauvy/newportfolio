@@ -2051,8 +2051,9 @@
     // xPercent/yPercent로 CSS transform 없이 센터링 — GSAP이 직접 관리
     gsap.set(banners, { xPercent: -50, yPercent: 150, opacity: 0, scale: 1, x: 0, y: 0 });
 
-    let dragEnabled = false;
-    let dragging    = false;
+    let dragEnabled  = false;
+    let scrubPaused  = false; // kill 대신 onUpdate만 차단 — pin 유지로 스냅 방지
+    let dragging     = false;
     let _sx = 0, _sy = 0;
 
     /* ── Phase 1: 스크롤로 배너 한 장씩 스택 (scrub) ── */
@@ -2080,8 +2081,7 @@
       scrub: 1,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => { tl.progress(self.progress); },
-      // scrub 완전히 끝나면(onLeave) ST를 kill → 배너 GSAP 제어 해제 후 드래그 활성화
+      onUpdate: (self) => { if (!scrubPaused) tl.progress(self.progress); },
       onLeave: () => enableDragMode(),
     });
 
@@ -2090,8 +2090,8 @@
       if (dragEnabled) return;
       dragEnabled = true;
 
-      // scrub ST 제거 — 배너를 GSAP 제어에서 해방해야 드래그가 동작함
-      if (bdST) { bdST.kill(); bdST = null; }
+      // kill 대신 onUpdate만 중단 — pin spacer 살려서 스냅 점프 방지
+      scrubPaused = true;
 
       folder.classList.add('is-visible');
       if (dragHint) dragHint.classList.add('is-visible');
@@ -2199,9 +2199,14 @@
     }
 
     function onAllDelivered() {
-      // 폴더 힌트 → "DOUBLE CLICK TO OPEN" 으로 변경
       const hint = folder.querySelector('.bd-folder-hint');
       if (hint) { hint.textContent = 'DOUBLE CLICK'; }
+      // 이벤트 리스너 제거
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup',   onUp);
+      window.removeEventListener('pointercancel', onUp);
+      // pin spacer 제거 — 이 시점엔 스크롤 위치가 안정화돼 있어 점프 없음
+      if (bdST) { bdST.kill(); bdST = null; }
       // 제목 복귀 후 lenis 재개
       gsap.to([wL, wR], {
         x: 0, scale: 1, duration: 0.9, ease: 'power2.inOut',
