@@ -1915,14 +1915,14 @@
       ixCf = Math.max(0, Math.min(total - 1, ixStartCf - dy / 46));
       placeIndexWheel(ixCf);
       const idx = Math.round(ixCf);
-      if (idx !== current) { current = idx; loadProject(idx); }   // 드래그하는 동안 실시간 전환
+      if (idx !== current) { current = idx; loadProject(idx); if (isSledding()) { startCaseFX(); caseEl.classList.add('is-sledding'); } else { stopCaseFX(); caseEl.classList.remove('is-sledding'); } }   // 드래그하는 동안 실시간 전환
     });
     function ixEnd() {
       if (!ixDrag) return;
       ixDrag = false; indexEl.style.cursor = 'grab';
       if (ixMoved > 6) {
         const target = Math.round(ixCf);
-        current = target; loadProject(target);
+        current = target; loadProject(target); if (isSledding()) { startCaseFX(); caseEl.classList.add('is-sledding'); } else { stopCaseFX(); caseEl.classList.remove('is-sledding'); }
         const proxy = { v: ixCf };
         gsap.to(proxy, { v: target, duration: 0.4, ease: 'power3.out', onUpdate: () => placeIndexWheel(proxy.v) });
       } else {
