@@ -849,6 +849,47 @@
     #pj-viewer .cs-hero-text { position: absolute; left: 6%; bottom: 7%; max-width: 54%; }
     #pj-viewer .cs-hero-title { font-size: clamp(2rem, 3.6vw, 3.4rem); font-weight: 700; line-height: 1.14; letter-spacing: -0.02em; color: #14233a; white-space: pre-line; }
     #pj-viewer .cs-hero-lead { margin-top: 1.5rem; font-size: 0.92rem; line-height: 1.7; color: rgba(20, 35, 58, 0.72); white-space: pre-line; }
+    /* ODE Design System 섹션 */
+    #pj-viewer .ode-ds {
+      background: #2b2420; padding: clamp(3rem,6vw,5rem) clamp(2.5rem,5vw,4.5rem);
+    }
+    #pj-viewer .ode-ds-top-label {
+      font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-bottom: 3rem;
+    }
+    #pj-viewer .ode-ds-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,6vw,6rem);
+    }
+    #pj-viewer .ode-ds-label {
+      font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.35); margin-bottom: 1.8rem;
+    }
+    #pj-viewer .ode-ds-font-block { margin-bottom: 2.2rem; }
+    #pj-viewer .ode-ds-font-display { color: rgba(255,255,255,0.92); line-height: 1.1; margin-bottom: 0.7rem; }
+    #pj-viewer .ode-ds-font-desc {
+      font-size: 0.78rem; line-height: 1.75; color: rgba(255,255,255,0.45);
+    }
+    #pj-viewer .ode-ds-swatch {
+      display: flex; align-items: center; gap: 1.2rem; margin-bottom: 1.1rem;
+    }
+    #pj-viewer .ode-ds-swatch-color {
+      flex-shrink: 0; width: clamp(80px,10vw,140px); height: clamp(56px,7vw,90px);
+      border-radius: 6px;
+    }
+    #pj-viewer .ode-ds-swatch-info {
+      display: flex; flex-direction: column; gap: 0.2rem;
+    }
+    #pj-viewer .ode-ds-swatch-info strong {
+      font-size: 0.88rem; font-weight: 500; color: rgba(255,255,255,0.88);
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem;
+    }
+    #pj-viewer .ode-ds-swatch-hex {
+      font-size: 0.68rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.4);
+    }
+    #pj-viewer .ode-ds-swatch-desc {
+      font-size: 0.75rem; line-height: 1.65; color: rgba(255,255,255,0.45); margin-top: 0.15rem;
+    }
+
     /* ODE Brand Naming 섹션 */
     #pj-viewer .ode-naming {
       position: relative; overflow: hidden;
@@ -1597,6 +1638,7 @@
         caseTheme: 'ode',
         caseOdeOverview: true,
         caseOdeBrandNaming: true,
+        caseOdeDesignSystem: true,
         caseTitle: '실무의 경험에서 시작한\n데일리 포켓 뷰티',
         caseLead: '뷰티 실무에서 발견한 니즈를 바탕으로,\n포켓 뷰티 브랜드 ODE를 기획했습니다.',
         period: '5 Days',
@@ -1991,6 +2033,47 @@
         </section>`;
     }
 
+    function odeDesignSystemHTML() {
+      return `
+      <section class="ode-ds">
+        <p class="ode-ds-top-label reveal" style="--d:0s">Design System</p>
+        <div class="ode-ds-grid">
+          <div class="ode-ds-typo">
+            <p class="ode-ds-label reveal" style="--d:0.05s">Typography</p>
+            <div class="ode-ds-font-block reveal" style="--d:0.1s">
+              <p class="ode-ds-font-display" style="font-family:'Gowun Batang',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:400">고운바탕</p>
+              <p class="ode-ds-font-desc">브랜드 스토리와 국문 헤드라인에 사용하여<br>따뜻하고 감성적인 브랜드 경험을 전달합니다.</p>
+            </div>
+            <div class="ode-ds-font-block reveal" style="--d:0.2s">
+              <p class="ode-ds-font-display" style="font-family:'Jost',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700">Jost</p>
+              <p class="ode-ds-font-desc">제품 정보와 UI 요소에 적용하여<br>높은 가독성과 직관적인 사용성을 제공합니다.</p>
+            </div>
+            <div class="ode-ds-font-block reveal" style="--d:0.3s">
+              <p class="ode-ds-font-display" style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.6vw,2.8rem);font-style:italic">Cormorant Garamond</p>
+              <p class="ode-ds-font-desc">브랜드 로고와 영문 헤드라인에 사용하여<br>ODE만의 우아하고 정제된 무드를 표현합니다.</p>
+            </div>
+          </div>
+          <div class="ode-ds-palette">
+            <p class="ode-ds-label reveal" style="--d:0.05s">Color Palette</p>
+            ${[
+              { hex:'#F5F1ED', name:'Soft Ivory',   desc:'브랜드의 메인 배경 컬러로,<br>깨끗하고 편안한 인상을 전달합니다.' },
+              { hex:'#E8E0D8', name:'Warm Beige',   desc:'부드럽고 자연스러운 무드를 더하는<br>서브 베이지 컬러입니다.' },
+              { hex:'#8D775F', name:'Mocha Beige',  desc:'ODE만의 따뜻하고 감성적인 분위기를 표현하는<br>시그니처 컬러입니다.' },
+              { hex:'#5C4F45', name:'Deep Taupe',   desc:'텍스트와 강조 요소에 사용되는 컬러로<br>브랜드의 안정감과 깊이를 더합니다.' },
+            ].map((c, i) => `
+              <div class="ode-ds-swatch reveal" style="--d:${0.12 + i * 0.1}s">
+                <span class="ode-ds-swatch-color" style="background:${c.hex}"></span>
+                <span class="ode-ds-swatch-info">
+                  <strong>${c.name}</strong>
+                  <span class="ode-ds-swatch-hex">${c.hex}</span>
+                  <span class="ode-ds-swatch-desc">${c.desc}</span>
+                </span>
+              </div>`).join('')}
+          </div>
+        </div>
+      </section>`;
+    }
+
     function odeBrandNamingHTML() {
       return `
       <section class="ode-naming">
@@ -2059,6 +2142,7 @@
       let body = '';
       if (p.caseOdeOverview) body += odeOverviewHTML();
       if (p.caseOdeBrandNaming) body += odeBrandNamingHTML();
+      if (p.caseOdeDesignSystem) body += odeDesignSystemHTML();
       if (p.caseBackground) body += bgSectionHTML();
       if (p.caseDesignSystem) body += dsSectionHTML();
       if (p.caseKeyInteraction) body += kiSectionHTML();
