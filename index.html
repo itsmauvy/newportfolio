@@ -530,7 +530,7 @@
     #banner-design { position: relative; z-index: 2; background: #fff; color: #111; }
     #banner-design .bd-fade { height: 60vh; background: linear-gradient(180deg, #0a0a0b 0%, #ffffff 100%); }
     #banner-design .bd-pin { position: relative; height: 140vh; overflow: hidden; background: #fff; }
-    #banner-design .bd-title { position: absolute; top: 50vh; left: 0; right: 0; transform: translateY(-50%); margin: 0; display: flex; justify-content: center; align-items: baseline; gap: 0.3em; z-index: 3; pointer-events: none; }
+    #banner-design .bd-title { position: absolute; top: 50vh; left: 0; right: 0; transform: translateY(-50%); margin: 0; display: flex; justify-content: center; align-items: baseline; gap: 0.4em; z-index: 3; pointer-events: none; }
     #banner-design .bd-word { display: inline-block; font-size: clamp(2.4rem, 7vw, 6rem); font-weight: 700; letter-spacing: -0.02em; color: #111; white-space: nowrap; will-change: transform; }
     #banner-design .bd-stage { position: absolute; inset: 0; z-index: 2; }
     #banner-design .bd-banner { position: absolute; left: 50%; top: 50vh; width: min(40vh, 80vw); aspect-ratio: 4 / 5; opacity: 0; will-change: transform, opacity; }
@@ -545,7 +545,7 @@
       text-align: center; pointer-events: none;
       opacity: 0; transform: translateY(20px);
       will-change: transform;
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transition: opacity 0.5s ease;
     }
     #banner-design .bd-folder.is-visible { opacity: 1; transform: none; pointer-events: auto; }
     #banner-design .bd-folder-wrap {
