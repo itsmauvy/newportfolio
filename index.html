@@ -914,7 +914,7 @@
     #pj-viewer .reveal.cs-in { opacity: 1; transform: none; }
     @media (prefers-reduced-motion: reduce) { #pj-viewer .reveal { opacity: 1; transform: none; transition: none; } }
     /* 케이스 영역 전용: CSS 눈 + 커스텀 커서 */
-    #pjvCase, #pjvCase * { cursor: none; }
+    #pjvCase.is-sledding, #pjvCase.is-sledding * { cursor: none; }
     #pj-viewer .cs-snow { position: fixed; overflow: hidden; pointer-events: none; z-index: 6; }
     #pj-viewer .cs-snow .flake { position: absolute; top: 0; display: block; border-radius: 50%; background: #fff; box-shadow: 0 0 4px rgba(255, 255, 255, 0.55); animation-name: csFall; animation-timing-function: linear; animation-iteration-count: infinite; will-change: transform; }
     @keyframes csFall { from { transform: translate3d(0, -12vh, 0); } to { transform: translate3d(var(--drift, 0px), 110vh, 0); } }
@@ -2018,11 +2018,13 @@
         setTimeout(() => {
           renderViewer();
           stageEl.style.opacity = '1';
-          if (isSledding()) startCaseFX(); else stopCaseFX();
+          if (isSledding()) { startCaseFX(); caseEl.classList.add('is-sledding'); }
+      else { stopCaseFX(); caseEl.classList.remove('is-sledding'); }
         }, 220);
       } else {
         renderViewer();
-        if (isSledding()) startCaseFX(); else stopCaseFX();
+        if (isSledding()) { startCaseFX(); caseEl.classList.add('is-sledding'); }
+      else { stopCaseFX(); caseEl.classList.remove('is-sledding'); }
       }
     }
     // ===== 케이스 영역 전용: CSS 눈 + 커스텀 커서(마우스 방향 ±45° 기울기) =====
@@ -2098,7 +2100,8 @@
       viewer.classList.add('is-open');
       viewer.setAttribute('aria-hidden', 'false');
       if (typeof lenis !== 'undefined' && lenis) lenis.stop();
-      if (isSledding()) startCaseFX(); else stopCaseFX();
+      if (isSledding()) { startCaseFX(); caseEl.classList.add('is-sledding'); }
+      else { stopCaseFX(); caseEl.classList.remove('is-sledding'); }
     }
     function closeViewer() {
       viewer.classList.remove('is-open');
