@@ -554,6 +554,18 @@
     #projects .pjp-title { font-size: clamp(2.2rem, 4vw, 4.2rem); font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; text-align: center; margin: 1.8rem 0 1rem; line-height: 1; white-space: nowrap; }
     #projects .pjp-foot { display: flex; justify-content: space-between; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
 
+    /* 케이스 뷰어 목차 드래그 힌트 — 드래그하면 사라짐 */
+    #pj-viewer .pjv-hint {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-top: -84px;   /* 다이얼 빈 아래공간만큼 끌어올려 활성 항목 바로 아래에 */
+      font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45); pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    #pj-viewer .pjv-hint .pjh-arrow { font-style: normal; font-size: 0.85rem; animation: pjhBob 1.6s ease-in-out infinite; }
+    #pj-viewer .pjv-hint.is-hidden { opacity: 0; }
+    @keyframes pjhBob { 0%, 100% { transform: translateY(-2px); opacity: 0.5; } 50% { transform: translateY(2px); opacity: 1; } }
+
     @media (max-width: 860px) {
       #projects .pj-grid { grid-template-columns: 1fr; gap: 3rem; }
       #projects .pj-line { display: none; }
@@ -600,7 +612,7 @@
     #pj-viewer .pjv-eyebrow { font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); }
     #pj-viewer .pjv-title { font-size: clamp(2.1rem, 3.4vw, 3.3rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.02; margin: 1.2vh 0 0.7rem; }
     #pj-viewer .pjv-sub { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
-    #pj-viewer .pjv-desc { font-size: 0.95rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); margin-top: 2.6vh; max-width: 42ch; }
+    #pj-viewer .pjv-desc { font-size: 0.95rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); margin-top: 2.6vh; max-width: 42ch; white-space: pre-line; }
     #pj-viewer .pjv-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 3vh; }
     #pj-viewer .pjv-tags span { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 100px; padding: 0.5rem 1rem; }
     /* View Site CTA — 테두리를 도는 빛 + 반짝임, hover 시 채워짐 */
@@ -663,7 +675,7 @@
     #pj-viewer .pjv-hero img, #pj-viewer .pjv-figure img { width: 100%; height: 100%; object-fit: cover; }
     #pj-viewer .pjv-section { margin-bottom: 6vh; }
     #pj-viewer .pjv-section h3 { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); margin-bottom: 1.4vh; }
-    #pj-viewer .pjv-section p { font-size: 1rem; line-height: 1.7; color: rgba(255, 255, 255, 0.82); }
+    #pj-viewer .pjv-section p { font-size: 1rem; line-height: 1.7; color: rgba(255, 255, 255, 0.82); max-width: 680px; }
     #pj-viewer .pjv-nav {
       position: absolute; bottom: 0; right: 4vw; z-index: 12;
       display: flex; align-items: center; gap: 2.2rem; padding: 3vh 0;
@@ -867,6 +879,7 @@
         <a class="pjv-live" id="pjvLive" href="#" target="_blank" rel="noopener"><span>View Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
       </div>
       <ul class="pjv-index" id="pjvIndex" aria-label="프로젝트 목차"></ul>
+      <div class="pjv-hint" id="pjvHint"><em class="pjh-arrow">↕</em><span>Drag to switch projects</span></div>
     </div>
     <div class="pjv-case" id="pjvCase" data-lenis-prevent></div>
   </div>
@@ -1051,8 +1064,8 @@
     /* ⬇️ 프로젝트 데이터 (단일 소스 — 여기만 고치면 리스트·뷰어·인덱스 전부 반영)
        thumb: 리스트 호버 썸네일(없으면 이름만), live: 라이브 사이트 URL(새 탭) */
     const PROJECTS = [
-      { name: 'Sledding Game', year: '2025', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Web-based Sledding Mini Game', tags: ['UX/UI Design', 'Interaction', 'Web'],
-        summary: '한 줄 소개 placeholder — 썰매 게임 프로젝트 설명을 적어주세요.',
+      { name: 'Sledding Game', year: '2025', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Web Publishing', 'Interaction', 'Localization'],
+        summary: '귀여운 캐릭터와 겨울의 즐거움을 담은\n인터랙티브 게임 웹사이트',
         sections: [
           { h: 'Overview', p: '프로젝트 개요 placeholder. 무엇을, 왜 만들었는지.' },
           { h: 'Problem',  p: '해결하려던 문제 placeholder.' },
@@ -1344,9 +1357,11 @@
         setTimeout(() => { renderViewer(); stageEl.style.opacity = '1'; }, 220);
       } else { renderViewer(); }
     }
+    const ixHint = document.getElementById('pjvHint');
     function openViewer(i) {
       current = Math.max(0, Math.min(total - 1, i));
       renderViewer();
+      if (ixHint) ixHint.classList.remove('is-hidden');   // 뷰어 열 때 힌트 다시 표시
       if (stageEl) stageEl.style.opacity = '1';
       viewer.classList.add('is-open');
       viewer.setAttribute('aria-hidden', 'false');
