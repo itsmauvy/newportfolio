@@ -2052,7 +2052,6 @@
     gsap.set(banners, { xPercent: -50, yPercent: 150, opacity: 0, scale: 1, x: 0, y: 0 });
 
     let dragEnabled  = false;
-    let scrubPaused  = false; // kill 대신 onUpdate만 차단 — pin 유지로 스냅 방지
     let dragging     = false;
     let _sx = 0, _sy = 0;
 
@@ -2081,17 +2080,28 @@
       scrub: 1,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => { if (!scrubPaused) tl.progress(self.progress); },
+      onUpdate: (self) => { if (!dragging) tl.progress(self.progress); },
       onLeave: () => enableDragMode(),
+      onEnterBack: () => disableDragMode(),
     });
 
-    /* ── Phase 2: 드래그 모드 활성화 ── */
+    /* ── Phase 2: 드래그 모드 ── */
+    function disableDragMode() {
+      if (!dragEnabled) return;
+      dragEnabled = false;
+      folder.classList.remove('is-visible');
+      if (dragHint) dragHint.classList.remove('is-visible');
+      const top = banners[N - 1];
+      top.style.cursor = '';
+      top.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup',   onUp);
+      window.removeEventListener('pointercancel', onUp);
+    }
+
     function enableDragMode() {
       if (dragEnabled) return;
       dragEnabled = true;
-
-      // kill 대신 onUpdate만 중단 — pin spacer 살려서 스냅 점프 방지
-      scrubPaused = true;
 
       folder.classList.add('is-visible');
       if (dragHint) dragHint.classList.add('is-visible');
