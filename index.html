@@ -1944,8 +1944,15 @@
       current = n;
       if (stageEl) {
         stageEl.style.opacity = '0';
-        setTimeout(() => { renderViewer(); stageEl.style.opacity = '1'; }, 220);
-      } else { renderViewer(); }
+        setTimeout(() => {
+          renderViewer();
+          stageEl.style.opacity = '1';
+          if (isSledding()) startCaseFX(); else stopCaseFX();
+        }, 220);
+      } else {
+        renderViewer();
+        if (isSledding()) startCaseFX(); else stopCaseFX();
+      }
     }
     // ===== 케이스 영역 전용: CSS 눈 + 커스텀 커서(마우스 방향 ±45° 기울기) =====
     let csSnowEl, csCursorEl, csRAF = null, csMove = null, csResize = null;
@@ -2010,15 +2017,17 @@
     }
 
     const ixHint = document.getElementById('pjvHint');
+    const isSledding = () => PROJECTS[current] && PROJECTS[current].name === 'Sledding Game';
+
     function openViewer(i) {
       current = Math.max(0, Math.min(total - 1, i));
       renderViewer();
-      if (ixHint) ixHint.classList.remove('is-hidden');   // 뷰어 열 때 힌트 다시 표시
+      if (ixHint) ixHint.classList.remove('is-hidden');
       if (stageEl) stageEl.style.opacity = '1';
       viewer.classList.add('is-open');
       viewer.setAttribute('aria-hidden', 'false');
       if (typeof lenis !== 'undefined' && lenis) lenis.stop();
-      startCaseFX();
+      if (isSledding()) startCaseFX(); else stopCaseFX();
     }
     function closeViewer() {
       viewer.classList.remove('is-open');
