@@ -888,16 +888,15 @@
     }
     #pj-viewer .ode-mp-annot.cs-in .ode-mp-arrow-line { width: clamp(40px, 6vw, 80px); }
     #pj-viewer .ode-mp-arrow-tip {
-      width: 0; height: 0;
-      border-top: 3.5px solid transparent;
-      border-bottom: 3.5px solid transparent;
-      border-left: 5px solid #2b2420;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #2b2420;
+      flex-shrink: 0;
       opacity: 0; transition: opacity 0.2s 0.65s;
     }
     #pj-viewer .ode-mp-arrow-tip--left {
-      border-left: none;
-      border-right: 5px solid #2b2420;
-      transition: opacity 0.2s 0.65s;
+      border: none;
+      background: #2b2420;
     }
     #pj-viewer .ode-mp-annot.cs-in .ode-mp-arrow-tip { opacity: 1; }
 
