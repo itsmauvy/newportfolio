@@ -500,6 +500,7 @@
       background: #0a0a0b;
       color: #fff;
       padding: 11vh 4vw 22vh;
+      min-height: 100vh;
     }
     #projects .pj-inner { max-width: 1600px; margin: 0 auto; position: relative; z-index: 1; }
     #projects .pj-item {
@@ -1143,8 +1144,15 @@
     const projectsEl = document.getElementById('projects');
     const bannerEl   = document.getElementById('banner-design');
 
-    // pin된 요소는 offsetTop이 pin-spacer 기준이라 0이 됨 → offsetParent 체인 합산으로 실제 문서 위치 계산
-    const docTop = (el) => { let y = 0, n = el; while (n) { y += n.offsetTop; n = n.offsetParent; } return y; };
+    // GSAP pin은 요소를 .pin-spacer 안에 래핑하고 position:fixed로 전환 → offsetParent가 null이 되어 0 반환 방지
+    // pin-spacer가 있으면 spacer 기준으로 계산해야 실제 스크롤 위치와 일치함
+    const docTop = (el) => {
+      const target = (el.parentElement && el.parentElement.classList.contains('pin-spacer'))
+        ? el.parentElement : el;
+      let y = 0, n = target;
+      while (n) { y += n.offsetTop; n = n.offsetParent; }
+      return y;
+    };
 
     // 페이지 섹션 정의 (스크롤 시작 위치 기준) — 섹션 추가 시 여기에 등록
     const sectionDefs = () => [
