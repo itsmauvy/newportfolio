@@ -849,6 +849,69 @@
     #pj-viewer .cs-hero-text { position: absolute; left: 6%; bottom: 7%; max-width: 54%; }
     #pj-viewer .cs-hero-title { font-size: clamp(2rem, 3.6vw, 3.4rem); font-weight: 700; line-height: 1.14; letter-spacing: -0.02em; color: #14233a; white-space: pre-line; }
     #pj-viewer .cs-hero-lead { margin-top: 1.5rem; font-size: 0.92rem; line-height: 1.7; color: rgba(20, 35, 58, 0.72); white-space: pre-line; }
+    /* ODE Brand Naming 섹션 */
+    #pj-viewer .ode-naming {
+      position: relative; overflow: hidden;
+      aspect-ratio: 16 / 6.2; min-height: 320px;
+    }
+    #pj-viewer .ode-naming-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+    #pj-viewer .ode-naming-label {
+      position: absolute; top: 1.4rem; left: 1.8rem;
+      font-size: 0.55rem; letter-spacing: 0.22em; color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+    }
+    #pj-viewer .ode-naming-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; padding: 2rem;
+      gap: 1.8rem;
+    }
+    #pj-viewer .ode-naming-circles {
+      display: flex; align-items: center; gap: clamp(1.5rem, 4vw, 3.5rem);
+    }
+    #pj-viewer .ode-naming-circle {
+      position: relative; width: clamp(120px, 16vw, 200px); height: clamp(120px, 16vw, 200px);
+    }
+    #pj-viewer .ode-naming-circle svg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+    }
+    #pj-viewer .ode-circle-bg { fill: rgba(255,255,255,0.07); stroke: none; }
+    #pj-viewer .ode-circle-path {
+      fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 1;
+      stroke-dasharray: 622; stroke-dashoffset: 622;
+      transition: stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #pj-viewer .ode-naming-circle.cs-in .ode-circle-path { stroke-dashoffset: 0; }
+    #pj-viewer .ode-naming-circle:nth-child(3).cs-in .ode-circle-path {
+      transition-delay: 0.25s;
+    }
+    #pj-viewer .ode-circle-text {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(1rem, 1.8vw, 1.5rem); color: rgba(255,255,255,0.9);
+      letter-spacing: 0.02em;
+    }
+    #pj-viewer .ode-naming-plus {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2vw, 1.8rem); color: rgba(255,255,255,0.7);
+    }
+    #pj-viewer .ode-naming-brand {
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    }
+    #pj-viewer .ode-naming-wordmark {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: 0.6em;
+      color: rgba(255,255,255,0.92); text-indent: 0.6em;
+    }
+    #pj-viewer .ode-naming-sub {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.75rem, 1.1vw, 0.95rem); color: rgba(255,255,255,0.7);
+      letter-spacing: 0.04em; text-align: center; line-height: 1.6;
+    }
+
     /* ODE Overview 섹션 */
     #pj-viewer .ode-overview {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -1533,6 +1596,7 @@
         caseHero: 'ode/ode hero.jpg',
         caseTheme: 'ode',
         caseOdeOverview: true,
+        caseOdeBrandNaming: true,
         caseTitle: '실무의 경험에서 시작한\n데일리 포켓 뷰티',
         caseLead: '뷰티 실무에서 발견한 니즈를 바탕으로,\n포켓 뷰티 브랜드 ODE를 기획했습니다.',
         period: '5 Days',
@@ -1927,6 +1991,37 @@
         </section>`;
     }
 
+    function odeBrandNamingHTML() {
+      return `
+      <section class="ode-naming">
+        <img class="ode-naming-bg" src="ode/brand naming.jpg" alt="">
+        <span class="ode-naming-label reveal" style="--d:0s">Brand Naming</span>
+        <div class="ode-naming-content">
+          <div class="ode-naming-circles">
+            <div class="ode-naming-circle reveal" style="--d:0.1s">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <circle class="ode-circle-bg" cx="100" cy="100" r="99"/>
+                <circle class="ode-circle-path" cx="100" cy="100" r="99" transform="rotate(-90 100 100)"/>
+              </svg>
+              <span class="ode-circle-text">Ordinary</span>
+            </div>
+            <span class="ode-naming-plus reveal" style="--d:0.35s">+</span>
+            <div class="ode-naming-circle reveal" style="--d:0.2s">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <circle class="ode-circle-bg" cx="100" cy="100" r="99"/>
+                <circle class="ode-circle-path" cx="100" cy="100" r="99" transform="rotate(-90 100 100)"/>
+              </svg>
+              <span class="ode-circle-text">Everyday</span>
+            </div>
+          </div>
+          <div class="ode-naming-brand reveal" style="--d:0.5s">
+            <p class="ode-naming-wordmark">O D E</p>
+            <p class="ode-naming-sub">An ode to everyday moments,<br>평범한 일상에 보내는 작은 찬가</p>
+          </div>
+        </div>
+      </section>`;
+    }
+
     function odeOverviewHTML() {
       return `
       <section class="ode-overview">
@@ -1963,6 +2058,7 @@
         </div>`;
       let body = '';
       if (p.caseOdeOverview) body += odeOverviewHTML();
+      if (p.caseOdeBrandNaming) body += odeBrandNamingHTML();
       if (p.caseBackground) body += bgSectionHTML();
       if (p.caseDesignSystem) body += dsSectionHTML();
       if (p.caseKeyInteraction) body += kiSectionHTML();
@@ -1990,7 +2086,7 @@
           if (e.isIntersecting) { e.target.classList.add('cs-in'); caseObserver.unobserve(e.target); }
         });
       }, { root: caseEl, threshold: 0.1, rootMargin: '0px 0px 0px 0px' });
-      caseEl.querySelectorAll('.reveal, .cs-deco-rise, .cs-deco-fade, .ki__point').forEach((el) => caseObserver.observe(el));
+      caseEl.querySelectorAll('.reveal, .cs-deco-rise, .cs-deco-fade, .ki__point, .ode-naming-circle').forEach((el) => caseObserver.observe(el));
     }
 
     let current = 0;
