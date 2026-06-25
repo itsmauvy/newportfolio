@@ -854,12 +854,19 @@
     #pj-viewer .ode-mp-header { text-align: center; margin-bottom: 3rem; }
     #pj-viewer .ode-mp-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.25em; color: #2b2420; margin-bottom: 1rem; }
     #pj-viewer .ode-mp-desc { font-size: 0.82rem; line-height: 1.85; color: #4a3f3a; }
-    #pj-viewer .ode-mp-body { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 1.5rem; align-items: start; }
+    #pj-viewer .ode-mp-body { position: relative; }
     #pj-viewer .ode-mp-screen img { width: 100%; display: block; border-radius: 6px; box-shadow: 0 8px 40px rgba(43,36,32,0.14); }
-    #pj-viewer .ode-mp-annots { display: flex; flex-direction: column; justify-content: space-around; height: 100%; gap: 3rem; padding-top: 4rem; }
-    #pj-viewer .ode-mp-annot { display: flex; flex-direction: column; gap: 0.6rem; }
-    #pj-viewer .ode-mp-annots--left .ode-mp-annot { align-items: flex-start; }
+    #pj-viewer .ode-mp-annots { position: absolute; top: 0; bottom: 0; width: 26%; }
+    #pj-viewer .ode-mp-annots--left  { left: 0; }
+    #pj-viewer .ode-mp-annots--right { right: 0; }
+    #pj-viewer .ode-mp-screen { margin: 0 28%; }
+    #pj-viewer .ode-mp-annot { position: absolute; display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
+    #pj-viewer .ode-mp-annots--left  .ode-mp-annot { align-items: flex-start; }
     #pj-viewer .ode-mp-annots--right .ode-mp-annot { align-items: flex-end; text-align: right; }
+    #pj-viewer .ode-mp-annot:nth-child(1) { top: 3%; }
+    #pj-viewer .ode-mp-annot:nth-child(2) { top: 62%; }
+    #pj-viewer .ode-mp-annots--right .ode-mp-annot:nth-child(1) { top: 18%; }
+    #pj-viewer .ode-mp-annots--right .ode-mp-annot:nth-child(2) { top: 46%; }
     #pj-viewer .ode-mp-annot-text strong { font-size: 0.85rem; font-weight: 600; color: #2b2420; display: block; margin-bottom: 0.35rem; }
     #pj-viewer .ode-mp-annot-text p { font-size: 0.72rem; line-height: 1.7; color: #7a6e69; }
     #pj-viewer .ode-mp-annot-text b { font-weight: 600; color: #4a3f3a; }
