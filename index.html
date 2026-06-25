@@ -856,11 +856,11 @@
     #pj-viewer .ode-mp-desc { font-size: 0.82rem; line-height: 1.85; color: #4a3f3a; }
     #pj-viewer .ode-mp-body { position: relative; }
     #pj-viewer .ode-mp-screen img { width: 100%; display: block; border-radius: 6px; box-shadow: 0 8px 40px rgba(43,36,32,0.14); }
-    #pj-viewer .ode-mp-annots { position: absolute; top: 0; bottom: 0; width: 26%; overflow: visible; z-index: 2; }
+    #pj-viewer .ode-mp-annots { position: absolute; top: 0; bottom: 0; width: 27.5%; overflow: visible; z-index: 2; }
     #pj-viewer .ode-mp-annots--left  { left: 0; }
     #pj-viewer .ode-mp-annots--right { right: 0; }
     #pj-viewer .ode-mp-screen { margin: 0 28%; }
-    #pj-viewer .ode-mp-annot { position: absolute; display: flex; align-items: flex-start; gap: 0.5rem; }
+    #pj-viewer .ode-mp-annot { position: absolute; left: 0; right: 0; display: flex; align-items: flex-start; gap: 0.5rem; }
     #pj-viewer .ode-mp-annots--left  .ode-mp-annot { flex-direction: row; }
     #pj-viewer .ode-mp-annots--right .ode-mp-annot { flex-direction: row; }
     /* 화살표: 텍스트 첫 줄 높이에 맞춤 */
@@ -876,15 +876,17 @@
     #pj-viewer .ode-mp-annot-text p { font-size: 0.72rem; line-height: 1.7; color: #7a6e69; }
     #pj-viewer .ode-mp-annot-text b { font-weight: 600; color: #4a3f3a; }
     /* 화살표 */
-    #pj-viewer .ode-mp-arrow { display: flex; align-items: center; margin-top: 0.4rem; }
+    #pj-viewer .ode-mp-arrow { display: flex; align-items: center; margin-top: 0.4rem; flex: 1 1 auto; min-width: 0; }
     #pj-viewer .ode-mp-arrow--right { flex-direction: row; }
     #pj-viewer .ode-mp-arrow--left  { flex-direction: row; }
     #pj-viewer .ode-mp-arrow-line {
-      height: 1px; background: #2b2420; width: 0;
-      transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
-      min-width: 0; max-width: clamp(40px, 6vw, 80px);
+      height: 1px; background: #2b2420;
+      flex: 1 1 auto; min-width: 0;
+      transform: scaleX(0); transform-origin: left center;
+      transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
     }
-    #pj-viewer .ode-mp-annot.cs-in .ode-mp-arrow-line { width: clamp(40px, 6vw, 80px); }
+    #pj-viewer .ode-mp-arrow--left .ode-mp-arrow-line { transform-origin: right center; }
+    #pj-viewer .ode-mp-annot.cs-in .ode-mp-arrow-line { transform: scaleX(1); }
     #pj-viewer .ode-mp-arrow-tip {
       width: 5px; height: 5px;
       border-radius: 50%;
