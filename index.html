@@ -2240,8 +2240,11 @@
       window.removeEventListener('pointerup',   onUp);
       window.removeEventListener('pointercancel', onUp);
       if (bdST) { bdST.kill(); bdST = null; }
-      // 타이틀 페이드아웃 — 중앙 복귀 시 폴더와 겹치므로 숨김
-      gsap.to([wL, wR], { opacity: 0, duration: 0.5, ease: 'power2.out',
+      // 폴더를 아래로 내려 타이틀 닫힘과 겹치지 않게
+      gsap.to(folder, { y: '+=140', duration: 0.7, ease: 'power2.inOut', force3D: true });
+      // 타이틀 좌우 닫기
+      gsap.to([wL, wR], {
+        x: 0, scale: 1, duration: 0.9, ease: 'power2.inOut',
         onComplete: () => lenis.start(),
       });
     }
