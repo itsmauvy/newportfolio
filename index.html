@@ -1964,7 +1964,7 @@
       }
     });
 
-    ScrollTrigger.create({
+    let bdST = ScrollTrigger.create({
       trigger: bdPin,
       start: 'top top',
       end: '+=' + Math.round(tlDur * 60) + '%',
@@ -1972,23 +1972,29 @@
       scrub: 1,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        tl.progress(self.progress);
-        // 스택 완료(scrub 끝)에 도달하면 드래그 모드 활성화
-        if (self.progress >= 0.98 && !dragEnabled) enableDragMode();
-      },
+      onUpdate: (self) => { tl.progress(self.progress); },
+      // scrub 완전히 끝나면(onLeave) ST를 kill → 배너 GSAP 제어 해제 후 드래그 활성화
+      onLeave: () => enableDragMode(),
     });
 
     /* ── Phase 2: 드래그 모드 활성화 ── */
     function enableDragMode() {
+      if (dragEnabled) return;
       dragEnabled = true;
+
+      // scrub ST 제거 — 배너를 GSAP 제어에서 해방해야 드래그가 동작함
+      if (bdST) { bdST.kill(); bdST = null; }
+
+      // lenis 정지 (드래그 중 실수 스크롤 방지)
       lenis.stop();
+
       folder.classList.add('is-visible');
       if (dragHint) dragHint.classList.add('is-visible');
 
-      // 가장 위 배너(마지막)에 drag cursor
+      // 가장 위 배너(마지막 DOM = 시각적 최상단)
       const top = banners[N - 1];
       top.style.cursor = 'grab';
+      top.style.touchAction = 'none'; // 모바일 스크롤 제스처 충돌 방지
 
       top.addEventListener('pointerdown', onDown);
       window.addEventListener('pointermove', onMove);
