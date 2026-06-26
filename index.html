@@ -1064,6 +1064,8 @@
       font-weight: 700; margin-bottom: 0.5rem;
     }
     #pj-viewer .ode-problem-card-sub { font-size: 0.82rem; color: #b0a49a; }
+    #pj-viewer .ode-problem-card-head em,
+    #pj-viewer .ode-problem-insight-text em { font-style: italic; color: #c9a97a; }
     #pj-viewer .ode-problem-insight { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding-top: 2.5rem; }
     #pj-viewer .ode-problem-insight-icon { font-size: 1.2rem; color: #c9a97a; }
     #pj-viewer .ode-problem-insight-label { font-size: 0.8rem; font-style: italic; color: #c9a97a; letter-spacing: 0.1em; }
@@ -2514,9 +2516,9 @@
         <hr class="ode-problem-rule reveal" style="--d:0.3s">
         <div class="ode-problem-cards">
           ${[
-            { n:'01', h:'잊혀지는 제품',       s:'구매 후 사용 빈도 감소' },
-            { n:'02', h:'휴대되지 않는 패키지', s:'일상 속 사용 경험 부족' },
-            { n:'03', h:'경험되지 않는 온라인', s:'실물 경험의 부재' },
+            { n:'01', h:'<em>잊혀지는</em> 제품',       s:'구매 후 사용 빈도 감소' },
+            { n:'02', h:'<em>휴대되지 않는</em> 패키지', s:'일상 속 사용 경험 부족' },
+            { n:'03', h:'<em>경험되지 않는</em> 온라인', s:'실물 경험의 부재' },
           ].map((c, i) => `
             <div class="ode-problem-card reveal" style="--d:${0.1 + i * 0.12}s">
               <span class="ode-problem-card-num">${c.n}</span>
@@ -2528,7 +2530,7 @@
         <div class="ode-problem-insight reveal" style="--d:0.55s">
           <span class="ode-problem-insight-icon">✦</span>
           <span class="ode-problem-insight-label">Insight</span>
-          <p class="ode-problem-insight-text">사용자가 찾고, 사용하고, 다시 손이 가는 경험에 집중했습니다</p>
+          <p class="ode-problem-insight-text">사용자가 <em>찾고, 사용하고, 다시 손이 가는 경험</em>에 집중했습니다</p>
         </div>
       </section>`;
     }
