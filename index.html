@@ -27,6 +27,52 @@
       pointer-events: none;
     }
 
+    /* ── 3D Tilted Card Gallery (彬 마스크 안) ── */
+    #card-ticker {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #000;
+      pointer-events: auto;
+    }
+    #card-ticker-track {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      will-change: transform;
+      flex-shrink: 0;
+    }
+    .tc-card {
+      width: 200px;
+      height: 250px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      border-radius: 6px;
+      opacity: 0.92;
+      transform: perspective(1143px) rotateY(-50deg) skewY(20deg) translateY(0px);
+      -webkit-mask: linear-gradient(3deg, #0003 0%, #000 55%);
+      mask: linear-gradient(3deg, #0003 0%, #000 55%);
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease, filter 0.4s ease;
+      filter: grayscale(0.08) brightness(1);
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .tc-card:hover {
+      transform: perspective(1143px) rotateY(-50deg) skewY(20deg) translateY(-60px);
+      opacity: 1;
+      filter: grayscale(0) brightness(1.15);
+    }
+    .tc-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     /* ── 영상 (화면 중앙) ── */
     #video-wrap {
       position: absolute;
@@ -1458,18 +1504,45 @@
 
 <div id="scene">
 
-  <!-- Layer 1: 전체화면 영상 (스크롤 후반에 페이드인) -->
-  <video id="video-full" muted loop playsinline
-    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;z-index:0;">
-    <source src="assets/video/13820343_3840_2160_30fps.mp4" type="video/mp4">
-  </video>
-
-  <!-- Layer 2: 彬 마스크 영상 (중앙에서 확대) -->
+  <!-- 彬 마스크 안에 카드 갤러리 -->
   <div id="video-wrap">
-    <div id="video-placeholder">VIDEO</div>
-    <video id="hero-video" muted loop playsinline>
-      <source src="assets/video/13820343_3840_2160_30fps.mp4" type="video/mp4">
-    </video>
+    <div id="card-ticker">
+      <div id="card-ticker-track">
+        <!-- set 1 -->
+        <figure class="tc-card"><video src="assets/video/0626.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card"><img src="ode/main page.png" alt=""></figure>
+        <figure class="tc-card"><img src="ode/brand naming.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/about.png" alt=""></figure>
+        <figure class="tc-card"><img src="ode/cart.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop page.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop card1.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop card2.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/store page.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/ode overview.jpg" alt=""></figure>
+        <!-- set 2 -->
+        <figure class="tc-card"><video src="assets/video/0626.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card"><img src="ode/main page.png" alt=""></figure>
+        <figure class="tc-card"><img src="ode/brand naming.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/about.png" alt=""></figure>
+        <figure class="tc-card"><img src="ode/cart.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop page.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop card1.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop card2.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/store page.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/ode overview.jpg" alt=""></figure>
+        <!-- set 3 -->
+        <figure class="tc-card"><video src="assets/video/0626.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card"><img src="ode/main page.png" alt=""></figure>
+        <figure class="tc-card"><img src="ode/brand naming.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/about.png" alt=""></figure>
+        <figure class="tc-card"><img src="ode/cart.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop page.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop card1.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/shop card2.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/store page.jpg" alt=""></figure>
+        <figure class="tc-card"><img src="ode/ode overview.jpg" alt=""></figure>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -1691,16 +1764,6 @@
   gsap.ticker.add((time) => { lenis.raf(time * 1000); });
   gsap.ticker.lagSmoothing(0);
 
-  /* 영상 */
-  const vid  = document.getElementById('hero-video');
-  const vidF = document.getElementById('video-full');
-  const ph   = document.getElementById('video-placeholder');
-  [vid, vidF].forEach(v => {
-    v.addEventListener('canplaythrough', () => { v.play(); }, { once: true });
-    v.load();
-  });
-  vid.addEventListener('canplaythrough', () => { ph.style.display = 'none'; }, { once: true });
-
   /* ── 공통 ScrollTrigger 설정 ── */
   const ST = {
     trigger: '#scroll-space',
@@ -1709,15 +1772,30 @@
     scrub: 1,
   };
 
-  /* ── 1) 영상은 100% 고정, 글자(마스크)만 확대 → 다 커진 뒤 전체영상으로 전환 ── */
-  // 타임라인: 앞 70% 구간에 글자 40배 확대 완료 → 뒤 30% 구간에 전체영상 페이드인(사라짐)
+  /* ── 1) 彬 마스크 확대 → 카드 갤러리가 글자 모양으로 드러났다가 전체화면으로 열림 ── */
   const heroTL = gsap.timeline({ scrollTrigger: ST });
   heroTL.fromTo('#video-wrap',
     { webkitMaskSize: '26vmin', maskSize: '26vmin' },
-    { webkitMaskSize: '2600vmin', maskSize: '2600vmin', ease: 'none', duration: 0.7 });
-  heroTL.to('#video-full', { opacity: 1, ease: 'none', duration: 0.3 });
+    { webkitMaskSize: '2600vmin', maskSize: '2600vmin', ease: 'none', duration: 1 });
 
   window.addEventListener('resize', () => { ScrollTrigger.refresh(); });
+
+  /* ── Card Ticker: 3D tilted card gallery infinite scroll ── */
+  (function () {
+    const track = document.getElementById('card-ticker-track');
+    if (!track) return;
+    track.querySelectorAll('video').forEach(v => { v.muted = true; v.play().catch(() => {}); });
+    const SETS = 3;
+    const cardCount = track.children.length / SETS; // 1세트 카드 수
+    const cardW = 200 + 20; // card width + gap
+    const oneSetW = cardW * cardCount;
+    let x = 0;
+    gsap.ticker.add(() => {
+      x -= 0.6;
+      if (x <= -oneSetW) x += oneSetW; // 1세트 너비만큼 밀리면 리셋 → 빈자리 없음
+      track.style.transform = `translateY(-50%) translateX(${x}px)`;
+    });
+  })();
 
   /* ── 2) 스크롤 인디케이터: 영상 진입(스크롤 다운) 시 숨김, 맨 위로 돌아오면 다시 표시 ── */
   (function () {
