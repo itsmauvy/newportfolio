@@ -1069,6 +1069,64 @@
       color: #f5f0ea; margin-top: 0.3rem; line-height: 1.7;
     }
 
+    /* ODE Market Research 섹션 */
+    #pj-viewer .ode-market {
+      background: #f5f1ed; color: #2b2420;
+      padding: clamp(4rem,8vw,7rem) clamp(2rem,6vw,5rem);
+      text-align: center;
+    }
+    #pj-viewer .ode-market-label {
+      font-size: 0.72rem; letter-spacing: 0.25em; color: #8a7a72; margin-bottom: 1.2rem;
+    }
+    #pj-viewer .ode-market-title {
+      font-family: 'Noto Serif KR', serif; font-size: clamp(1.5rem,2.8vw,2.2rem);
+      font-weight: 600; line-height: 1.55; margin: 0 0 3rem;
+    }
+    #pj-viewer .ode-market-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 0; border: 1px solid #d9d0c8; margin-bottom: 3rem;
+    }
+    #pj-viewer .ode-market-card {
+      padding: 1.8rem 1.5rem; border-right: 1px solid #d9d0c8; text-align: left;
+    }
+    #pj-viewer .ode-market-card:last-child { border-right: none; }
+    #pj-viewer .ode-market-card-tag {
+      display: block; font-size: 0.65rem; letter-spacing: 0.18em;
+      color: #8a7a72; margin-bottom: 0.8rem;
+    }
+    #pj-viewer .ode-market-card-name {
+      display: block; font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem,2vw,1.6rem); font-style: italic;
+      color: #2b2420; margin-bottom: 1.2rem;
+    }
+    #pj-viewer .ode-market-card-rule {
+      border: none; border-top: 1px solid #d9d0c8; margin: 0 0 1rem;
+    }
+    #pj-viewer .ode-market-card-feat-label {
+      display: block; font-size: 0.62rem; letter-spacing: 0.18em;
+      color: #8a7a72; margin-bottom: 0.4rem;
+    }
+    #pj-viewer .ode-market-card-feat { font-size: 0.8rem; color: #5a4f4a; line-height: 1.6; }
+    #pj-viewer .ode-market-divider {
+      width: 1px; height: 4rem; background: #c5b9b0; margin: 0 auto 2.5rem;
+    }
+    #pj-viewer .ode-market-opp-label {
+      font-size: 0.72rem; letter-spacing: 0.25em; color: #8a7a72; margin-bottom: 1.2rem;
+    }
+    #pj-viewer .ode-market-opp-title {
+      font-family: 'Noto Serif KR', serif; font-size: clamp(1.3rem,2.4vw,1.9rem);
+      font-weight: 600; line-height: 1.55; margin: 0 0 1.5rem;
+    }
+    #pj-viewer .ode-market-opp-body {
+      font-size: clamp(0.82rem,1.2vw,0.95rem); color: #7a6e69;
+      line-height: 1.9; margin: 0 0 1.8rem;
+    }
+    #pj-viewer .ode-market-opp-body em { color: #9b7b5a; font-style: normal; }
+    #pj-viewer .ode-market-opp-closing {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(1.1rem,2vw,1.5rem); color: #2b2420;
+    }
+
     /* ODE Brand Naming 섹션 */
     #pj-viewer .ode-naming {
       position: relative; overflow: hidden;
@@ -1825,6 +1883,7 @@
         caseTheme: 'ode',
         caseOdeOverview: true,
         caseOdeProblem: true,
+        caseOdeMarket: true,
         caseOdeBrandNaming: true,
         caseOdeDesignSystem: true,
         caseOdeMainPage: true,
@@ -2470,6 +2529,35 @@
       </section>`;
     }
 
+    function odeMarketHTML() {
+      const brands = [
+        { tag:'GLOBAL · MINIMAL', name:'rhode',    feat:'미니멀 패키징 + 현대적 뷰티' },
+        { tag:'KOREA · PLAYFUL',  name:'fwee',     feat:'감각적 컬러 + 독특한 사용감' },
+        { tag:'KOREA · DAILY',    name:'anillo',   feat:'라이프스타일 + 일상 사용 경험' },
+        { tag:'KOREA · OBJET',    name:'무지개맨션', feat:'오브제 디자인 + 소장 욕구' },
+      ];
+      return `
+      <section class="ode-market">
+        <p class="ode-market-label reveal" style="--d:0s">MARKET RESEARCH</p>
+        <h2 class="ode-market-title reveal" style="--d:0.08s">시장은 이 문제를<br>어떻게 풀고 있을까</h2>
+        <div class="ode-market-grid">
+          ${brands.map((b,i)=>`
+          <div class="ode-market-card reveal" style="--d:${0.1+i*0.1}s">
+            <span class="ode-market-card-tag">${b.tag}</span>
+            <em class="ode-market-card-name">${b.name}</em>
+            <hr class="ode-market-card-rule">
+            <span class="ode-market-card-feat-label">FEATURE</span>
+            <p class="ode-market-card-feat">${b.feat}</p>
+          </div>`).join('')}
+        </div>
+        <div class="ode-market-divider reveal" style="--d:0.5s"></div>
+        <p class="ode-market-opp-label reveal" style="--d:0.55s">OPPORTUNITY</p>
+        <h3 class="ode-market-opp-title reveal" style="--d:0.62s">감성과 휴대성을 동시에 담은<br>포켓 뷰티의 빈자리</h3>
+        <p class="ode-market-opp-body reveal" style="--d:0.7s">각 브랜드는 미니멀, 컬러, 라이프스타일, 오브제 중 하나에 집중했습니다.<br>일상에 자연스럽게 스며들며 감성과 기능을 함께 담은 브랜드는 없었습니다.</p>
+        <p class="ode-market-opp-closing reveal" style="--d:0.78s">ODE는 그 빈 지점에서 출발했습니다.</p>
+      </section>`;
+    }
+
     function odeBrandNamingHTML() {
       return `
       <section class="ode-naming">
@@ -2538,6 +2626,7 @@
       let body = '';
       if (p.caseOdeOverview) body += odeOverviewHTML();
       if (p.caseOdeProblem) body += odeProblemHTML();
+      if (p.caseOdeMarket) body += odeMarketHTML();
       if (p.caseOdeBrandNaming) body += odeBrandNamingHTML();
       if (p.caseOdeDesignSystem) body += odeDesignSystemHTML();
       if (p.caseOdeMainPage) body += odeMainPageHTML();
