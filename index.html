@@ -1023,6 +1023,52 @@
       font-size: 0.75rem; line-height: 1.65; color: rgba(255,255,255,0.45); margin-top: 0.15rem;
     }
 
+    /* ODE Problem 섹션 */
+    #pj-viewer .ode-problem {
+      background: #3a2e26; color: #f5f0ea;
+      padding: clamp(4rem,8vw,7rem) clamp(2rem,6vw,5rem);
+      text-align: center;
+    }
+    #pj-viewer .ode-problem-title {
+      font-family: 'Noto Serif KR', serif; font-size: clamp(1.6rem,3.2vw,2.6rem);
+      font-weight: 600; line-height: 1.5; margin: 0 0 2rem;
+    }
+    #pj-viewer .ode-problem-dots {
+      font-size: 1.4rem; letter-spacing: 0.2em; color: #c9a97a; margin: 0 0 1.8rem;
+    }
+    #pj-viewer .ode-problem-quote {
+      font-size: clamp(0.9rem,1.4vw,1.1rem); color: #d4c8bc; line-height: 1.8;
+      margin: 0 auto 2.5rem; max-width: 640px;
+    }
+    #pj-viewer .ode-problem-quote em { color: #c9a97a; font-style: normal; }
+    #pj-viewer .ode-problem-rule {
+      border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 0 0 3rem;
+    }
+    #pj-viewer .ode-problem-cards {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 0; margin-bottom: 3rem;
+    }
+    #pj-viewer .ode-problem-card {
+      padding: 1.5rem 2rem; border-right: 1px solid rgba(255,255,255,0.12);
+    }
+    #pj-viewer .ode-problem-card:last-child { border-right: none; }
+    #pj-viewer .ode-problem-card-num {
+      display: block; font-size: 0.72rem; letter-spacing: 0.2em;
+      color: #c9a97a; margin-bottom: 0.8rem;
+    }
+    #pj-viewer .ode-problem-card-head {
+      display: block; font-size: clamp(0.95rem,1.5vw,1.15rem);
+      font-weight: 700; margin-bottom: 0.5rem;
+    }
+    #pj-viewer .ode-problem-card-sub { font-size: 0.82rem; color: #b0a49a; }
+    #pj-viewer .ode-problem-insight { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding-top: 2.5rem; }
+    #pj-viewer .ode-problem-insight-icon { font-size: 1.2rem; color: #c9a97a; }
+    #pj-viewer .ode-problem-insight-label { font-size: 0.8rem; font-style: italic; color: #c9a97a; letter-spacing: 0.1em; }
+    #pj-viewer .ode-problem-insight-text {
+      font-family: 'Noto Serif KR', serif; font-size: clamp(1rem,1.8vw,1.3rem);
+      color: #f5f0ea; margin-top: 0.3rem; line-height: 1.7;
+    }
+
     /* ODE Brand Naming 섹션 */
     #pj-viewer .ode-naming {
       position: relative; overflow: hidden;
@@ -1778,6 +1824,7 @@
         caseHero: 'ode/ode hero.jpg',
         caseTheme: 'ode',
         caseOdeOverview: true,
+        caseOdeProblem: true,
         caseOdeBrandNaming: true,
         caseOdeDesignSystem: true,
         caseOdeMainPage: true,
@@ -2395,6 +2442,34 @@
       </section>`;
     }
 
+    function odeProblemHTML() {
+      return `
+      <section class="ode-problem">
+        <h2 class="ode-problem-title reveal" style="--d:0s">실무에서 발견한 문제를<br>브랜드 기획으로 풀어내다</h2>
+        <p class="ode-problem-dots reveal" style="--d:0.1s">⋮</p>
+        <p class="ode-problem-quote reveal" style="--d:0.2s">" 구매는 이루어지지만, 일상 속에서 <em>꾸준히 사용되는 제품은 많지 않았다.</em> "</p>
+        <hr class="ode-problem-rule reveal" style="--d:0.3s">
+        <div class="ode-problem-cards">
+          ${[
+            { n:'01', h:'잊혀지는 제품',       s:'구매 후 사용 빈도 감소' },
+            { n:'02', h:'휴대되지 않는 패키지', s:'일상 속 사용 경험 부족' },
+            { n:'03', h:'경험되지 않는 온라인', s:'실물 경험의 부재' },
+          ].map((c, i) => `
+            <div class="ode-problem-card reveal" style="--d:${0.1 + i * 0.12}s">
+              <span class="ode-problem-card-num">${c.n}</span>
+              <strong class="ode-problem-card-head">${c.h}</strong>
+              <p class="ode-problem-card-sub">${c.s}</p>
+            </div>`).join('')}
+        </div>
+        <hr class="ode-problem-rule reveal" style="--d:0.45s">
+        <div class="ode-problem-insight reveal" style="--d:0.55s">
+          <span class="ode-problem-insight-icon">✦</span>
+          <span class="ode-problem-insight-label">Insight</span>
+          <p class="ode-problem-insight-text">사용자가 찾고, 사용하고, 다시 손이 가는 경험에 집중했습니다</p>
+        </div>
+      </section>`;
+    }
+
     function odeBrandNamingHTML() {
       return `
       <section class="ode-naming">
@@ -2462,6 +2537,7 @@
         </div>`;
       let body = '';
       if (p.caseOdeOverview) body += odeOverviewHTML();
+      if (p.caseOdeProblem) body += odeProblemHTML();
       if (p.caseOdeBrandNaming) body += odeBrandNamingHTML();
       if (p.caseOdeDesignSystem) body += odeDesignSystemHTML();
       if (p.caseOdeMainPage) body += odeMainPageHTML();
