@@ -1029,6 +1029,9 @@
       padding: clamp(4rem,8vw,7rem) clamp(2rem,6vw,5rem);
       text-align: center;
     }
+    #pj-viewer .ode-problem-label {
+      font-size: 0.72rem; letter-spacing: 0.25em; color: #c9a97a; margin-bottom: 1.2rem;
+    }
     #pj-viewer .ode-problem-title {
       font-family: 'Noto Serif KR', serif; font-size: clamp(1.6rem,3.2vw,2.6rem);
       font-weight: 600; line-height: 1.5; margin: 0 0 2rem;
@@ -2504,7 +2507,8 @@
     function odeProblemHTML() {
       return `
       <section class="ode-problem">
-        <h2 class="ode-problem-title reveal" style="--d:0s">실무에서 발견한 문제를<br>브랜드 기획으로 풀어내다</h2>
+        <p class="ode-problem-label reveal" style="--d:0s">PROBLEM DEFINITION</p>
+        <h2 class="ode-problem-title reveal" style="--d:0.08s">실무에서 발견한 문제를<br>브랜드 기획으로 풀어내다</h2>
         <p class="ode-problem-dots reveal" style="--d:0.1s">⋮</p>
         <p class="ode-problem-quote reveal" style="--d:0.2s">" 구매는 이루어지지만, 일상 속에서 <em>꾸준히 사용되는 제품은 많지 않았다.</em> "</p>
         <hr class="ode-problem-rule reveal" style="--d:0.3s">
