@@ -694,6 +694,20 @@
       cursor: pointer; transition: filter 0.15s;
     }
     #banner-design .bd-mac-dot:hover { filter: brightness(0.85); }
+    #banner-design .bd-mac-dots { position: relative; }
+    #banner-design .bd-close-hint {
+      position: absolute;
+      top: 20px; left: 3px;
+      font-size: 0.75rem;
+      color: rgba(0,0,0,0.55);
+      pointer-events: none;
+      animation: bdHintBounce 1.2s ease-in-out infinite;
+      line-height: 1;
+    }
+    @keyframes bdHintBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(4px); }
+    }
     #banner-design .dot-red    { background: #ff5f57; }
     #banner-design .dot-yellow { background: #febc2e; }
     #banner-design .dot-green  { background: #28c840; }
@@ -1711,6 +1725,7 @@
           <button class="bd-mac-dot dot-red"    id="bdMacClose"  aria-label="닫기" title="닫기"></button>
           <button class="bd-mac-dot dot-yellow" aria-label="최소화" title="최소화"></button>
           <button class="bd-mac-dot dot-green"  aria-label="전체화면" title="전체화면"></button>
+          <span class="bd-close-hint">↑</span>
         </div>
         <span class="bd-mac-title">Banner Design — <span id="bdMacCount">0</span> items</span>
       </div>
