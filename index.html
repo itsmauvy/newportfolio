@@ -983,7 +983,7 @@
     #pj-viewer .ode-shop { position: relative; background: #f5f1ed; padding: clamp(3rem,6vw,5rem) clamp(2rem,4vw,4rem) clamp(4rem,8vw,7rem); overflow: hidden; }
     #pj-viewer .ode-shop .ode-mp-header { margin-bottom: clamp(2.5rem,5vw,4rem); }
     /* mobile shop 은은한 배경 */
-    #pj-viewer .ode-shop-bg { position: absolute; left: -1%; top: clamp(0rem,2vw,1.5rem); width: clamp(250px,27vw,370px); opacity: 0.9; z-index: 3; pointer-events: none; user-select: none; }
+    #pj-viewer .ode-shop-bg { position: absolute; left: -1%; top: clamp(0rem,2vw,1.5rem); width: clamp(250px,27vw,370px); opacity: 0.9; z-index: 0; pointer-events: none; user-select: none; }
     #pj-viewer .ode-shop > .ode-mp-header,
     #pj-viewer .ode-shop > .ode-shop-page,
     #pj-viewer .ode-shop > .ode-shop-cards,
@@ -2536,7 +2536,7 @@
 
     function odeOutroHTML() {
       return `
-      <section class="ode-outro reveal" style="--d:0s">
+      <section class="ode-outro">
         <img src="ode/ode hero.jpg" alt="ODE">
         <div class="ode-outro-text">
           <h2>ODE</h2>
