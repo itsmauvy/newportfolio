@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOTALK — SOOBIN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #ffffff; color: #1a1035; font-family: 'Pretendard', sans-serif; overflow-x: hidden; }
+    /* 스크롤바: 뷰어(.pjv-case)와 동일한 얇은 4px 스타일 (밝은 배경용 컬러)
+       주의: Chrome은 표준 scrollbar-* 속성이 있으면 ::-webkit-scrollbar를 무시하므로 Firefox에만 적용 */
+    @supports not selector(::-webkit-scrollbar) {
+      html { scrollbar-width: thin; scrollbar-color: rgba(26,16,53,0.25) transparent; }
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(26,16,53,0.25); border-radius: 100px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(26,16,53,0.45); }
+
+    :root {
+      --purple: #7d6dff;
+      --mint: #83d8bf;
+      --purple-light: #f0eeff;
+      --dark: #1a1035;
+      --muted: rgba(26,16,53,0.55);
+      --border: rgba(125,109,255,0.18);
+      --pad: max(80px, (100% - 1440px) / 2);
+    }
+
+    /* ── RAIL NAV ── */
+    .pf-rail{position:fixed;inset:0 0 auto 0;height:60px;z-index:1000;display:flex;align-items:center;gap:14px;padding:0 clamp(20px,5vw,48px);background:linear-gradient(90deg, rgba(238,235,255,0.72), rgba(227,221,250,0.8));backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(125,109,255,0.13);box-shadow:0 6px 22px rgba(125,109,255,0.08);font-family:'Pretendard',system-ui,sans-serif;}
+    .pf-rail a,.pf-rail span{color:var(--dark);text-decoration:none;}
+    .pf-rail__home{font-weight:800;letter-spacing:.1em;font-size:16px;display:inline-flex;gap:7px;align-items:center;flex-shrink:0;transition:gap .25s;}
+    .pf-rail__home:hover{gap:11px;}
+    .pf-rail__tabs{display:flex;gap:4px;margin:0 auto;overflow-x:auto;scrollbar-width:none;}
+    .pf-rail__tabs::-webkit-scrollbar{display:none;}
+    .pf-rail__tab{white-space:nowrap;font-size:13px;font-weight:700;letter-spacing:.04em;padding:7px 13px;border-radius:999px;opacity:.55;transition:opacity .25s,background .25s;}
+    .pf-rail__tab:hover{opacity:1;}
+    .pf-rail__tab--active{opacity:1;background:rgba(125,109,255,.14);color:var(--purple);}
+    .pf-rail__tab--soon{opacity:.3;pointer-events:none;}
+    .pf-rail__live{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;letter-spacing:.04em;padding:9px 16px;border-radius:999px;background:#7d6dff;color:#fff!important;transition:transform .2s;}
+    .pf-rail__live:hover{transform:translateY(-2px);}
+    .pf-rail__live::before{content:'▶';font-size:.7em;}
+    .pf-rail__live span{color:inherit;}
+    @media(max-width:720px){.pf-rail__live span{display:none;}.pf-rail__live{padding:9px 12px;}}
+
+    /* ── HERO (Figma 1920px scale) ── */
+    .hero-wrap {
+      margin-top: 0;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      background: none;
+    }
+    .hero-figma {
+      width: 1920px;
+      height: 927px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform-origin: 0 0;
+    }
+    .rectangle-48 {
+      background: linear-gradient(180deg, rgba(116,184,225,0.5) 0%, rgba(159,124,255,0) 100%);
+      width: 1920px; height: 927px;
+      position: absolute; left: 0; top: 0;
+    }
+    .rectangle-50 {
+      background: #7e85f7;
+      border-radius: 80px 80px 0 0;
+      width: 1920px; height: 300px;
+      position: absolute; left: 0; top: 627px;
+    }
+    .logo-svg-1 {
+      width: 344px; height: 92.84px;
+      position: absolute; left: 161px; top: 331px;
+      overflow: hidden;
+    }
+    .logo-svg-1 img { position: absolute; }
+    .logo-svg-1 .vector  { width:14.95%; height:60.51%; left:1.22%;  top:22.4%; }
+    .logo-svg-1 .grp-226 { width:18.73%; height:62.08%; left:18.08%; top:21.41%; }
+    .logo-svg-1 .vector2 { width:14.43%; height:60.26%; left:37.13%; top:22.68%; }
+    .logo-svg-1 .grp-227 { width:15.88%; height:60.61%; left:51.17%; top:22.45%; }
+    .logo-svg-1 .vector3 { width:12.66%; height:60.37%; left:70.22%; top:22.57%; }
+    .logo-svg-1 .grp-228 { width:13.28%; height:60.51%; left:85.39%; top:22.55%; }
+    .image-378 {
+      width: 860px; height: 735px;
+      position: absolute; left: 490px; top: 120px;
+      object-fit: cover;
+    }
+    .div18 {
+      color: #4e36c7;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 36px; font-weight: 600;
+      position: absolute; left: 161px; top: 424px;
+      line-height: 1.3;
+    }
+    .div20 {
+      color: #ffffff;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 22px; font-weight: 400;
+      position: absolute; left: 90px; top: 674px;
+    }
+    .f-period { color:#fff; font-family:'Pretendard',sans-serif; font-size:22px; font-weight:700; position:absolute; left:90px; top:718px; }
+    .f-8weeks { color:#fff; font-family:'Pretendard',sans-serif; font-size:22px; font-weight:400; position:absolute; left:310px; top:718px; }
+    .f-tools  { color:#fff; font-family:'Pretendard',sans-serif; font-size:22px; font-weight:700; position:absolute; left:90px; top:764px; }
+    .f-tools-val { color:#fff; font-family:'Pretendard',sans-serif; font-size:22px; font-weight:400; position:absolute; left:310px; top:764px; }
+    .f-scope  { color:#fff; font-family:'Pretendard',sans-serif; font-size:22px; font-weight:700; position:absolute; left:90px; top:810px; }
+    .f-scope-val { color:#fff; font-family:'Pretendard',sans-serif; font-size:22px; font-weight:400; position:absolute; left:310px; top:810px; }
+    .project-overview {
+      color: #ffffff;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 20px; font-weight: 400;
+      position: absolute; left: 1413px; top: 672px;
+    }
+    .div19 {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 30px; font-weight: 700;
+      position: absolute; left: 1413px; top: 712px;
+      width: 480px; line-height: 1.4;
+    }
+    .div-19-span { color: #ffffff; }
+    .div-19-span2 { color: #b9f8ff; }
+    .notalk-desc {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 21px; font-weight: 400; line-height: 160%;
+      width: 640px;
+      position: absolute; left: 1413px; top: 822px;
+    }
+    .notalk-span { color: #b9f8ff; font-weight: 700; }
+    .notalk-span2 { color: #ffffff; font-weight: 500; }
+
+    /* ── SHARED SECTION STYLES ── */
+    .sec-label {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--purple);
+      display: block;
+      margin-bottom: 20px;
+    }
+    .sec-title {
+      font-family: 'Pretendard', sans-serif;
+      font-size: clamp(28px, 2.8vw, 44px);
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .sec-desc {
+      font-size: 16px;
+      line-height: 2;
+      color: var(--muted);
+    }
+    .card-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .card {
+      border-radius: 20px;
+      background: #ffffff;
+      border: 1.5px solid rgba(125,109,255,0.15);
+      box-shadow: 0 4px 20px rgba(26,16,53,0.06);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card--purple { background: var(--purple-light); border-color: rgba(125,109,255,0.2); }
+    .card__num {
+      position: absolute;
+      bottom: -20px; right: 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 160px;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(180deg, rgba(125,109,255,0.14) 0%, transparent 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      pointer-events: none;
+      user-select: none;
+    }
+    .card__en { font-size: 16px; font-weight: 700; letter-spacing: 0.14em; color: var(--purple); }
+    .card__ko { font-size: 21px; font-weight: 700; color: var(--dark); }
+    .card__desc { font-size: 16px; line-height: 1.9; color: var(--muted); padding-bottom: 80px; }
+    .card__icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(125,109,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 8px;
+    }
+    .card__icon img { width: 28px; height: 28px; object-fit: contain; }
+
+    /* ── MARKET RESEARCH ── */
+    .mr {
+      background: linear-gradient(180deg, #E9EAFD 0%, #FFFFFF 100%);
+      padding: 160px var(--pad) 200px;
+    }
+    .mr__label {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--purple);
+      margin-bottom: 70px;
+    }
+    .mr__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 32px;
+      row-gap: 28px;
+      align-items: stretch;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .mr__card {
+      position: relative;
+      background: #ffffff;
+      border: 1.5px solid rgba(125,109,255,0.18);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(26,16,53,0.05);
+      padding: 56px 28px 36px;
+      margin-top: 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 12px;
+    }
+    .mr__card::after {
+      content: '';
+      position: absolute;
+      bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-top: 11px solid var(--purple);
+    }
+    .mr__icon {
+      position: absolute;
+      top: -34px; left: 50%;
+      transform: translateX(-50%);
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6f7bf0 0%, #8c78f4 100%);
+      box-shadow: 0 8px 18px rgba(112,108,240,0.35);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mr__icon img { width: 34px; height: 34px; }
+    .mr__card-title { font-size: 20px; font-weight: 700; color: var(--dark); }
+    .mr__card-stat {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 38px; font-weight: 700;
+      color: var(--purple);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      display: flex; align-items: flex-end; justify-content: center; gap: 0;
+    }
+    .mr__stat-note {
+      flex: 0 0 0; min-width: 0; width: 0;
+      overflow: visible; white-space: nowrap;
+      margin-left: 6px;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 11px; font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      padding-bottom: 7px;
+    }
+    .mr__card-sub { font-size: 15px; color: var(--muted); }
+    .mr__card-body { font-size: 16px; line-height: 1.8; color: var(--muted); }
+    .mr__summary {
+      text-align: center;
+      align-self: start;
+      font-size: 17px;
+      font-weight: 600;
+      color: #3a3550;
+    }
+    .mr__connector {
+      width: 0;
+      height: 56px;
+      margin: 36px auto 0;
+      border-left: 2px dotted rgba(125,109,255,0.55);
+      position: relative;
+    }
+    .mr__connector::after {
+      content: '';
+      position: absolute;
+      bottom: -5px; left: 50%;
+      transform: translateX(-50%);
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+    .mr__callout {
+      margin: 28px auto 0;
+      max-width: 780px;
+      background: #ffffff;
+      border: 1.5px solid rgba(125,109,255,0.3);
+      border-radius: 16px;
+      padding: 24px 40px;
+      text-align: center;
+    }
+    .mr__callout p {
+      font-size: clamp(16px, 1.5vw, 19px);
+      font-weight: 600;
+      line-height: 1.6;
+      color: rgba(26,16,53,0.65);
+    }
+    .mr__callout span { color: var(--purple); font-weight: 800; }
+
+    /* ── PROBLEM DEFINITION ── */
+    .pd {
+      position: relative;
+      overflow: hidden;
+      background: #ffffff;
+      padding: 100px max(40px, (100% - 1440px) / 2) 110px;
+    }
+    .pd__ellipse {
+      background: rgba(232, 232, 253, 0.2);
+      border-radius: 50%;
+      width: 2745px;
+      height: 2119px;
+      position: absolute;
+      left: -409px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .pd__header { max-width: 760px; margin: 0 auto 56px; text-align: center; }   /* 가운데 정렬 */
+    .pd__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .pd__card {
+      border-radius: 20px;
+      border: 1.5px solid rgba(125,109,255,0.18);
+      padding: 30px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: #ffffff;
+      box-shadow: 0 4px 20px rgba(26,16,53,0.05);
+    }
+    .pd__card-title { font-size: 20px; font-weight: 800; color: var(--dark); }
+    .pd__card-head { display: flex; align-items: center; gap: 16px; }
+    .pd__card-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(125,109,255,0.10);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .pd__card-icon img { width: 28px; height: 28px; object-fit: contain; }
+    .pd__card-sub { font-size: 17px; font-weight: 700; color: var(--dark); line-height: 1.4; word-break: keep-all; }
+    .pd__card-divider { height: 1px; background: rgba(26,16,53,0.08); }
+    .pd__card-list { display: flex; flex-direction: column; gap: 8px; }
+    .pd__card-item { font-size: 15px; line-height: 1.7; color: var(--muted); padding-left: 14px; position: relative; word-break: keep-all; }
+    @media (min-width: 1000px) { .pd__card-item { white-space: nowrap; } }
+    .pd__card-item::before { content: '·'; position: absolute; left: 0; color: var(--purple); font-weight: 700; }
+    /* card3 민트 액센트 */
+    .pd__card--mint { border-color: rgba(131,216,191,0.5); }
+    .pd__card--mint .pd__card-icon { background: rgba(131,216,191,0.18); }
+    .pd__card--mint .pd__card-title { color: #2a9d82; }
+    .pd__card--mint .pd__card-item::before { color: var(--mint); }
+    /* 연결선 + 요약 배너 (가운데) */
+    .pd__badge {
+      display: inline-block;
+      margin: 0 auto 24px;
+      padding: 8px 24px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-align: center;
+      width: fit-content;
+      display: block;
+    }
+    .pd__badge--problem { background: var(--purple); color: #fff; margin-bottom: 24px; }
+    .pd__badge--goals { background: transparent; border: 1.5px solid var(--mint); color: var(--mint); margin-top: 0; margin-bottom: 20px; }
+    .pd__connector { width: 1px; height: 46px; background: rgba(125,109,255,0.3); margin: 44px auto 0; }
+    .pd__summary {
+      margin: 0 auto; max-width: 1100px;
+      border: 1.5px solid rgba(131,216,191,0.6); border-radius: 18px;
+      padding: 30px 40px; text-align: center; background: rgba(131,216,191,0.06);
+    }
+    .pd__summary p { font-size: clamp(16px, 1.5vw, 19px); font-weight: 600; line-height: 1.5; color: #2a9d82; letter-spacing: -0.01em; }
+    @media (max-width: 860px) { .pd__cards { grid-template-columns: 1fr; } }
+
+    /* ── DESIGN SYSTEM ── */
+    .ds {
+      background: var(--purple-light);
+      padding: 100px var(--pad) 110px;
+    }
+    .ds__header { margin-bottom: 48px; text-align: center; }
+    .ds__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .ds__card {
+      background: #e8e6f8;
+      border-radius: 20px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .ds__card-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--purple);
+    }
+    /* 로고 카드 */
+    .ds__logo-wrap {
+      position: relative;
+      width: 100%;
+      height: 65px;
+      flex-shrink: 0;
+      margin-bottom: 8px;
+    }
+    .ds__logo-wrap img { position: absolute; }
+    .ds__logo-wrap .vector  { width:14.95%; height:60.51%; left:1.22%;  top:22.4%; }
+    .ds__logo-wrap .grp-226 { width:18.73%; height:62.08%; left:18.08%; top:21.41%; }
+    .ds__logo-wrap .vector2 { width:14.43%; height:60.26%; left:37.13%; top:22.68%; }
+    .ds__logo-wrap .grp-227 { width:15.88%; height:60.61%; left:51.17%; top:22.45%; }
+    .ds__logo-wrap .vector3 { width:12.66%; height:60.37%; left:70.22%; top:22.57%; }
+    .ds__logo-wrap .grp-228 { width:13.28%; height:60.51%; left:85.39%; top:22.55%; }
+    .ds__app-icon {
+      width: 80px; height: 80px;
+      border-radius: 20px;
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .ds__app-icon img { width: 60px; height: 60px; object-fit: contain; }
+    /* 타이포 카드 */
+    .ds__typo-list { display: flex; flex-direction: column; gap: 6px; }
+    .ds__typo-item { display: flex; flex-direction: column; gap: 2px; padding: 14px 0; border-bottom: 1px solid rgba(26,16,53,0.1); }
+    .ds__typo-item:last-child { border-bottom: none; }
+    .ds__typo-spec-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
+    .ds__typo-sample { color: var(--dark); }
+    /* 오른쪽 컬럼 */
+    .ds__col-right { display: flex; flex-direction: column; gap: 16px; }
+    /* 아이콘 카드 */
+    .ds__icon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .ds__icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .ds__icon-bg {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ds__icon-bg img { width: 34px; height: 34px; object-fit: contain; }
+    .ds__icon-label { font-size: 11px; font-weight: 600; color: var(--muted); }
+    /* 컬러 카드 */
+    .ds__color-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 10px;
+    }
+    .ds__color-swatch {
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 4px;
+      min-height: 90px;
+    }
+    .ds__color-swatch.span2 { grid-column: span 2; min-height: 110px; }
+    .ds__color-name { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); }
+    .ds__color-hex { font-size: 12px; color: #fff; font-family: monospace; }
+    /* 버튼 카드 */
+    .ds__card--btn { justify-content: center; }
+    .ds__btn-list { display: flex; flex-direction: column; gap: 10px; }
+    .ds__btn-group { display: flex; flex-direction: column; gap: 6px; }
+    .ds__btn-label { font-size: 11px; font-weight: 600; color: var(--muted); }
+    .ds__btn {
+      width: 100%; padding: 13px 0; border-radius: 12px;
+      font-size: 15px; font-weight: 700; font-family: 'Pretendard', sans-serif;
+      cursor: default; border: none;
+    }
+    .ds__btn--primary { background: linear-gradient(90deg,#7d6dff,#83d8bf); color: #fff; }
+    .ds__btn--secondary { background: var(--purple); color: #fff; }
+    .ds__btn--outline { background: transparent; border: 2px solid var(--purple); color: var(--purple); }
+    .ds__btn--disabled { background: #e0e0e0; color: #aaa; }
+
+    /* ── IA ── */
+    .ia {
+      background: var(--purple-light);
+      padding: 100px var(--pad) 60px;
+      position: relative;
+    }
+    .ia::before, .ia::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .ia::before {
+      width: 1100px; height: 1100px;
+      background: radial-gradient(circle, rgba(160,148,255,0.22) 0%, rgba(160,148,255,0.08) 60%, transparent 75%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .ia::after {
+      width: 720px; height: 720px;
+      background: radial-gradient(circle, rgba(140,126,255,0.35) 0%, rgba(140,126,255,0.12) 60%, transparent 78%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .ia__header { margin-bottom: 56px; text-align: center; }
+    .ia__tree {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    /* 중앙 로고 */
+    .ia__root {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0;
+      position: relative;
+    }
+    .ia__logo-node {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ia__logo-node .logo-svg-1 {
+      position: relative;
+      width: 220px;
+      height: 60px;
+      left: auto;
+      top: auto;
+    }
+    /* 수직 연결선 루트→탭 */
+    .ia__root-line {
+      width: 2px;
+      height: 40px;
+      background: rgba(125,109,255,0.35);
+      margin: 0 auto;
+    }
+    /* 수평 연결선 */
+    .ia__h-line {
+      height: 2px;
+      background: rgba(125,109,255,0.35);
+      margin: 0 auto;
+      width: 82%;
+    }
+    /* 탭 행 */
+    .ia__tabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      position: relative;
+    }
+    .ia__tab-col { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    /* 탭 레이블 위 수직선 */
+    .ia__tab-vline-top {
+      width: 2px; height: 30px;
+      background: rgba(125,109,255,0.35);
+    }
+    .ia__tab-btn {
+      background: var(--purple);
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 0;
+      width: 100%;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    /* 탭 아래 수직선 */
+    .ia__tab-vline-bot {
+      width: 2px; height: 20px;
+      background: rgba(125,109,255,0.35);
+    }
+    /* 서브 아이템들 */
+    .ia__sub-list { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+    .ia__sub-item {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 14px;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+      border: 1.5px solid rgba(125,109,255,0.15);
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .ia__sub-title {
+      text-align: center;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--dark);
+    }
+    .ia__sub-detail {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .ia__sub-detail li { list-style: none; }
+    .ia__sub-detail li::before { content: '· '; color: var(--purple); }
+
+    /* ── SPLASH LOGIN SHOWCASE ── */
+    .sl {
+      display: block;
+      line-height: 0;
+      overflow: hidden;
+    }
+    .sl__img {
+      width: 100vw;
+      height: auto;
+      display: block;
+    }
+
+    /* ── HOME SCREEN ── */
+    .hm {
+      background: #fff;
+      padding: 100px var(--pad) 120px;
+      text-align: center;
+    }
+    .hm__label {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--purple);
+      margin-bottom: 60px;
+    }
+    .hm__layout {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .hm__phone {
+      display: block;
+      height: 620px;
+      width: auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hm__col--left,
+    .hm__col--right {
+      position: absolute;
+      top: 0;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+    }
+    .hm__col--left  { right: calc(50% + 160px); align-items: flex-end; }
+    .hm__col--right { left: calc(50% + 160px);  align-items: flex-start; margin-right: 15px; }
+    .hm__callout {
+      display: flex;
+      align-items: center;
+    }
+    .hm__callout--right { flex-direction: row-reverse; }
+    .hm__callout-text { text-align: left; }
+    /* 02 카테고리 — 카테고리 그리드 중심 46% ≈ 285px */
+    .hm__col--left .hm__callout { margin-top: 285px; }
+    /* 01 히어로 — 히어로 배너 중심 17% ≈ 105px */
+    .hm__col--right .hm__callout:nth-child(1) { margin-top: 105px; }
+    /* 03 오늘 예정 모임 — 섹션 시작 62% ≈ 385px */
+    .hm__col--right .hm__callout:nth-child(2) { margin-top: 280px; }
+    .hm__callout-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+      white-space: nowrap;
+      display: flex;
+      align-items: baseline;
+    }
+    .hm__callout-title .hm__num {
+      color: var(--purple);
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+    .hm__callout-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      padding-left: calc(1.2em + 15px); /* 숫자 너비 + margin-right 맞춤 */
+    }
+    .hm__line {
+      flex-shrink: 0;
+      width: 80px;
+      height: 1px;
+      background: #aaa;
+      position: relative;
+      margin: 0 16px;
+    }
+    .hm__line::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+    .hm__col--left .hm__line::after  { right: 0; }
+    .hm__col--right .hm__line::after { left: 0; }
+
+    /* ── EXPLORE ── */
+    .ex {
+      background: #fff;
+      padding: 100px max(40px, (100% - 1440px) / 2) 120px;
+      text-align: center;
+    }
+    .ex__layout {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 48px;
+      max-width: 1500px;
+      margin: 40px auto 0;
+    }
+    /* 센터 폰: 가장 크게 */
+    .ex__phone--main {
+      display: block;
+      height: clamp(400px, 36vw, 540px);
+      width: auto;
+    }
+    /* 사이드 폰: 센터보다 작게, 하단 정렬 */
+    .ex__phone--sub {
+      display: block;
+      height: clamp(320px, 29vw, 430px);
+      width: auto;
+    }
+    .ex__phone--right {
+      margin-bottom: 60px;
+    }
+    .ex__left-group,
+    .ex__right-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+    }
+    .ex__left-group .ex__aside,
+    .ex__right-group .ex__aside {
+      margin-bottom: 0;
+      align-self: center;
+    }
+    .ex__center {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+    }
+    /* 화살표: 필터 아이콘 위치 (상단 15%) */
+    .ex__connector {
+      position: absolute;
+      top: 15%;
+      display: flex;
+      align-items: center;
+    }
+    .ex__connector--right {
+      right: -48px;
+      top: 15%; /* 필터 아이콘 위치 */
+    }
+    .ex__connector--left {
+      left: -48px;
+      top: 37%; /* 첫 번째 모임 카드 위치 */
+    }
+    .ex__conn-line {
+      width: 48px;
+      height: 1px;
+      background: #aaa;
+    }
+    .ex__conn-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+    }
+    /* 사이드 텍스트: 서브 폰 중간 높이에 위치 */
+    .ex__aside {
+      width: 170px;
+      flex-shrink: 0;
+      align-self: flex-end;
+      margin-bottom: 170px; /* sub폰 ~430px 중간 높이 보정 */
+      word-break: keep-all;
+    }
+    .ex__aside--left { text-align: right; }
+    .ex__aside--left .hm__callout-title { justify-content: flex-end; }
+    .ex__aside--right { text-align: left; }
+    .ex__aside .hm__callout-title {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .ex__aside .hm__callout-desc {
+      padding-left: 0;
+      line-height: 1.7;
+    }
+    .ex__aside--left .hm__callout-desc { padding-left: 0; }
+
+    /* ── CREATE ── */
+    .cr {
+      background: #fff;
+      padding: 100px var(--pad) 120px;
+      text-align: center;
+    }
+    .cr__label {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--purple);
+      margin-bottom: 60px;
+    }
+    .cr__phones {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: clamp(16px, 2vw, 40px);
+      margin-bottom: 48px;
+    }
+    .cr__phone {
+      height: clamp(320px, 30vw, 480px);
+      width: auto;
+      display: block;
+    }
+    .cr__steps {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .cr__step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      padding-top: 20px;
+    }
+    /* 점 연결 점선 */
+    .cr__step::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      border-top: 2px dashed var(--purple);
+      z-index: 0;
+    }
+    .cr__step:first-child::before { left: 50%; }
+    .cr__step:last-child::before  { right: 50%; }
+    .cr__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--purple);
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      margin-bottom: 20px;
+    }
+    .cr__step-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .cr__step-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ── MYPAGE ── */
+    .mp {
+      background: #fff;
+      padding: 100px var(--pad) 120px;
+    }
+    .mp__label {
+      display: block;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--purple);
+      margin-bottom: 60px;
+    }
+    .mp__layout {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+    .mp__phone-main {
+      height: clamp(480px, 44vw, 620px);
+      width: auto;
+      display: block;
+      flex-shrink: 0;
+    }
+    .mp__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px 48px;
+      flex: 1;
+    }
+    .mp__card { display: flex; flex-direction: column; text-align: center; }
+    .mp__card-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .mp__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .mp__card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--purple);
+    }
+    .mp__card-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .mp__card-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+    }
+
+    /* ── ONBOARDING ── */
+    .ob {
+      background: #ffffff;
+      padding: 100px var(--pad) 140px;
+      text-align: center;
+    }
+    .ob__header { margin-bottom: 60px; }
+    .ob__label {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--purple);
+      margin-bottom: 12px;
+    }
+    .ob__sub {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .ob__phones {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 120px;
+    }
+    .ob__phone {
+      height: clamp(380px, 36vw, 560px);
+      width: auto;
+      display: block;
+    }
+
+    /* ── APP SCREENS ── */
+    .as {
+      background: var(--purple-light);
+      padding: 100px var(--pad) 110px;
+    }
+    .as__header { margin-bottom: 72px; }
+    .as__section { margin-bottom: 80px; }
+    .as__section:last-child { margin-bottom: 0; }
+    .as__section-title {
+      font-size: 16px; font-weight: 700; letter-spacing: 0.18em;
+      color: var(--purple); margin-bottom: 28px; display: block;
+    }
+    .as__screens {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+    .as__screens--2 { grid-template-columns: repeat(2, 1fr); }
+    .as__screen {
+      border-radius: 20px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 8px 32px rgba(26,16,53,0.1);
+    }
+    .as__screen img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .as__screen-cap {
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      border-top: 1px solid rgba(125,109,255,0.1);
+    }
+    .as__desc-col { display: flex; flex-direction: column; gap: 24px; justify-content: center; }
+    .as__desc-item { display: flex; flex-direction: column; gap: 8px; }
+    .as__desc-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--purple); color: #fff;
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .as__desc-title { font-size: 18px; font-weight: 800; color: var(--dark); }
+    .as__desc-text { font-size: 16px; line-height: 1.8; color: var(--muted); }
+
+    /* ── NEXT NAV ── */
+    .next-nav{background:#1a1035;padding:72px max(80px,(100% - 1440px)/2);display:flex;justify-content:space-between;align-items:center;}
+    .next-nav a{text-decoration:none;color:rgba(255,255,255,0.45);display:flex;flex-direction:column;gap:8px;transition:color .2s;}
+    .next-nav a:hover{color:#fff;}
+    .next-nav__dir{font-size:16px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,0.3);}
+    .next-nav__title{font-family:'Syne',sans-serif;font-size:clamp(24px,2.6vw,38px);font-weight:800;color:inherit;line-height:1;}
+
+    @media (max-width: 900px) {
+      .hero__inner { grid-template-columns: 1fr; }
+      .hero__phones { margin-top: 40px; }
+      .hero__img { margin-bottom: -60px; }
+      .hero__banner { grid-template-columns: 1fr; }
+      .card-grid-3, .mr__grid, .pd__cards, .as__screens { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .card-grid-3, .mr__grid, .pd__cards, .as__screens { grid-template-columns: 1fr; }
+      .ds__color-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ────────── HERO ────────── -->
+  <div class="hero-wrap" id="heroWrap">
+    <div class="hero-figma" id="heroFigma">
+      <div class="rectangle-48"></div>
+      <div class="rectangle-50"></div>
+      <img class="image-378" src="../assets/images/notalk/image-3780.png" alt="NOTALK 앱 화면">
+      <div class="logo-svg-1">
+        <img class="vector"  src="../assets/images/notalk/vector0.svg" alt="">
+        <img class="grp-226" src="../assets/images/notalk/group-2260.svg" alt="">
+        <img class="vector2" src="../assets/images/notalk/vector1.svg" alt="">
+        <img class="grp-227" src="../assets/images/notalk/group-2270.svg" alt="">
+        <img class="vector3" src="../assets/images/notalk/vector2.svg" alt="">
+        <img class="grp-228" src="../assets/images/notalk/group-2280.svg" alt="">
+      </div>
+      <div class="div18">말하지 않아도<br>편안한 관계</div>
+      <div class="div20">팀 프로젝트</div>
+      <div class="f-period">PERIOD</div><div class="f-8weeks">8 Weeks</div>
+      <div class="f-tools">TOOLS</div><div class="f-tools-val">Figma · Photoshop · AI · Supabase</div>
+      <div class="f-scope">SCOPE OF WORK</div><div class="f-scope-val">UX/UI Design · Backend · QA · UX Research</div>
+      <div class="project-overview">Project Overview</div>
+      <div class="div19">
+        <span class="div-19-span">대화 부담 없이 함께하는<br></span><span class="div-19-span2">팝업형 소셜 서비스</span>
+      </div>
+      <div class="notalk-desc">
+        <span class="notalk-span">NOTALK</span><span class="notalk-span2">는 관계에 대한 부담은 줄이고,<br>필요한 만큼만 연결될 수 있는 새로운 방식의 소셜 서비스.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── MARKET RESEARCH ────────── -->
+  <section class="mr">
+    <p class="mr__label">MARKET RESEARCH</p>
+    <div class="mr__grid">
+      <div class="mr__card">
+        <div class="mr__icon"><img src="../assets/images/notalk/user0.svg" alt=""></div>
+        <p class="mr__card-title">1인 가구 증가</p>
+        <p class="mr__card-stat">36.9%<span class="mr__stat-note">KOSIS</span></p>
+        <p class="mr__card-sub">2026년 기준 1인 가구 비율</p>
+      </div>
+      <div class="mr__card">
+        <div class="mr__icon"><img src="../assets/images/notalk/users0.svg" alt=""></div>
+        <p class="mr__card-title">관계 방식 변화</p>
+        <p class="mr__card-body">혼밥 · 혼영 · 개인여가 증가<br>관계를 필요한 만큼만 맺는 경향 확대</p>
+      </div>
+      <div class="mr__card">
+        <div class="mr__icon"><img src="../assets/images/notalk/basket0.svg" alt=""></div>
+        <p class="mr__card-title">소비 방식 변화</p>
+        <p class="mr__card-body">원데이클라스 · 팝업스토어 증가<br>구독보다 '필요할 때 참여' 소비 증가</p>
+      </div>
+      <p class="mr__summary">개인 중심 생활 확산</p>
+      <p class="mr__summary">선택적이고 부담 없는 연결 선호</p>
+      <p class="mr__summary">단기 · 팝업형 경험 증가</p>
+    </div>
+    <div class="mr__connector"></div>
+    <div class="mr__callout">
+      <p>선택적 관계와 경험 소비 트렌드는 <span>새로운 형태의 모임 서비스</span>를 요구하고 있습니다.</p>
+    </div>
+  </section>
+
+  <!-- ────────── PROBLEM DEFINITION ────────── -->
+  <section class="pd">
+    <div class="pd__ellipse"></div>
+    <div class="pd__header">
+      <p class="mr__label">PROBLEM &amp; PROJECT GOALS</p>
+    </div>
+    <div class="pd__badge pd__badge--problem">PROBLEM</div>
+    <div class="pd__cards">
+      <div class="pd__card">
+        <p class="pd__card-title">기존 서비스의 한계</p>
+        <div class="pd__card-head">
+          <div class="pd__card-icon"><img src="../assets/images/notalk/user-sound0.svg" alt=""></div>
+          <p class="pd__card-sub">관계 없이 함께 하는<br>경험은 제공하기 어렵다</p>
+        </div>
+        <div class="pd__card-divider"></div>
+        <div class="pd__card-list">
+          <p class="pd__card-item">모임앱은 자기소개 · 대화 · 친목을 전제로 함</p>
+          <p class="pd__card-item">커뮤니티는 지속적 소통과 관계 유지가 필요</p>
+          <p class="pd__card-item">스터디카페는 혼자 머무는 공간에 가까움</p>
+        </div>
+      </div>
+      <div class="pd__card">
+        <p class="pd__card-title">사용자 니즈</p>
+        <div class="pd__card-head">
+          <div class="pd__card-icon"><img src="../assets/images/notalk/clock-user0.svg" alt=""></div>
+          <p class="pd__card-sub">함께하고 싶지만<br>관계는 부담스럽다</p>
+        </div>
+        <div class="pd__card-divider"></div>
+        <div class="pd__card-list">
+          <p class="pd__card-item">혼자서는 지속이 어렵고 깊은 관계는 피로함</p>
+          <p class="pd__card-item">모임 참여 전후 대화의 부담이 큼</p>
+          <p class="pd__card-item">낯선 사람과의 만남에서 안전·신뢰가 중요</p>
+        </div>
+      </div>
+      <div class="pd__card">
+        <p class="pd__card-title">연결 방식의 전환</p>
+        <div class="pd__card-head">
+          <div class="pd__card-icon"><img src="../assets/images/notalk/chat-circle-slash0.svg" alt=""></div>
+          <p class="pd__card-sub">같은 시간을 공유하되<br>대화는 선택이 되어야 한다</p>
+        </div>
+        <div class="pd__card-divider"></div>
+        <div class="pd__card-list">
+          <p class="pd__card-item">침묵 매너 기반의 안전한 참여 구조</p>
+          <p class="pd__card-item">시간, 장소, 카테고리 중심의 팝업 모임</p>
+          <p class="pd__card-item">짧은 채팅과 상태 공유로 최소한의 소통만 제공</p>
+        </div>
+      </div>
+    </div>
+    <div class="pd__connector"></div>
+    <div class="pd__badge pd__badge--goals">GOALS</div>
+    <div class="pd__summary"><p>NOTALK은 함께하는 경험을 통해 부담 없는 연결을 제공합니다.</p></div>
+  </section>
+
+  <!-- ────────── DESIGN SYSTEM ────────── -->
+  <section class="ds">
+    <div class="ds__header">
+      <span class="sec-label">DESIGN SYSTEM</span>
+    </div>
+
+    <div class="ds__grid">
+      <!-- col 1: 로고 + 컬러 -->
+      <div class="ds__card">
+        <span class="ds__card-label">Logo</span>
+        <div class="ds__logo-wrap">
+          <img class="vector"  src="../assets/images/notalk/vector0.svg" alt="">
+          <img class="grp-226" src="../assets/images/notalk/group-2260.svg" alt="">
+          <img class="vector2" src="../assets/images/notalk/vector1.svg" alt="">
+          <img class="grp-227" src="../assets/images/notalk/group-2270.svg" alt="">
+          <img class="vector3" src="../assets/images/notalk/vector2.svg" alt="">
+          <img class="grp-228" src="../assets/images/notalk/group-2280.svg" alt="">
+        </div>
+        <span class="ds__card-label">COLOR</span>
+        <div class="ds__color-grid">
+          <div class="ds__color-swatch span2" style="background:linear-gradient(135deg,#7d6dff,#83d8bf);">
+            <p class="ds__color-name">Main Gradient</p>
+            <p class="ds__color-hex">#7D6DFF → #83D8BF</p>
+          </div>
+          <div class="ds__color-swatch" style="background:#7d6dff;">
+            <p class="ds__color-name">Purple</p>
+            <p class="ds__color-hex">#7D6DFF</p>
+          </div>
+          <div class="ds__color-swatch" style="background:#83d8bf;">
+            <p class="ds__color-name">Mint</p>
+            <p class="ds__color-hex">#83D8BF</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- col 2: 타이포그래피 -->
+      <div class="ds__card">
+        <span class="ds__card-label">Pretendard</span>
+        <div class="ds__typo-list">
+          <div class="ds__typo-item">
+            <span class="ds__typo-spec-label">Title · Bold 700 · 24px</span>
+            <span class="ds__typo-sample" style="font-size:24px;font-weight:700;">타이틀 Title</span>
+          </div>
+          <div class="ds__typo-item">
+            <span class="ds__typo-spec-label">Title · SemiBold 600 · 20px</span>
+            <span class="ds__typo-sample" style="font-size:20px;font-weight:600;">타이틀 Title</span>
+          </div>
+          <div class="ds__typo-item">
+            <span class="ds__typo-spec-label">Title · Medium 500 · 18px</span>
+            <span class="ds__typo-sample" style="font-size:18px;font-weight:500;">타이틀 Title</span>
+          </div>
+          <div class="ds__typo-item">
+            <span class="ds__typo-spec-label">Subtitle · Bold 700 · 16px</span>
+            <span class="ds__typo-sample" style="font-size:16px;font-weight:700;">서브타이틀 Subtitle</span>
+          </div>
+          <div class="ds__typo-item">
+            <span class="ds__typo-spec-label">Subtitle · Regular 400 · 16px</span>
+            <span class="ds__typo-sample" style="font-size:16px;font-weight:400;">서브타이틀 Subtitle</span>
+          </div>
+          <div class="ds__typo-item">
+            <span class="ds__typo-spec-label">Subtitle · Regular 400 · 14px</span>
+            <span class="ds__typo-sample" style="font-size:14px;font-weight:400;">서브타이틀 Subtitle</span>
+          </div>
+          <div class="ds__typo-item">
+            <span class="ds__typo-spec-label">Body1 · Body2 · Description1</span>
+            <span class="ds__typo-sample" style="font-size:13px;font-weight:400;">본문1 Body1 &nbsp; 본문2 Body2 &nbsp; 설명1 Description1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- col 3: 아이콘 + 컬러 -->
+      <div class="ds__col-right">
+        <!-- 아이콘 -->
+        <div class="ds__card">
+          <span class="ds__card-label">ICON</span>
+          <div class="ds__icon-grid">
+            <div class="ds__icon-item">
+              <div class="ds__icon-bg" style="background:#fff3ed;"><img src="../assets/images/notalk/icon-food-10.png" alt="푸드"></div>
+              <span class="ds__icon-label">푸드</span>
+            </div>
+            <div class="ds__icon-item">
+              <div class="ds__icon-bg" style="background:#eaeff4;"><img src="../assets/images/notalk/icon-drink-10.png" alt="드링크"></div>
+              <span class="ds__icon-label">드링크</span>
+            </div>
+            <div class="ds__icon-item">
+              <div class="ds__icon-bg" style="background:#fff0f9;"><img src="../assets/images/notalk/icon-activity-10.png" alt="액티비티"></div>
+              <span class="ds__icon-label">액티비티</span>
+            </div>
+            <div class="ds__icon-item">
+              <div class="ds__icon-bg" style="background:#eaf5f5;"><img src="../assets/images/notalk/icon-hobby-10.png" alt="취미"></div>
+              <span class="ds__icon-label">취미</span>
+            </div>
+            <div class="ds__icon-item">
+              <div class="ds__icon-bg" style="background:#ebf9ed;"><img src="../assets/images/notalk/icon-self-10.png" alt="자기계발"></div>
+              <span class="ds__icon-label">자기계발</span>
+            </div>
+            <div class="ds__icon-item">
+              <div class="ds__icon-bg" style="background:#f7f1ff;"><img src="../assets/images/notalk/icon-culture-10.png" alt="문화예술"></div>
+              <span class="ds__icon-label">문화예술</span>
+            </div>
+          </div>
+        </div>
+        <!-- 버튼 -->
+        <div class="ds__card ds__card--btn">
+          <span class="ds__card-label">BUTTON</span>
+          <div class="ds__btn-list">
+            <div class="ds__btn-group">
+              <span class="ds__btn-label">Primary</span>
+              <button class="ds__btn ds__btn--primary">적용하기</button>
+            </div>
+            <div class="ds__btn-group">
+              <span class="ds__btn-label">Secondary</span>
+              <button class="ds__btn ds__btn--secondary">+ 모임 만들기</button>
+            </div>
+            <div class="ds__btn-group">
+              <span class="ds__btn-label">Secondary</span>
+              <button class="ds__btn ds__btn--outline">+ 모임 만들기</button>
+            </div>
+            <div class="ds__btn-group">
+              <span class="ds__btn-label">Disabled</span>
+              <button class="ds__btn ds__btn--disabled" disabled>적용하기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── INFORMATION ARCHITECTURE ────────── -->
+  <section class="ia">
+    <div class="ia__header">
+      <span class="sec-label">INFORMATION ARCHITECTURE</span>
+    </div>
+    <div class="ia__tree">
+      <!-- 루트 로고 -->
+      <div class="ia__root">
+        <div class="ia__logo-node">
+          <div class="logo-svg-1" style="position:relative;left:auto;top:auto;width:200px;height:54px;">
+            <img class="vector"  src="../assets/images/notalk/vector0.svg" alt="">
+            <img class="grp-226" src="../assets/images/notalk/group-2260.svg" alt="">
+            <img class="vector2" src="../assets/images/notalk/vector1.svg" alt="">
+            <img class="grp-227" src="../assets/images/notalk/group-2270.svg" alt="">
+            <img class="vector3" src="../assets/images/notalk/vector2.svg" alt="">
+            <img class="grp-228" src="../assets/images/notalk/group-2280.svg" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="ia__root-line"></div>
+      <div class="ia__h-line"></div>
+      <!-- 탭 5개 -->
+      <div class="ia__tabs">
+        <!-- 홈 -->
+        <div class="ia__tab-col">
+          <div class="ia__tab-vline-top"></div>
+          <div class="ia__tab-btn">홈</div>
+          <div class="ia__tab-vline-bot"></div>
+          <div class="ia__sub-list">
+            <div class="ia__sub-item">
+              <div class="ia__sub-title">메인 배너</div>
+              <ul class="ia__sub-detail"><li>모임 참여하기</li><li>모임 만들기</li></ul>
+            </div>
+            <div class="ia__sub-item">
+              <div class="ia__sub-title">전체 카테고리</div>
+              <ul class="ia__sub-detail"><li>푸드</li><li>드링크</li><li>액티비티</li><li>취미</li><li>자기계발</li><li>문화·예술</li></ul>
+            </div>
+            <div class="ia__sub-item"><div class="ia__sub-title">오늘 예정 모임</div></div>
+          </div>
+        </div>
+        <!-- 탐색 -->
+        <div class="ia__tab-col">
+          <div class="ia__tab-vline-top"></div>
+          <div class="ia__tab-btn">탐색</div>
+          <div class="ia__tab-vline-bot"></div>
+          <div class="ia__sub-list">
+            <div class="ia__sub-item"><div class="ia__sub-title">검색</div></div>
+            <div class="ia__sub-item"><div class="ia__sub-title">필터</div></div>
+            <div class="ia__sub-item"><div class="ia__sub-title">카테고리</div></div>
+            <div class="ia__sub-item"><div class="ia__sub-title">모임 리스트</div></div>
+            <div class="ia__sub-item">
+              <div class="ia__sub-title">모임 상세</div>
+              <ul class="ia__sub-detail"><li>모임 정보</li><li>참여자</li></ul>
+            </div>
+          </div>
+        </div>
+        <!-- 시작하기 -->
+        <div class="ia__tab-col">
+          <div class="ia__tab-vline-top"></div>
+          <div class="ia__tab-btn">시작하기</div>
+          <div class="ia__tab-vline-bot"></div>
+          <div class="ia__sub-list">
+            <div class="ia__sub-item">참여자</div>
+            <div class="ia__sub-item">카테고리</div>
+            <div class="ia__sub-item">날짜, 장소, 시간</div>
+            <div class="ia__sub-item">제목, 소개</div>
+            <div class="ia__sub-item">모임 열기</div>
+          </div>
+        </div>
+        <!-- 채팅 -->
+        <div class="ia__tab-col">
+          <div class="ia__tab-vline-top"></div>
+          <div class="ia__tab-btn">채팅</div>
+          <div class="ia__tab-vline-bot"></div>
+          <div class="ia__sub-list">
+            <div class="ia__sub-item">
+              <div class="ia__sub-title">채팅 리스트</div>
+              <ul class="ia__sub-detail"><li>활성 채팅방</li><li>비활성 채팅방</li></ul>
+            </div>
+            <div class="ia__sub-item">
+              <div class="ia__sub-title">채팅방</div>
+              <ul class="ia__sub-detail"><li>모임 정보</li><li>타이머</li><li>참여자 목록</li><li>보낸/받은 메시지</li><li>입력창</li></ul>
+            </div>
+          </div>
+        </div>
+        <!-- 마이페이지 -->
+        <div class="ia__tab-col">
+          <div class="ia__tab-vline-top"></div>
+          <div class="ia__tab-btn">마이페이지</div>
+          <div class="ia__tab-vline-bot"></div>
+          <div class="ia__sub-list">
+            <div class="ia__sub-item">
+              <div class="ia__sub-title">프로필</div>
+              <ul class="ia__sub-detail"><li>프로필 수정</li><li>활동 기록</li></ul>
+            </div>
+            <div class="ia__sub-item"><div class="ia__sub-title">배지</div></div>
+            <div class="ia__sub-item">
+              <div class="ia__sub-title">설정</div>
+              <ul class="ia__sub-detail"><li>모임 관리</li><li>계정 정보</li><li>알림 설정</li><li>신고·차단 관리</li><li>FAQ·문의하기</li><li>개선·의견 남기기</li><li>공지사항</li><li>서비스 약관</li><li>개인정보처리방침</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── SPLASH & LOGIN SHOWCASE ────────── -->
+  <section class="sl">
+    <img class="sl__img" src="../assets/images/notalk/splash login.png" alt="스플래시 & 로그인">
+  </section>
+
+  <!-- ────────── ONBOARDING ────────── -->
+  <section class="ob">
+    <div class="ob__header">
+      <span class="ob__label">ONBOARDING</span>
+    </div>
+    <div class="ob__phones">
+      <img class="ob__phone" src="../assets/images/notalk/온보딩1.png" alt="온보딩 1">
+      <img class="ob__phone" src="../assets/images/notalk/온보딩2.png" alt="온보딩 2">
+      <img class="ob__phone" src="../assets/images/notalk/온보딩3.png" alt="온보딩 3">
+    </div>
+  </section>
+
+  <!-- ────────── HOME SCREEN ────────── -->
+  <section class="hm">
+    <span class="hm__label">HOME</span>
+    <div class="hm__layout">
+      <div class="hm__col hm__col--left">
+        <div class="hm__callout hm__callout--right">
+          <div class="hm__line"></div>
+          <div class="hm__callout-text">
+            <p class="hm__callout-title"><span class="hm__num">02</span>빠른 카테고리 탐색</p>
+            <p class="hm__callout-desc">빠른 바로가기 카테고리를 통해<br>원하는 활동의 모임을 탐색해요.</p>
+          </div>
+        </div>
+      </div>
+      <div class="hm__col hm__col--center">
+        <img class="hm__phone" src="../assets/images/notalk/home screen.png" alt="홈 화면">
+      </div>
+      <div class="hm__col hm__col--right">
+        <div class="hm__callout hm__callout--left">
+          <div class="hm__line"></div>
+          <div class="hm__callout-text">
+            <p class="hm__callout-title"><span class="hm__num">01</span>히어로 영역</p>
+            <p class="hm__callout-desc">간략한 서비스 설명 및CTA</p>
+          </div>
+        </div>
+        <div class="hm__callout hm__callout--left">
+          <div class="hm__line"></div>
+          <div class="hm__callout-text">
+            <p class="hm__callout-title"><span class="hm__num">03</span>오늘 예정 모임</p>
+            <p class="hm__callout-desc">오늘 참여 예정인 모임 일정을<br>확인하고 참여할 수 있어요.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── EXPLORE SCREEN ────────── -->
+  <section class="ex">
+    <span class="hm__label">EXPLORE</span>
+    <div class="ex__layout">
+      <!-- 좌측 그룹: 텍스트 + 폰 -->
+      <div class="ex__left-group">
+        <div class="ex__aside ex__aside--left">
+          <p class="hm__callout-title"><span class="hm__num">02</span>모임 상세</p>
+          <p class="hm__callout-desc">모임 상세를 확인하고 모임을<br>참여 할 수 있어요.</p>
+        </div>
+        <img class="ex__phone ex__phone--sub" src="../assets/images/notalk/모임 상세 화면.png" alt="모임 상세">
+      </div>
+      <!-- 중앙 메인 폰 -->
+      <div class="ex__center">
+        <img class="ex__phone ex__phone--main" src="../assets/images/notalk/explore screen.png" alt="탐색 화면">
+        <!-- 좌측 화살표 (모임 상세 방향) -->
+        <div class="ex__connector ex__connector--left">
+          <span class="ex__conn-dot"></span>
+          <div class="ex__conn-line"></div>
+        </div>
+        <!-- 우측 화살표 (필터 방향) -->
+        <div class="ex__connector ex__connector--right">
+          <div class="ex__conn-line"></div>
+          <span class="ex__conn-dot"></span>
+        </div>
+      </div>
+      <!-- 우측 그룹: 폰 + 텍스트 -->
+      <div class="ex__right-group">
+        <img class="ex__phone ex__phone--sub ex__phone--right" src="../assets/images/notalk/필터 기능 화면.png" alt="필터 기능">
+        <div class="ex__aside ex__aside--right">
+          <p class="hm__callout-title"><span class="hm__num">01</span>필터 기능</p>
+          <p class="hm__callout-desc">사용자가 희망하는 조건으로<br>모임을 탐색할 수 있어요.</p>
+        </div>
+      </div>
+    </div><!-- /.ex__layout -->
+  </section>
+
+  <!-- ────────── CREATE ────────── -->
+  <section class="cr">
+    <span class="cr__label">CREATE</span>
+    <div class="cr__phones">
+      <img class="cr__phone" src="../assets/images/notalk/create1.png" alt="모임 만들기 1">
+      <img class="cr__phone" src="../assets/images/notalk/create2.png" alt="모임 만들기 2">
+      <img class="cr__phone" src="../assets/images/notalk/create3.png" alt="모임 만들기 3">
+      <img class="cr__phone" src="../assets/images/notalk/create4.png" alt="모임 만들기 4">
+      <img class="cr__phone" src="../assets/images/notalk/create5.png" alt="모임 만들기 5">
+    </div>
+    <div class="cr__steps">
+      <div class="cr__step">
+        <div class="cr__dot"></div>
+        <h4 class="cr__step-title">모임 옵션 설정</h4>
+        <p class="cr__step-desc">모임의 목적과 분위기, 참여 인원,<br>선호 성별과 나이 등을 설정해요.</p>
+      </div>
+      <div class="cr__step">
+        <div class="cr__dot"></div>
+        <h4 class="cr__step-title">주제 선택</h4>
+        <p class="cr__step-desc">함께할 활동 주제를 선택해요.</p>
+      </div>
+      <div class="cr__step">
+        <div class="cr__dot"></div>
+        <h4 class="cr__step-title">날짜·시간·장소 설정</h4>
+        <p class="cr__step-desc">모임이 열릴 날짜와 시간,<br>만날 장소를 설정해요.</p>
+      </div>
+      <div class="cr__step">
+        <div class="cr__dot"></div>
+        <h4 class="cr__step-title">모임 소개 작성</h4>
+        <p class="cr__step-desc">모임 제목과 간단한 소개를 작성해<br>참여자가 모임을 이해할 수 있게 해요.</p>
+      </div>
+      <div class="cr__step">
+        <div class="cr__dot"></div>
+        <h4 class="cr__step-title">모임 생성 완료</h4>
+        <p class="cr__step-desc">설정한 내용을 확인하고<br>모임을 생성해요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── MYPAGE ────────── -->
+  <section class="mp">
+    <span class="mp__label">MYPAGE</span>
+    <div class="mp__layout">
+      <!-- 좌측 큰 폰 -->
+      <img class="mp__phone-main" src="../assets/images/notalk/mypage.png" alt="마이페이지">
+      <!-- 우측 2×2 그리드 -->
+      <div class="mp__grid">
+        <div class="mp__card">
+          <div class="mp__card-header">
+            <span class="mp__num">01</span>
+            <h4 class="mp__card-title">프로필 정보</h4>
+          </div>
+          <p class="mp__card-desc">프로필 이미지, 닉네임, MBTI 등<br>사용자 기본 정보를 확인 할 수 있어요.</p>
+          <img class="mp__card-img" src="../assets/images/notalk/mypage1.png" alt="프로필 정보">
+        </div>
+        <div class="mp__card">
+          <div class="mp__card-header">
+            <span class="mp__num">02</span>
+            <h4 class="mp__card-title">모임 및 활동 통계</h4>
+          </div>
+          <p class="mp__card-desc">참여한 모임, 개설한 모임, 누적 활동 시간을<br>한눈에 확인 할 수 있어요.</p>
+          <img class="mp__card-img" src="../assets/images/notalk/mypage2.png" alt="모임 및 활동 통계">
+        </div>
+        <div class="mp__card mp__card--abs mp__card--badge">
+          <div class="mp__card-header">
+            <span class="mp__num">03</span>
+            <h4 class="mp__card-title">나의 배지</h4>
+          </div>
+          <p class="mp__card-desc">활동을 통해 획득한 배지를 확인할 수 있으며,<br>다양한 배지를 모아 볼수 있어요.</p>
+          <img class="mp__card-img" src="../assets/images/notalk/mypage3.png" alt="나의 배지">
+        </div>
+        <div class="mp__card mp__card--abs mp__card--setting">
+          <div class="mp__card-header">
+            <span class="mp__num">04</span>
+            <h4 class="mp__card-title">설정 및 관리 기능</h4>
+          </div>
+          <p class="mp__card-desc">모임관리, 계정 정보, 알림 설정, 신고/차단,<br>문의하기 등 다양한 계정 관련 기능을 이용할 수 있어요.</p>
+          <img class="mp__card-img" src="../assets/images/notalk/mypage4.png" alt="설정 및 관리">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP SCREENS 제거됨 -->
+  <section class="as" style="display:none">
+    <div class="as__header">
+      <span class="sec-label">APP SCREENS</span>
+      <h2 class="sec-title">주요 화면</h2>
+    </div>
+
+    <!-- Splash & Login -->
+    <div class="as__section">
+      <span class="as__section-title">SPLASH &amp; LOGIN</span>
+      <div class="as__screens">
+        <div class="as__screen">
+          <img src="../assets/images/notalk/image-5720.png" alt="스플래시 화면">
+          <p class="as__screen-cap">스플래시</p>
+        </div>
+        <div class="as__screen">
+          <img src="../assets/images/notalk/image-5710.png" alt="로그인 화면">
+          <p class="as__screen-cap">로그인</p>
+        </div>
+        <div class="as__desc-col">
+          <div class="as__desc-item">
+            <span class="as__desc-num">01</span>
+            <p class="as__desc-title">브랜드 첫인상</p>
+            <p class="as__desc-text">NOTALK 로고와 그라데이션으로 서비스의 차분하고 부드러운 분위기를 첫 화면에서 전달합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home & Explore -->
+    <div class="as__section">
+      <span class="as__section-title">HOME &amp; EXPLORE</span>
+      <div class="as__screens">
+        <div class="as__screen">
+          <img src="../assets/images/notalk/image-5930.png" alt="홈 화면">
+          <p class="as__screen-cap">홈</p>
+        </div>
+        <div class="as__screen">
+          <img src="../assets/images/notalk/image-5960.png" alt="탐색 화면">
+          <p class="as__screen-cap">탐색</p>
+        </div>
+        <div class="as__desc-col">
+          <div class="as__desc-item">
+            <span class="as__desc-num">01</span>
+            <p class="as__desc-title">빠른 카테고리 탐색</p>
+            <p class="as__desc-text">바로가기 카테고리를 통해 원하는 활동의 모임을 탐색해요.</p>
+          </div>
+          <div class="as__desc-item">
+            <span class="as__desc-num">02</span>
+            <p class="as__desc-title">오늘 예정 모임</p>
+            <p class="as__desc-text">오늘 참여 예정인 모임 일정을 확인하고 참여할 수 있어요.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explore Detail -->
+    <div class="as__section">
+      <span class="as__section-title">EXPLORE DETAIL</span>
+      <div class="as__screens">
+        <div class="as__screen">
+          <img src="../assets/images/notalk/image-5970.png" alt="모임 상세">
+          <p class="as__screen-cap">모임 상세</p>
+        </div>
+        <div class="as__screen">
+          <img src="../assets/images/notalk/image-4710.png" alt="필터">
+          <p class="as__screen-cap">필터</p>
+        </div>
+        <div class="as__desc-col">
+          <div class="as__desc-item">
+            <span class="as__desc-num">03</span>
+            <p class="as__desc-title">모임 상세 & 필터</p>
+            <p class="as__desc-text">모임 상세를 확인하고 참여할 수 있어요.<br>사용자가 희망하는 조건으로 모임을 탐색할 수 있어요.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="as__section">
+      <span class="as__section-title">CHAT</span>
+      <div class="as__screens">
+        <div class="as__screen">
+          <img src="../assets/images/notalk/image-5080.png" alt="채팅 리스트">
+          <p class="as__screen-cap">채팅 리스트</p>
+        </div>
+        <div class="as__screen">
+          <img src="../assets/images/notalk/image-5090.png" alt="채팅방">
+          <p class="as__screen-cap">채팅방</p>
+        </div>
+        <div class="as__desc-col">
+          <div class="as__desc-item">
+            <span class="as__desc-num">01</span>
+            <p class="as__desc-title">자동종료까지 시간 자동계산</p>
+            <p class="as__desc-text">모임 생성 시 설정한 시간이 실시간으로 표시되며, 설정된 시간이 지나면 채팅방이 자동으로 종료돼요.</p>
+          </div>
+          <div class="as__desc-item">
+            <span class="as__desc-num">02</span>
+            <p class="as__desc-title">상태 변경 & 퀵 메시지</p>
+            <p class="as__desc-text">버튼 탭으로 필요한 소통을 빠르고 간편하게 전달할 수 있어요.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <script>
+    function scaleHero() {
+      const wrap = document.getElementById('heroWrap');
+      const figma = document.getElementById('heroFigma');
+      const scale = wrap.offsetWidth / 1920;
+      figma.style.transform = 'scale(' + scale + ')';
+      figma.style.left = '0px';
+      wrap.style.height = (927 * scale) + 'px';
+    }
+    window.addEventListener('load', function() { requestAnimationFrame(scaleHero); });
+    window.addEventListener('resize', scaleHero);
+  </script>
+</body>
+</html>

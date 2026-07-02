@@ -901,6 +901,17 @@
     #pj-viewer .pjv-index button:hover { color: rgba(255, 255, 255, 0.8); }
     #pj-viewer .pjv-index li.is-active button { color: #fff; }
     #pj-viewer .pjv-case { overflow-y: auto; overflow-x: hidden; padding-right: 1.4vw; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.22) transparent; }
+    /* 케이스 준비 중 (caseSoon) */
+    #pj-viewer .cs-wrap--soon { display: flex; flex-direction: column; height: 100%; }
+    #pj-viewer .cs-soon-hero { border-radius: 12px; overflow: hidden; }
+    #pj-viewer .cs-soon-hero img { display: block; width: 100%; height: auto; max-height: 52vh; object-fit: contain; }
+    #pj-viewer .cs-soon { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8vh 0; }
+    #pj-viewer .cs-soon-label { font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    #pj-viewer .cs-soon-title { margin-top: 14px; font-size: clamp(1.6rem, 2.4vw, 2.4rem); font-weight: 700; color: #fff; }
+    #pj-viewer .cs-soon-desc { margin-top: 16px; font-size: 0.9rem; line-height: 1.8; color: rgba(255,255,255,0.5); }
+    /* NOTALK 등: 케이스 페이지를 iframe으로 임베드 */
+    #pj-viewer .cs-wrap--frame { height: 100%; }
+    #pj-viewer .nt-frame { display: block; width: 100%; height: 100%; min-height: 78vh; border: 0; border-radius: 12px; background: #fff; }
     /* 케이스 스터디 (2단 오른쪽 칼럼에 맞춤) */
     #pj-viewer .cs-wrap { width: 100%; }
     #pj-viewer .cs-hero { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #1a1a1f; margin-bottom: 0; display: block; }
@@ -1494,6 +1505,29 @@
       #pj-viewer .pjv-info { height: auto; }
       #pj-viewer .pjv-case { overflow: visible; }
     }
+
+    /* ── CONTACT (다크 복귀 · mescubook 감성 플립 명함) ── */
+    #contact { position: relative; z-index: 2; background: #ffffff; color: #fff; overflow: hidden; padding-top: 16vh; }
+    /* 다크 패널: 둥근 아치로 차오르며 스크롤에 따라 평평해짐 (JS scrub) */
+    #contact .ct-dark { background: #0a0a0b; border-radius: 42vw 42vw 0 0; will-change: border-radius; }
+    #contact .ct-body { min-height: 100vh; padding: 12vh 6vw 14vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5vh; }
+    #contact .ct-eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); text-align: center; }
+    #contact .ct-cta { font-size: clamp(2rem, 6.5vw, 5.2rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.04; text-align: center; max-width: 14ch; }
+    #contact .ct-cta em { font-style: normal; color: rgba(255, 255, 255, 0.38); }
+    #contact .ct-msg { font-size: 0.95rem; color: rgba(255,255,255,0.55); text-align: center; margin-top: -2vh; }
+    #contact .ct-info { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; margin-top: 3vh; }
+    #contact .ct-info .ct-eyebrow { margin-bottom: 0.4rem; align-self: center; }
+    #contact .ct-line { display: flex; align-items: baseline; gap: 1.1rem; }
+    #contact .ct-line-label { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+    #contact .ct-email { font-size: clamp(1.15rem, 2.2vw, 1.5rem); font-weight: 600; color: #fff; text-decoration: none; }
+    #contact .ct-email:hover { text-decoration: underline; text-underline-offset: 5px; }
+    #contact .ct-tel { font-size: clamp(1.05rem, 2vw, 1.3rem); font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; }
+    #contact .ct-footer { margin-top: 6vh; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    #contact .ct-top { margin-top: 2.4vh; width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: rgba(255,255,255,0.7); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease; }
+    #contact .ct-top svg { width: 18px; height: 18px; }
+    #contact .ct-top:hover { background: #fff; color: #0a0a0b; border-color: #fff; transform: translateY(-4px); }
+    #contact .ct-reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+    #contact .ct-in { opacity: 1; transform: none; }
   </style>
 </head>
 <body>
@@ -1506,8 +1540,8 @@
 <header id="site-header">
   <nav class="nav">
     <a href="#projects"><span class="nav-link-inner"><span>Work</span><span aria-hidden="true">Work</span></span></a>
-    <a href="#about"><span class="nav-link-inner"><span>About</span><span aria-hidden="true">About</span></span></a>
-    <a href="contact.html"><span class="nav-link-inner"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
+    <a href="#about-me"><span class="nav-link-inner"><span>About</span><span aria-hidden="true">About</span></span></a>
+    <a href="#contact"><span class="nav-link-inner"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
   </nav>
 </header>
 
@@ -1523,26 +1557,29 @@
     <div id="card-ticker">
       <div id="card-ticker-track">
         <!-- set 1 -->
-        <figure class="tc-card"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card"><img src="unframe/unframe hero.jpg" alt=""></figure>
-        <figure class="tc-card"><img src="sangsang/sangsang preview.png" alt=""></figure>
-        <figure class="tc-card"><img src="notalk/notalk preview.png" alt=""></figure>
-        <figure class="tc-card"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/unframe/"><img src="unframe/unframe card.jpg" alt=""></figure>
+        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="http://4team-notalk.vercel.app/"><img src="notalk/notalk card.jpg" alt=""></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/ODE/"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/SENNE/"><img src="senne/senne card.jpg" alt=""></figure>
         <!-- set 2 -->
-        <figure class="tc-card"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card"><img src="unframe/unframe hero.jpg" alt=""></figure>
-        <figure class="tc-card"><img src="sangsang/sangsang preview.png" alt=""></figure>
-        <figure class="tc-card"><img src="notalk/notalk preview.png" alt=""></figure>
-        <figure class="tc-card"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/unframe/"><img src="unframe/unframe card.jpg" alt=""></figure>
+        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="http://4team-notalk.vercel.app/"><img src="notalk/notalk card.jpg" alt=""></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/ODE/"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/SENNE/"><img src="senne/senne card.jpg" alt=""></figure>
         <!-- set 3 -->
-        <figure class="tc-card"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card"><img src="unframe/unframe hero.jpg" alt=""></figure>
-        <figure class="tc-card"><img src="sangsang/sangsang preview.png" alt=""></figure>
-        <figure class="tc-card"><img src="notalk/notalk preview.png" alt=""></figure>
-        <figure class="tc-card"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/unframe/"><img src="unframe/unframe card.jpg" alt=""></figure>
+        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="http://4team-notalk.vercel.app/"><img src="notalk/notalk card.jpg" alt=""></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/ODE/"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/SENNE/"><img src="senne/senne card.jpg" alt=""></figure>
       </div>
     </div>
   </div>
@@ -1728,6 +1765,25 @@
   </div>
 </section>
 
+<!-- ── CONTACT (다크 복귀 · 플립 명함) ── -->
+<section id="contact">
+  <div class="ct-dark">
+  <div class="ct-body">
+    <h2 class="ct-cta ct-reveal">THANK YOU</h2>
+    <p class="ct-msg ct-reveal">끝까지 봐주셔서 감사합니다.</p>
+    <div class="ct-info ct-reveal">
+      <span class="ct-eyebrow">[ Contact ]</span>
+      <div class="ct-line"><span class="ct-line-label">Email.</span><a class="ct-email" href="mailto:itsmauvely@gmail.com">itsmauvely@gmail.com</a></div>
+      <div class="ct-line"><span class="ct-line-label">Phone.</span><span class="ct-tel">010-4580-2999</span></div>
+    </div>
+    <p class="ct-footer ct-reveal">© 2026 SOOBIN&nbsp;&nbsp;ALL RIGHTS RESERVED</p>
+    <button class="ct-top ct-reveal" id="ctTop" type="button" aria-label="맨 위로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+    </button>
+  </div>
+  </div>
+</section>
+
 <!-- 풀스크린 케이스 스터디 뷰어 (밖 리스트 클릭 시 열림) -->
 <div id="pj-viewer" aria-hidden="true">
   <button class="pjv-close" id="pjvClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
@@ -1783,12 +1839,69 @@
 
   window.addEventListener('resize', () => { ScrollTrigger.refresh(); });
 
+  /* ── CONTACT: 다크 곡선 전환 + reveal ── */
+  (function () {
+    // 흰 배경 → 다크: 둥근 아치가 차오르며 펴짐
+    const dark = document.querySelector('#contact .ct-dark');
+    if (dark && typeof ScrollTrigger !== 'undefined') {
+      gsap.fromTo(dark,
+        { borderTopLeftRadius: '42vw', borderTopRightRadius: '42vw', y: 60 },
+        { borderTopLeftRadius: '0vw', borderTopRightRadius: '0vw', y: 0, ease: 'none',
+          scrollTrigger: { trigger: '#contact', start: 'top 85%', end: 'top 12%', scrub: 1, invalidateOnRefresh: true } });
+    }
+    const topBtn = document.getElementById('ctTop');
+    if (topBtn) topBtn.addEventListener('click', () => {
+      if (typeof lenis !== 'undefined' && lenis) lenis.scrollTo(0, { duration: 1.6 });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    const reveals = document.querySelectorAll('#contact .ct-reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en, i) => {
+        if (en.isIntersecting) {
+          en.target.style.transitionDelay = (i * 0.1) + 's';
+          en.target.classList.add('ct-in');
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+    reveals.forEach((el) => io.observe(el));
+  })();
+
   /* ── Card Ticker: 3D tilted card gallery infinite scroll ── */
   (function () {
     const track = document.getElementById('card-ticker-track');
     if (!track) return;
-    track.querySelectorAll('video').forEach(v => { v.muted = true; v.play().catch(() => {}); });
     const SETS = 3;
+    // 카드 랜덤 셔플 + 영상/이미지 교차 배치 (3세트 동일 순서 → 루프 이음새 없음, ODE·SENNE 인접 방지)
+    (function shuffleCards() {
+      const n = track.children.length / SETS;
+      const cards = Array.from(track.children).slice(0, n);
+      const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+      const tooClose = (o) => {
+        const at = (kw) => o.findIndex((c) => c.innerHTML.includes(kw));
+        const a = at('ode hero'), b = at('senne card');
+        if (a < 0 || b < 0) return false;
+        const d = Math.abs(a - b);
+        return d === 1 || d === n - 1; // 랩어라운드 포함
+      };
+      let order, guard = 0;
+      do {
+        const vids = shuffle(cards.filter((c) => c.querySelector('video')));
+        const imgs = shuffle(cards.filter((c) => !c.querySelector('video')));
+        const long = imgs.length >= vids.length ? imgs : vids;
+        const short = long === imgs ? vids : imgs;
+        order = [];
+        for (let i = 0; i < long.length; i++) { order.push(long[i]); if (short[i]) order.push(short[i]); } // 교차: 이미지-영상-이미지-…
+      } while (tooClose(order) && ++guard < 30);
+      track.innerHTML = '';
+      for (let s = 0; s < SETS; s++) order.forEach((c) => track.appendChild(c.cloneNode(true)));
+    })();
+    track.querySelectorAll('video').forEach(v => { v.muted = true; v.play().catch(() => {}); });
+    // 카드 클릭 → 라이브 사이트 새 탭
+    track.addEventListener('click', (e) => {
+      const card = e.target.closest('.tc-card');
+      if (card && card.dataset.live) window.open(card.dataset.live, '_blank', 'noopener');
+    });
     const cardCount = track.children.length / SETS; // 1세트 카드 수
     const cardW = 200 + 20; // card width + gap
     const oneSetW = cardW * cardCount;
@@ -1819,6 +1932,7 @@
     const profileEl  = document.getElementById('about-me');
     const projectsEl = document.getElementById('projects');
     const bannerEl   = document.getElementById('banner-design');
+    const contactEl  = document.getElementById('contact');
 
     // GSAP pin은 요소를 .pin-spacer 안에 래핑하고 position:fixed로 전환 → offsetParent가 null이 되어 0 반환 방지
     // pin-spacer가 있으면 spacer 기준으로 계산해야 실제 스크롤 위치와 일치함
@@ -1838,6 +1952,7 @@
       { name: 'Profile',  top: docTop(profileEl) - window.innerHeight * 0.5 },
       { name: 'Projects', top: docTop(projectsEl) - window.innerHeight * 0.5 },
       { name: 'Banner Design', top: docTop(bannerEl) - window.innerHeight * 0.5 },
+      { name: 'Contact',  top: docTop(contactEl) + window.innerHeight * 0.1 },
     ];
 
     // 세그먼트 DOM 생성 (섹션 수만큼)
@@ -1942,7 +2057,7 @@
     /* ⬇️ 프로젝트 데이터 (단일 소스 — 여기만 고치면 리스트·뷰어·인덱스 전부 반영)
        thumb: 리스트 호버 썸네일(없으면 이름만), live: 라이브 사이트 URL(새 탭) */
     const PROJECTS = [
-      { name: 'Sledding Game', year: '2026.05', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Web Publishing', 'Interaction', 'Responsive', 'KR / EN'],
+      { name: 'Sledding Game', year: '2026.05', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Interaction', 'Responsive Web', 'KR / EN'],
         summary: '귀여운 캐릭터와 겨울의 즐거움을 담은\n인터랙티브 게임 웹사이트',
         caseHero: 'sledding/case study/hero.jpg',
         caseTitle: '게임의 즐거움을\n웹으로 확장하다',
@@ -1963,9 +2078,9 @@
           { h: 'Process',  p: '진행 과정·역할·의사결정 placeholder.' },
           { h: 'Outcome',  p: '결과·배운 점 placeholder.' },
         ] },
-      { name: 'ODE',   year: '2026.06', role: 'Personal', type: 'Web · UX/UI', live: 'https://itsmauvy.github.io/ODE/', thumb: 'ode/ode hero.jpg', tagline: 'POCKET BEAUTY BRAND', tags: ['UX/UI Design', 'Branding', 'Web'],
+      { name: 'ODE',   year: '2026.06', role: 'Personal', type: 'Web · UX/UI', live: 'https://itsmauvy.github.io/ODE/', thumb: 'ode/ode hero.jpg', tagline: 'POCKET BEAUTY BRAND', tags: ['UX/UI Design', 'Branding', 'Responsive Web'],
         summary: '뷰티 실무에서 발견한 휴대성과 사용성의 문제를\n브랜드 기획부터 반응형 웹 구현까지 풀어냈습니다.',
-        caseHero: 'ode/ode hero.jpg',
+        caseHero: 'ode/ode case study hero.jpg',
         caseTheme: 'ode',
         caseOdeOverview: true,
         caseOdeProblem: true,
@@ -1986,54 +2101,26 @@
         caseLead: '뷰티 실무에서 발견한 니즈를 바탕으로,\n포켓 뷰티 브랜드 ODE를 기획했습니다.',
         period: '9 Days',
         tools: 'Figma · Photoshop · AI (Claude · ChatGPT)' },
-      { name: '2XKO', year: '2024', role: 'Personal', type: 'Mobile · UI', live: 'https://itsmauvy.github.io/2XKO/', thumb: '2XKO/preview.jpg', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
-        summary: '한 줄 소개 placeholder.',
-        sections: [
-          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
-          { h: 'Problem',  p: '문제 정의 placeholder.' },
-          { h: 'Process',  p: '진행 과정 placeholder.' },
-          { h: 'Outcome',  p: '결과 placeholder.' },
-        ] },
-      { name: '상상의문', year: '2024', role: 'Team',     type: 'Branding', live: 'https://doorlove1234-coder.github.io/sangsangDoor/', thumb: 'sangsang/sangsang preview.png', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
-        summary: '한 줄 소개 placeholder.',
-        sections: [
-          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
-          { h: 'Problem',  p: '문제 정의 placeholder.' },
-          { h: 'Process',  p: '진행 과정 placeholder.' },
-          { h: 'Outcome',  p: '결과 placeholder.' },
-        ] },
-      { name: 'UNFRAME', year: '2024', role: 'Personal', type: 'Web · Dev', live: 'https://itsmauvy.github.io/unframe/', thumb: 'unframe/unframe hero.jpg', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
-        summary: '한 줄 소개 placeholder.',
-        sections: [
-          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
-          { h: 'Problem',  p: '문제 정의 placeholder.' },
-          { h: 'Process',  p: '진행 과정 placeholder.' },
-          { h: 'Outcome',  p: '결과 placeholder.' },
-        ] },
-      { name: 'NOTALK', year: '2023', role: 'Team',     type: 'Graphic', live: 'http://4team-notalk.vercel.app/', thumb: 'notalk/notalk preview.png', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Branding', 'Web'],
-        summary: '한 줄 소개 placeholder.',
-        sections: [
-          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
-          { h: 'Problem',  p: '문제 정의 placeholder.' },
-          { h: 'Process',  p: '진행 과정 placeholder.' },
-          { h: 'Outcome',  p: '결과 placeholder.' },
-        ] },
-      { name: 'SENNE', year: '2025', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/SENNE/', thumb: '', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Web'],
-        summary: '한 줄 소개 placeholder.',
-        sections: [
-          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
-          { h: 'Problem',  p: '문제 정의 placeholder.' },
-          { h: 'Process',  p: '진행 과정 placeholder.' },
-          { h: 'Outcome',  p: '결과 placeholder.' },
-        ] },
-      { name: 'ICANNNOTE', year: '2025', role: 'Team', type: 'Web', live: 'https://jiwon12011.github.io/icannote/', thumb: '', tagline: '한 줄 태그라인 placeholder', tags: ['UX/UI Design', 'Web'],
-        summary: '한 줄 소개 placeholder.',
-        sections: [
-          { h: 'Overview', p: '프로젝트 개요 placeholder.' },
-          { h: 'Problem',  p: '문제 정의 placeholder.' },
-          { h: 'Process',  p: '진행 과정 placeholder.' },
-          { h: 'Outcome',  p: '결과 placeholder.' },
-        ] },
+      { name: '2XKO', year: '2026.06', role: 'Personal', type: 'Mobile · UI', live: 'https://itsmauvy.github.io/2XKO/', thumb: '2XKO/preview.jpg', tagline: '2v2 Tag-Team Fighting Game', tags: ['UX/UI Redesign', 'Web', 'Visual Design'],
+        summary: '2XKO의 빠른 전투 흐름과 챔피언 중심의 경험을<br>시각적으로 강화한 반응형 웹사이트 리디자인.',
+        caseSoon: true },
+      { name: '상상의문', year: '2026.06', role: 'Team',     type: 'Branding', live: 'https://doorlove1234-coder.github.io/sangsangDoor/', thumb: 'sangsang/sangsang preview.png', tagline: 'Escape Room Website', tags: ['UX/UI Redesign', 'Responsive Web', 'Admin System'],
+        summary: '방탈출 테마와 스토리를 새롭게 기획하고,<br>탐색부터 예약까지의 사용자 경험을 개선한 웹사이트.',
+        caseHero: 'sangsang/sansang hero.jpg',
+        caseSoon: true },
+      { name: 'UNFRAME', year: '2026.06', role: 'Personal', type: 'Web · Dev', live: 'https://itsmauvy.github.io/unframe/', thumb: 'unframe/unframe hero.jpg', tagline: 'Fashion Brand Website', tags: ['UX/UI Design', 'Concept Design', 'Web'],
+        summary: '개성 넘치는 해외 패션 사이트의 감성을<br>과감한 레이아웃과 비주얼로 풀어낸 웹사이트.',
+        caseSoon: true },
+      { name: 'NOTALK', year: '2026.05', role: 'Team',     type: 'Graphic', live: 'http://4team-notalk.vercel.app/', thumb: 'notalk/notalk preview.png', tagline: 'Social App Design', tags: ['User Flow', 'App Design', 'Backend Development'],
+        summary: '대화에 대한 부담을 낮추고,<br>가볍게 함께할 수 있도록 설계한 팝업형 소셜 서비스.',
+        caseIframe: 'notalk/case.html' },
+      { name: 'SENNE', year: '2026.06', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/SENNE/', thumb: 'senne/senne hero.jpg', tagline: 'Lifestyle Personal Care Brand', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
+        summary: '향을 중심으로 일상의 케어 경험을 제안하는<br>오브제 감성의 퍼스널 케어 브랜드 웹사이트.',
+        caseHero: 'senne/senne case study hero.jpg',
+        caseSoon: true },
+      { name: 'ICANNNOTE', year: '2026.06', role: 'Team', type: 'Web', live: 'https://jiwon12011.github.io/icannote/', thumb: 'icannote/icannote hero.jpg', tagline: 'Education Software Website', tags: ['UX/UI Design', 'Web Redesign', 'Responsive Web'],
+        summary: '수업 자료 위에 바로 쓰고 설명하는 판서 기능을<br>쉽게 이해하고 사용할 수 있도록 개선한 웹사이트.',
+        caseSoon: true },
     ];
 
     const listEl     = document.getElementById('pjList');
@@ -2713,6 +2800,16 @@
     }
 
     function caseHTML(p) {
+      if (p.caseSoon) {
+        const img = p.caseHero || p.hero || p.thumb;
+        return '<div class="cs-wrap cs-wrap--soon">'
+          + (img ? '<div class="cs-soon-hero"><img src="' + esc(img) + '" alt=""></div>' : '')
+          + '<div class="cs-soon"><span class="cs-soon-label">Case Study</span><p class="cs-soon-title">Coming Soon</p><p class="cs-soon-desc">케이스 스터디를 준비하고 있어요.<br>View Site에서 프로젝트를 먼저 만나보세요.</p></div>'
+          + '</div>';
+      }
+      if (p.caseIframe) {
+        return '<div class="cs-wrap cs-wrap--frame"><iframe class="nt-frame" src="' + esc(p.caseIframe) + '" title="' + esc(p.name) + ' case study" loading="lazy"></iframe></div>';
+      }
       const heroImg = p.caseHero || p.hero;
       const hero = `
         <div class="cs-hero" ${p.caseTheme ? `data-theme="${esc(p.caseTheme)}"` : ''}>
@@ -2843,7 +2940,7 @@
       if (infoEyebrow) infoEyebrow.textContent = (p.role || '') + ' Project';
       if (infoTitle)   infoTitle.textContent   = p.name;
       if (infoSub)     infoSub.textContent     = p.tagline || p.type || '';
-      if (infoDesc)    infoDesc.textContent    = p.summary || '';
+      if (infoDesc)    infoDesc.innerHTML       = p.summary || '';
       if (infoTags)    infoTags.innerHTML      = (p.tags || []).map((t) => '<span>' + esc(t) + '</span>').join('');
       if (infoLive)    infoLive.setAttribute('href', p.live || '#');
       if (caseEl)    {
@@ -3030,6 +3127,7 @@
       }
     });
 
+    let delivered = false; // 납품 완료 후 scrub 재생 방지 (핀은 유지 — kill하면 spacer 제거로 스크롤 점프)
     let bdST = ScrollTrigger.create({
       trigger: bdPin,
       start: 'top top',
@@ -3038,9 +3136,9 @@
       scrub: 1,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => { if (!dragging) tl.progress(self.progress); },
+      onUpdate: (self) => { if (!dragging && !delivered) tl.progress(self.progress); },
       onLeave: () => enableDragMode(),
-      onEnterBack: () => disableDragMode(),
+      onEnterBack: () => { if (!delivered) disableDragMode(); },
     });
 
     /* ── Phase 2: 드래그 모드 ── */
@@ -3172,7 +3270,7 @@
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup',   onUp);
       window.removeEventListener('pointercancel', onUp);
-      if (bdST) { bdST.kill(); bdST = null; }
+      delivered = true; // scrub 정지 (핀은 유지 → 레이아웃 점프 없음)
       // 폴더를 아래로 내려 타이틀 닫힘과 겹치지 않게
       gsap.to(folder, { y: '+=140', duration: 0.7, ease: 'power2.inOut', force3D: true });
       // 타이틀 좌우 닫기
