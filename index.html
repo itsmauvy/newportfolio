@@ -2344,7 +2344,7 @@
           <img class="cs-bg-frog cs-deco-rise" src="${frog}" alt="">
           <div class="cs-bg-head reveal">
             <span class="cs-bg-eyebrow">BACKGROUND</span>
-            <h3 class="cs-bg-title">Why Sledding Game?</h3>
+            <h3 class="cs-bg-title">인디 게임의 첫인상을 더 매력적으로</h3>
             <p class="cs-bg-desc">출시 5일 만에 100,000장 판매를 달성한 Steam 인디 게임의 매력을<br>웹에서도 자연스럽게 경험할 수 있도록 랜딩 페이지를<br>기획하고 제작했습니다.</p>
           </div>
           <div class="cs-bg-goals">
@@ -2422,12 +2422,12 @@
       const V = 'https://itsmauvy.github.io/myportfolio/assets/videos/';
       const pts = [
         { v: 'loading.mp4', rev: false, op: '', type: 'Loading Page', name: '로딩 화면', head: '게임이 시작되기 전, 기대감을 높이는 첫 경험', desc: '캐릭터 애니메이션을 활용해 대기 시간을 자연스럽게 연결하고,<br>게임의 분위기를 첫 화면부터 전달했습니다.', tags: ['CSS', 'GSAP'] },
-        { v: 'cta-frog.mp4', rev: true, op: 'object-position:5% center;', type: 'CTA Section', name: 'CTA 버튼 개구리', head: '버튼 위에 올라타는 개구리', desc: 'CTA 버튼에 호버하면 개구리가 버튼 위로 폴짝 뛰어올라,<br>클릭을 자연스럽게 유도하는 마이크로 인터랙션을 더했습니다.', tags: ['GSAP', 'Hover', 'back.out'] },
-        { v: 'scroll-frog.mp4', rev: false, op: '', type: 'Video Section', name: '스크롤 프로그', head: '스크롤에 맞춰 비탈을 내려오는 개구리', desc: '스크롤 진행도에 1:1로 연동해 개구리가 비탈을 따라 미끄러지며,<br>게임의 썰매 활강 감각을 웹으로 옮겼습니다.', tags: ['GSAP ScrollTrigger', 'Scrub'] },
-        { v: 'frog-mole.mp4', rev: true, op: 'object-position:100% center;', type: 'Intro Section', name: '게임 소개 카드', head: '마우스를 따라 튀어나오고 떨어지는 개구리', desc: '마우스가 닿는 모서리에서 개구리가 톡 튀어나오고,<br>빠져나가는 방향으로 쏙 떨어지듯 사라지는 두더지식 위트를 더했습니다.', tags: ['GSAP', 'Hover', 'back.out'] },
-        { v: 'frog-snow-attack.mp4', rev: false, op: '', type: 'Character Section', name: '눈덩이 맞기', head: '클릭하면 팡 터지는 눈덩이', desc: '캐릭터 영역을 클릭하면 그 자리에 눈덩이가 팡 터지며,<br>게임 속 눈싸움의 재미를 인터랙션으로 옮겼습니다.', tags: ['GSAP', 'Click', 'back.out'] },
-        { v: 'frog-scrollbar.mp4', rev: true, op: '', type: 'Media Gallery', name: 'frogback 스크롤바', head: '개구리 썰매로 보는 갤러리 진행도', desc: '갤러리를 넘길 때마다<br>개구리 썰매가 눈길 트랙을 따라 이동하며 진행도를 보여주고,<br>트랙을 직접 끌어 원하는 장면으로 미끄러질 수 있습니다.', tags: ['GSAP', 'Custom Scrollbar', 'power3.out'] },
-        { v: 'news-frog.mp4', rev: false, op: '', type: 'News Section', name: '방향키 내비게이션', head: '방향키로 카드 사이를 뛰어다니는 개구리', desc: '뉴스 섹션이 화면에 들어오면<br>←→ 방향키로 개구리가 카드 사이를 폴짝 건너뛰고,<br>↑↓ 키로 점프·착지하는 작은 게임성을 더했습니다.', tags: ['GSAP', 'Keyboard', 'Game-like'] },
+        { v: 'cta-frog.mp4', rev: true, op: 'object-position:5% center;', type: 'CTA Section', name: 'CTA 버튼', head: '호버 시 올라오는 개구리', desc: 'CTA 버튼에 호버하면 개구리 캐릭터가 버튼 위로 올라옵니다.<br>간단한 모션으로 버튼에 재미와 클릭 유도를 더했습니다.', tags: ['CSS Transition', 'Hover'] },
+        { v: 'scroll-frog.mp4', rev: false, op: '', type: 'Video Section', name: '스크롤 모션', head: '스크롤하면 내려오는 개구리', desc: '스크롤하면 개구리 캐릭터가 비탈을 따라 내려옵니다.<br>마치 썰매를 타고 내려가는 것처럼 보여서, 게임의 분위기를<br>더 재미있게 느낄 수 있도록 만들었습니다.', tags: ['GSAP ScrollTrigger', 'Scrub'] },
+        { v: 'frog-mole.mp4', rev: true, op: 'object-position:100% center;', type: 'Intro Section', name: '게임 소개 카드', head: '톡 튀어나왔다가 쏙 사라지는 개구리', desc: '마우스가 닿는 모서리에서 개구리가 톡 튀어나오고,<br>빠져나가는 방향으로 쏙 사라지도록 구현했습니다.<br>단순한 카드 hover에 개구리의 장난스러운 움직임을 더했습니다.', tags: ['GSAP', 'Hover', 'back.out'] },
+        { v: 'frog-snow-attack.mp4', rev: false, op: '', type: 'Character Section', name: '캐릭터 클릭 모션', head: '클릭한 곳에 팡 터지는 눈덩이', desc: '캐릭터 영역을 클릭하면 해당 위치에 눈덩이 효과가 나타납니다.<br>클릭 동작이 게임 속 눈싸움 장면처럼 보이도록 표현했습니다.', tags: ['GSAP', 'Click', 'back.out'] },
+        { v: 'frog-scrollbar.mp4', rev: true, op: '', type: 'Media Gallery', name: '개구리 스크롤바', head: '개구리 썰매로 보는 갤러리 진행도', desc: '갤러리를 넘기면 개구리 썰매가 눈길 트랙을 따라 이동합니다.', tags: ['GSAP', 'Custom Scrollbar', 'power3.out'] },
+        { v: 'news-frog.mp4', rev: false, op: '', type: 'News Section', name: '방향키 내비게이션', head: '방향키로 카드 사이를 뛰어다니는 개구리', desc: '뉴스 섹션이 화면에 들어오면<br>←→ 방향키로 개구리가 카드 사이를 폴짝 건너뛰고,<br>↑↓ 키로 점프·착지하는 작은 게임성을 더했습니다.', tags: ['Keyboard', 'CSS Keyframes', 'Game-like'] },
       ];
       const points = pts.map((p, i) => `
         <div class="ki__point${p.rev ? ' ki__point--reverse' : ''}">
