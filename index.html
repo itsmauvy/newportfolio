@@ -15,7 +15,7 @@
       overflow-x: hidden;
     }
 
-    #scroll-space { height: 300vh; }
+    #scroll-space { height: 420vh; }
 
     /* 고정 씬 */
     #scene {
@@ -1835,7 +1835,7 @@
   const heroTL = gsap.timeline({ scrollTrigger: ST });
   heroTL.fromTo('#video-wrap',
     { webkitMaskSize: '26vmin', maskSize: '26vmin' },
-    { webkitMaskSize: '2600vmin', maskSize: '2600vmin', ease: 'none', duration: 1 });
+    { webkitMaskSize: '2600vmin', maskSize: '2600vmin', ease: 'power1.inOut', duration: 1 });
 
   window.addEventListener('resize', () => { ScrollTrigger.refresh(); });
 
@@ -3137,8 +3137,8 @@
       anticipatePin: 1,
       invalidateOnRefresh: true,
       onUpdate: (self) => { if (!dragging && !delivered) tl.progress(self.progress); },
-      onLeave: () => enableDragMode(),
-      onEnterBack: () => { if (!delivered) disableDragMode(); },
+      onLeave: () => { if (!delivered) autoDeliver(); },
+      onEnterBack: () => { if (!delivered) resetBanners(); },
     });
 
     /* ── Phase 2: 드래그 모드 ── */
@@ -3171,6 +3171,28 @@
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup',   onUp);
       window.addEventListener('pointercancel', onUp);
+    }
+
+    /* ── 자동 납품 (스크롤 트리거) ── */
+    function autoDeliver() {
+      if (delivered) return;
+      folder.classList.add('is-visible');
+      gsap.delayedCall(0.5, () => {
+        if (!delivered) deliverAll();
+      });
+    }
+
+    function resetBanners() {
+      delivered = false;
+      folder.classList.remove('is-visible');
+      gsap.killTweensOf([banners, folder]);
+      gsap.set(banners, { x: 0, y: 0, scale: 1, opacity: 1, display: 'block' });
+      gsap.set(folder, { x: 0, y: 0, scale: 1 });
+      const docs = folderDocs.querySelectorAll('.bd-doc');
+      docs.forEach(d => d.remove());
+      if (cntEl) cntEl.textContent = '0';
+      const hint = folder.querySelector('.bd-folder-hint');
+      if (hint) hint.textContent = 'FOLDER';
     }
 
     /* ── 드래그 핸들러 ── */
@@ -3292,7 +3314,7 @@
 
     // 폴더 더블클릭 → 윈도 열기
     folder.addEventListener('dblclick', () => {
-      if (!dragEnabled) return; // 납품 전엔 열리지 않음
+      if (!delivered) return; // 납품 전엔 열리지 않음
       openMacWin();
     });
 
