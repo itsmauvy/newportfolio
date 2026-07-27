@@ -3442,7 +3442,9 @@
       invalidateOnRefresh: true,
       onUpdate: (self) => { if (!dragging && !delivered) tl.progress(self.progress); },
       onLeave: () => { if (!delivered) autoDeliver(); },
-      onEnterBack: () => { if (!delivered) resetBanners(); },
+      // 이미 납품 완료된 상태면 애니메이션 재생 없이 곧장 위/아래 섹션으로 스킵 (다시 보려면 폴더 더블클릭)
+      onEnterBack: () => { if (delivered) lenis.scrollTo(bdST.start - 2, { immediate: true }); else resetBanners(); },
+      onEnter: () => { if (delivered) lenis.scrollTo(bdST.end + 2, { immediate: true }); },
     });
 
     /* ── Phase 2: 드래그 모드 ── */
