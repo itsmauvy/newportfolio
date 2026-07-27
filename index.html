@@ -453,6 +453,48 @@
     }
     #about-me .me-sub strong { font-weight: 700; color: #111; }
     #about-me .me-head { border-bottom: 1px solid #ececec; padding-bottom: 4vh; margin-bottom: 6vh; }
+
+    /* ── EXPERIENCE & ACTIVITIES (Profile 아래 · 다크 톤 카드 그리드, 내용은 임시) ── */
+    #experience-activities {
+      position: relative; z-index: 2; background: #0a0a0b; color: #fff;
+      padding: 12vh 4vw 14vh;
+    }
+    #experience-activities .ea-inner { max-width: 1400px; margin: 0 auto; }
+    #experience-activities .ea-title {
+      font-weight: 800;
+      font-size: clamp(2.4rem, 5.6vw, 4.6rem); letter-spacing: -0.02em;
+      margin: 0 0 4vh;
+    }
+    #experience-activities .ea-eyebrow {
+      display: block; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4); margin-bottom: 5vh;
+    }
+    #experience-activities .ea-group { margin-bottom: 7vh; }
+    #experience-activities .ea-group:last-child { margin-bottom: 0; }
+    #experience-activities .ea-group-head {
+      display: flex; align-items: center; gap: 1.2rem;
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 3.2vh;
+    }
+    #experience-activities .ea-group-head::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.18); }
+    #experience-activities .ea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4vw; }
+    #experience-activities .ea-card { display: flex; flex-direction: column; }
+    #experience-activities .ea-date { font-size: 0.72rem; letter-spacing: 0.06em; color: rgba(255, 255, 255, 0.4); margin-bottom: 0.9rem; }
+    #experience-activities .ea-name {
+      border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 10px;
+      padding: 1rem 0.8rem; text-align: center;
+      font-size: 0.98rem; font-weight: 600; letter-spacing: -0.01em;
+      margin-bottom: 1.4rem;
+    }
+    #experience-activities .ea-points { list-style: none; margin: 0; padding: 0; }
+    #experience-activities .ea-points li {
+      font-size: 0.82rem; line-height: 1.7; color: rgba(255, 255, 255, 0.55);
+      padding-left: 1em; position: relative;
+    }
+    #experience-activities .ea-points li::before { content: '-'; position: absolute; left: 0; color: rgba(255, 255, 255, 0.35); }
+    @media (max-width: 900px) {
+      #experience-activities .ea-grid { grid-template-columns: 1fr; gap: 4vh; }
+    }
     #about-me .me-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 0.8fr;
@@ -556,7 +598,7 @@
                   transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
     #projects .pj-item.pj-in { opacity: 1 !important; transform: none !important; }
-    #projects .pj-eyebrow {
+    #projects .pj-eyebrow, #client-works .pj-eyebrow, #app-works .pj-eyebrow {
       position: absolute;
       left: 2vw;
       top: 50%;
@@ -571,6 +613,74 @@
       pointer-events: none;
     }
     #projects .pj-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 11vw; align-items: center; }
+
+    /* ── CLIENT WORKS / APP (밖: SELECTED WORKS(Web) 아래 · 가벼운 리스트 톤 공유) ── */
+    #client-works, #app-works {
+      position: relative;
+      z-index: 2;
+      background: #0a0a0b;
+      color: #fff;
+      padding: 11vh 4vw;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #client-works .cw-inner, #app-works .cw-inner {
+      max-width: 1600px; width: 100%; margin: 0 auto; position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    #client-works .cw-tabs { display: flex; gap: 1.6rem; margin-bottom: 3rem; }
+    #client-works .cw-tab {
+      background: none; border: none; cursor: pointer; padding: 0.4rem 0;
+      font-family: inherit; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255, 255, 255, 0.4); transition: color 0.3s;
+    }
+    #client-works .cw-tab.is-active, #client-works .cw-tab:hover { color: #fff; }
+    #client-works .cw-list, #app-works .cw-list { list-style: none; width: 100%; max-width: 900px; margin: 0; padding: 0; }
+    #client-works .cw-item, #app-works .cw-item { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+    #client-works .cw-item:last-child, #app-works .cw-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+    #client-works .cw-item a, #app-works .cw-item a {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+      padding: 2.2vh 0.2rem; text-decoration: none; color: rgba(255, 255, 255, 0.6); transition: color 0.3s;
+    }
+    #client-works .cw-item a:hover, #app-works .cw-item a:hover { color: #fff; }
+    #client-works .cw-name, #app-works .cw-name { font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 500; letter-spacing: -0.01em; }
+    #client-works .cw-meta, #app-works .cw-meta { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.6; white-space: nowrap; }
+    #client-works .cw-empty, #app-works .cw-empty { opacity: 0.5; font-size: 1rem; letter-spacing: 0.04em; }
+
+    /* ── APP: 표지(폰 프레임) + 상세 텍스트 카드 (레퍼런스 참고) ── */
+    #app-works .cw-list { max-width: 1200px; }
+    #app-works .aw-card {
+      display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 6vw; align-items: center;
+      padding: 5vh 0.2rem; text-decoration: none; color: inherit;
+    }
+    #app-works .aw-cover {
+      width: 100%; max-width: 340px; aspect-ratio: 9 / 16; margin: 0 auto;
+      background: #f3ede0; border-radius: 28px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    }
+    #app-works .aw-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #app-works .aw-top { font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); margin-bottom: 1.4rem; }
+    #app-works .aw-title { font-size: clamp(2.8rem, 5.4vw, 4.6rem); font-weight: 700; letter-spacing: -0.01em; margin: 0 0 1.4rem; line-height: 1; }
+    #app-works .aw-tagline { font-size: 1.3rem; color: rgba(255, 255, 255, 0.75); margin: 0 0 1.8rem; }
+    #app-works .aw-desc { font-size: 1rem; color: rgba(255, 255, 255, 0.5); margin: 0 0 2.4rem; }
+    #app-works .aw-role { font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.75); margin-bottom: 0.5rem; }
+    #app-works .aw-stack { font-size: 0.76rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.35); margin-bottom: 2.6rem; }
+    #app-works .aw-process {
+      display: inline-flex; align-items: baseline; gap: 0.6rem; font-size: 1.2rem; font-weight: 600;
+      text-decoration: none; color: #fff; border-bottom: 1px solid rgba(255, 255, 255, 0.3); padding-bottom: 0.3rem; width: fit-content;
+      transition: opacity 0.3s;
+    }
+    #app-works .aw-process:hover { opacity: 0.6; }
+    #app-works .aw-process-sub { font-size: 0.78rem; color: rgba(255, 255, 255, 0.35); margin: 0.8rem 0 1.8rem; }
+    #app-works .aw-live { font-size: 0.76rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); text-decoration: none; transition: color 0.3s; }
+    #app-works .aw-live:hover { color: #fff; }
+    @media (max-width: 720px) {
+      #app-works .aw-card { grid-template-columns: 1fr; text-align: center; }
+      #app-works .aw-process { margin: 0 auto; }
+    }
 
     /* ── BANNER DESIGN (밖: SELECTED WORKS 아래 · 제목 분리 + 배너 상승) ── */
     #banner-design { position: relative; z-index: 2; background: #fff; color: #111; }
@@ -587,7 +697,7 @@
 
     /* 폴더 */
     #banner-design .bd-folder {
-      position: absolute; top: 62vh; right: 6vw; z-index: 10;
+      position: absolute; top: 56vh; right: 6vw; z-index: 10;
       text-align: center; pointer-events: none;
       opacity: 0; transform: translateY(20px);
       will-change: transform;
@@ -793,7 +903,10 @@
     #projects .pjp-media img, #projects .pjp-media video { width: 100%; height: auto; object-fit: unset; display: block; }
     #projects .pjp-media span { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255, 255, 255, 0.3); }
     #projects .pjp-title { font-size: clamp(2.2rem, 4vw, 4.2rem); font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; text-align: center; margin: 1.8rem 0 1rem; line-height: 1; white-space: nowrap; }
-    #projects .pjp-foot { display: flex; justify-content: space-between; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
+    #projects .pjp-tagline { font-size: 0.9rem; font-weight: 400; letter-spacing: 0; text-transform: none; text-align: center; color: rgba(255, 255, 255, 0.55); margin: 0 0 1.6rem; }
+    #projects .pjp-foot { display: flex; justify-content: space-between; align-items: center; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
+    #projects .pjp-cta { color: rgba(255, 255, 255, 0.8); text-decoration: none; pointer-events: auto; transition: opacity 0.25s; }
+    #projects .pjp-cta:hover { opacity: 0.55; }
 
     /* 케이스 뷰어 목차 드래그 힌트 — 드래그하면 사라짐 */
     #pj-viewer .pjv-hint {
@@ -1540,6 +1653,7 @@
 <header id="site-header">
   <nav class="nav">
     <a href="#projects"><span class="nav-link-inner"><span>Work</span><span aria-hidden="true">Work</span></span></a>
+    <a href="#client-works"><span class="nav-link-inner"><span>Client Works</span><span aria-hidden="true">Client Works</span></span></a>
     <a href="#about-me"><span class="nav-link-inner"><span>About</span><span aria-hidden="true">About</span></span></a>
     <a href="#contact"><span class="nav-link-inner"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
   </nav>
@@ -1696,8 +1810,72 @@
   </div>
 </section>
 
+<section id="experience-activities">
+  <div class="ea-inner">
+    <span class="ea-eyebrow">Experience</span>
+    <h2 class="ea-title">Experience &amp; Activities</h2>
+
+    <div class="ea-group">
+      <div class="ea-group-head">Design &amp; Content</div>
+      <div class="ea-grid">
+        <div class="ea-card">
+          <div class="ea-date">2025.09 – 2025.12</div>
+          <div class="ea-name">UX/UI 디자인 부트캠프 수료</div>
+          <ul class="ea-points">
+            <li>실무 프로젝트 기반 UX/UI 디자인 교육 과정 수료 (임시 내용)</li>
+            <li>팀 프로젝트 다수 진행, 기획부터 퍼블리싱까지 참여 (임시 내용)</li>
+          </ul>
+        </div>
+        <div class="ea-card">
+          <div class="ea-date">2025.11</div>
+          <div class="ea-name">교내 해커톤 참가</div>
+          <ul class="ea-points">
+            <li>4인 팀 프로젝트로 서비스 기획부터 UI 디자인까지 담당 (임시 내용)</li>
+            <li>48시간 내 프로토타입 제작 및 발표 (임시 내용)</li>
+          </ul>
+        </div>
+        <div class="ea-card">
+          <div class="ea-date">2024.03 – 2024.12</div>
+          <div class="ea-name">디자인 동아리 활동</div>
+          <ul class="ea-points">
+            <li>정기 스터디 및 외부 세미나 참여 (임시 내용)</li>
+            <li>포트폴리오 피드백 세션 운영 (임시 내용)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="ea-group">
+      <div class="ea-group-head">Build &amp; Ops</div>
+      <div class="ea-grid">
+        <div class="ea-card">
+          <div class="ea-date">2023.07</div>
+          <div class="ea-name">UX 리서치 워크숍 수료</div>
+          <ul class="ea-points">
+            <li>사용자 인터뷰 및 리서치 방법론 실습 과정 이수 (임시 내용)</li>
+          </ul>
+        </div>
+        <div class="ea-card">
+          <div class="ea-date">2024</div>
+          <div class="ea-name">웹퍼블리싱 사이드 프로젝트</div>
+          <ul class="ea-points">
+            <li>반응형 레이아웃 · 브랜드 톤에 맞춘 UI 구현 (임시 내용)</li>
+          </ul>
+        </div>
+        <div class="ea-card">
+          <div class="ea-date">2023</div>
+          <div class="ea-name">SNS 콘텐츠 기획 · 운영</div>
+          <ul class="ea-points">
+            <li>정기 콘텐츠 기획·촬영·편집 전 과정 참여 (임시 내용)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="projects">
-  <span class="pj-eyebrow">Selected Works</span>
+  <span class="pj-eyebrow">Web Design</span>
   <div class="pj-inner">
     <div class="pj-grid">
       <div class="pj-left">
@@ -1708,9 +1886,34 @@
         <div class="pjp-num"><b id="pjPrevNum">01</b> / <span id="pjPrevTotal">06</span></div>
         <div class="pjp-frame"><div class="pjp-media" id="pjPrevImg"><span>Preview</span></div></div>
         <h3 class="pjp-title" id="pjPrevTitle">Project One</h3>
-        <div class="pjp-foot"><span id="pjPrevMeta">Personal · 2026</span></div>
+        <p class="pjp-tagline" id="pjPrevTagline"></p>
+        <div class="pjp-foot">
+          <span id="pjPrevMeta">Personal · 2026</span>
+          <a class="pjp-cta" id="pjPrevCta" href="#" target="_blank" rel="noopener noreferrer">View Live ↗</a>
+        </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="app-works">
+  <span class="pj-eyebrow">App Design</span>
+  <div class="cw-inner">
+    <ul class="cw-list" id="awList"></ul>
+    <p class="cw-empty" id="awEmpty">Coming soon.</p>
+  </div>
+</section>
+
+<section id="client-works">
+  <span class="pj-eyebrow">Client Works</span>
+  <div class="cw-inner">
+    <div class="cw-tabs" id="cwTabs">
+      <button type="button" class="cw-tab is-active" data-filter="all">All</button>
+      <button type="button" class="cw-tab" data-filter="web">Web</button>
+      <button type="button" class="cw-tab" data-filter="app">App</button>
+    </div>
+    <ul class="cw-list" id="cwList"></ul>
+    <p class="cw-empty" id="cwEmpty">Coming soon.</p>
   </div>
 </section>
 
@@ -1930,7 +2133,10 @@
     const label   = root.querySelector('.sp-label');
     const aboutEl    = document.getElementById('about');
     const profileEl  = document.getElementById('about-me');
+    const experienceEl = document.getElementById('experience-activities');
     const projectsEl = document.getElementById('projects');
+    const appWorksEl = document.getElementById('app-works');
+    const clientWorksEl = document.getElementById('client-works');
     const bannerEl   = document.getElementById('banner-design');
     const contactEl  = document.getElementById('contact');
 
@@ -1950,7 +2156,10 @@
       // About 구간을 한 화면 앞당겨 시작 → Passionate 문구가 보이기 전에 라벨이 ABOUT으로 전환
       { name: 'About',    top: Math.max(1, docTop(aboutEl) - window.innerHeight) },
       { name: 'Profile',  top: docTop(profileEl) - window.innerHeight * 0.5 },
+      { name: 'Experience', top: docTop(experienceEl) - window.innerHeight * 0.5 },
       { name: 'Projects', top: docTop(projectsEl) - window.innerHeight * 0.5 },
+      { name: 'App', top: docTop(appWorksEl) - window.innerHeight * 0.5 },
+      { name: 'Client Works', top: docTop(clientWorksEl) - window.innerHeight * 0.5 },
       { name: 'Banner Design', top: docTop(bannerEl) - window.innerHeight * 0.5 },
       { name: 'Contact',  top: docTop(contactEl) + window.innerHeight * 0.1 },
     ];
@@ -2111,9 +2320,6 @@
       { name: 'UNFRAME', year: '2026.06', role: 'Personal', type: 'Web · Dev', live: 'https://itsmauvy.github.io/unframe/', thumb: 'unframe/unframe hero.jpg', tagline: 'Fashion Brand Website', tags: ['UX/UI Design', 'Concept Design', 'Web'],
         summary: '개성 넘치는 해외 패션 사이트의 감성을<br>과감한 레이아웃과 비주얼로 풀어낸 웹사이트.',
         caseSoon: true },
-      { name: 'NOTALK', year: '2026.05', role: 'Team',     type: 'Graphic', live: 'http://4team-notalk.vercel.app/', thumb: 'notalk/notalk preview.png', tagline: 'Social App Design', tags: ['User Flow', 'App Design', 'Backend Development'],
-        summary: '대화에 대한 부담을 낮추고,<br>가볍게 함께할 수 있도록 설계한 팝업형 소셜 서비스.',
-        caseIframe: 'notalk/case.html' },
       { name: 'SENNE', year: '2026.06', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/SENNE/', thumb: 'senne/senne hero.jpg', tagline: 'Lifestyle Personal Care Brand', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
         summary: '향을 중심으로 일상의 케어 경험을 제안하는<br>오브제 감성의 퍼스널 케어 브랜드 웹사이트.',
         caseHero: 'senne/senne case study hero.jpg',
@@ -2153,6 +2359,8 @@
     const prevTitle = document.getElementById('pjPrevTitle');
     const prevNum   = document.getElementById('pjPrevNum');
     const prevMeta  = document.getElementById('pjPrevMeta');
+    const prevTagline = document.getElementById('pjPrevTagline');
+    const prevCta   = document.getElementById('pjPrevCta');
     const prevTotal = document.getElementById('pjPrevTotal');
     const wheelEl   = document.getElementById('pjWheel');
     const countEl   = document.getElementById('pjCount');
@@ -2169,6 +2377,8 @@
       if (prevNum)   prevNum.textContent   = pad2(i + 1);
       if (prevTitle) prevTitle.innerHTML   = splitChars(p.name);
       if (prevMeta)  prevMeta.textContent  = p.role + ' · ' + p.year;
+      if (prevTagline) prevTagline.textContent = p.tagline || '';
+      if (prevCta)   prevCta.href = p.live || '#';
       if (prevImg) {
         if (p.video) {
           prevImg.innerHTML = '<video src="' + esc(p.video) + '" muted loop playsinline preload="auto"' + (p.poster ? ' poster="' + esc(p.poster) + '"' : '') + '></video>';
@@ -3076,6 +3286,88 @@
         onEnter: () => { el.style.transitionDelay = (i * 0.05) + 's'; el.classList.add('pj-in'); },
       });
     });
+  })();
+
+  /* ── 8.5) CLIENT WORKS: All/Web/App 탭 필터 (데이터는 추후 채움) ── */
+  (function () {
+    /* ⬇️ 채용 시 여기만 채우면 됨: platform은 'web' 또는 'app' */
+    const CLIENT_WORKS = [
+      // { name: '', platform: 'web', year: '', role: '', live: '', tagline: '' },
+    ];
+
+    const tabs   = [...document.querySelectorAll('#cwTabs .cw-tab')];
+    const listEl = document.getElementById('cwList');
+    const emptyEl = document.getElementById('cwEmpty');
+    if (!tabs.length || !listEl) return;
+
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    let activeFilter = 'all';
+    function render() {
+      const list = activeFilter === 'all'
+        ? CLIENT_WORKS
+        : CLIENT_WORKS.filter((p) => p.platform === activeFilter);
+
+      listEl.innerHTML = list.map((p) => `
+        <li class="cw-item">
+          <a href="${esc(p.live || '#')}" target="_blank" rel="noopener noreferrer">
+            <span class="cw-name">${esc(p.name)}</span>
+            <span class="cw-meta">${esc(p.platform === 'app' ? 'App' : 'Web')} · ${esc(p.year || '')}</span>
+          </a>
+        </li>`).join('');
+
+      if (emptyEl) emptyEl.style.display = list.length ? 'none' : 'block';
+    }
+
+    tabs.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('is-active')) return;
+        tabs.forEach((b) => b.classList.toggle('is-active', b === btn));
+        activeFilter = btn.dataset.filter;
+        render();
+      });
+    });
+
+    render();
+  })();
+
+  /* ── 8.6) APP: Web(Selected Works)에서 분리한 앱 프로젝트 카드 (표지 + 상세 정보) ── */
+  (function () {
+    const APP_WORKS = [
+      { name: 'NOTALK', year: '2026.05', category: 'App Design', role: 'Team · UX/UI + Backend', stack: 'WEB · JAVASCRIPT',
+        thumb: 'notalk/notalk preview.png',
+        tagline: 'Social App Design',
+        desc: '대화에 대한 부담을 낮추고, 가볍게 함께할 수 있도록 설계한 팝업형 소셜 서비스',
+        process: 'notalk/case.html', processLabel: '제작과정 보기', processSub: '기획 · 디자인 · 개발 전 과정 기록',
+        live: 'http://4team-notalk.vercel.app/', liveLabel: 'LIVE SITE' },
+    ];
+
+    const listEl  = document.getElementById('awList');
+    const emptyEl = document.getElementById('awEmpty');
+    if (!listEl) return;
+
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const pad2 = (n) => String(n).padStart(2, '0');
+
+    listEl.innerHTML = APP_WORKS.map((p, i) => `
+      <li class="cw-item aw-item">
+        <div class="aw-card">
+          <div class="aw-cover"><img src="${esc(p.thumb)}" alt=""></div>
+          <div class="aw-info">
+            <div class="aw-top">${pad2(i + 1)} — ${esc(p.category)} · ${esc(p.year)}</div>
+            <h3 class="aw-title">${esc(p.name)}</h3>
+            <p class="aw-tagline">${esc(p.tagline)}</p>
+            <p class="aw-desc">— ${esc(p.desc)}</p>
+            <div class="aw-role">${esc(p.role)}</div>
+            <div class="aw-stack">${esc(p.stack)}</div>
+            <a class="aw-process" href="${esc(p.process)}" target="_blank" rel="noopener noreferrer">${esc(p.processLabel)} <span aria-hidden="true">→</span></a>
+            <p class="aw-process-sub">${esc(p.processSub)}</p>
+            <a class="aw-live" href="${esc(p.live)}" target="_blank" rel="noopener noreferrer">${esc(p.liveLabel)} ↗</a>
+          </div>
+        </div>
+      </li>`).join('');
+
+    if (emptyEl) emptyEl.style.display = APP_WORKS.length ? 'none' : 'block';
   })();
 
   /* ── 3.5) BANNER DESIGN: scrub 스택 → 한 번에 드래그 납품 (Projects 이후 초기화) ── */
