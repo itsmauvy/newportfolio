@@ -334,7 +334,7 @@
     }
     #about .about-inner {
       width: 100%;
-      max-width: 1000px;
+      max-width: 1360px;
       margin: 0 auto;
     }
     #about .about-eyebrow {
@@ -350,10 +350,10 @@
     /* 스크롤하며 단어별로 색이 채워지는 ABOUT 문장 */
     #about .about-fill {
       margin-top: 0;
-      font-size: clamp(1.5rem, 3.6vw, 3.2rem);
-      font-weight: 500;
+      font-size: clamp(1.8rem, 4.4vw, 4.2rem);
+      font-weight: 700;
       letter-spacing: -0.01em;
-      line-height: 1.25;
+      line-height: 1.2;
     }
     #about .about-fill .w {
       color: rgba(255, 255, 255, 0.16);
@@ -483,23 +483,30 @@
     #experience-activities .ea-group:last-child { margin-bottom: 0; }
     #experience-activities .ea-group-head {
       display: flex; align-items: center; gap: 1.2rem;
-      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-      margin-bottom: 3.2vh;
+      font-size: 0.95rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 3.6vh;
     }
     #experience-activities .ea-group-head::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.18); }
     #experience-activities .ea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4vw; }
-    #experience-activities .ea-card { display: flex; flex-direction: column; }
-    #experience-activities .ea-date { font-size: 0.72rem; letter-spacing: 0.06em; color: rgba(255, 255, 255, 0.4); margin-bottom: 0.9rem; }
+    #experience-activities .ea-card {
+      display: flex; flex-direction: column;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    }
+    #experience-activities .ea-card.ea-in { opacity: 1; transform: none; }
+    #experience-activities .ea-date { font-size: 0.88rem; letter-spacing: 0.06em; color: rgba(255, 255, 255, 0.45); margin-bottom: 1.1rem; }
     #experience-activities .ea-name {
       border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 10px;
-      padding: 1rem 0.8rem; text-align: center;
-      font-size: 0.98rem; font-weight: 600; letter-spacing: -0.01em;
-      margin-bottom: 1.4rem;
+      padding: 1.2rem 1rem; text-align: center;
+      font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em;
+      margin-bottom: 1.6rem;
+      word-break: keep-all;
     }
     #experience-activities .ea-points { list-style: none; margin: 0; padding: 0; }
     #experience-activities .ea-points li {
-      font-size: 0.82rem; line-height: 1.7; color: rgba(255, 255, 255, 0.55);
+      font-size: 1rem; line-height: 1.7; color: rgba(255, 255, 255, 0.6);
       padding-left: 1em; position: relative;
+      word-break: keep-all; overflow-wrap: break-word;
     }
     #experience-activities .ea-points li::before { content: '-'; position: absolute; left: 0; color: rgba(255, 255, 255, 0.35); }
     @media (max-width: 900px) {
@@ -1828,57 +1835,59 @@
     <h2 class="ea-title">Experience &amp; Activities</h2>
 
     <div class="ea-group">
-      <div class="ea-group-head">Design &amp; Content</div>
+      <div class="ea-group-head">Marketing &amp; Content</div>
       <div class="ea-grid">
         <div class="ea-card">
-          <div class="ea-date">2025.09 – 2025.12</div>
-          <div class="ea-name">UX/UI 디자인 부트캠프 수료</div>
+          <div class="ea-date">2026.08 – 현재</div>
+          <div class="ea-name">ROOTIN 서포터즈</div>
           <ul class="ea-points">
-            <li>실무 프로젝트 기반 UX/UI 디자인 교육 과정 수료 (임시 내용)</li>
-            <li>팀 프로젝트 다수 진행, 기획부터 퍼블리싱까지 참여 (임시 내용)</li>
+            <li>한국의 일상·문화를 주제로 콘텐츠 기획</li>
+            <li>영상 촬영·편집까지 숏폼 콘텐츠 제작</li>
           </ul>
         </div>
         <div class="ea-card">
-          <div class="ea-date">2025.11</div>
-          <div class="ea-name">교내 해커톤 참가</div>
+          <div class="ea-date">2024</div>
+          <div class="ea-name">브랜드 협업 콘텐츠 제작</div>
           <ul class="ea-points">
-            <li>4인 팀 프로젝트로 서비스 기획부터 UI 디자인까지 담당 (임시 내용)</li>
-            <li>48시간 내 프로토타입 제작 및 발표 (임시 내용)</li>
+            <li>브랜드 제안 협업 콘텐츠 기획 및 제작 (임시 내용)</li>
+            <li>채널 톤에 맞춘 콘텐츠 편집·발행 (임시 내용)</li>
           </ul>
         </div>
         <div class="ea-card">
-          <div class="ea-date">2024.03 – 2024.12</div>
-          <div class="ea-name">디자인 동아리 활동</div>
+          <div class="ea-date">2022.08 – 2025.12</div>
+          <div class="ea-name">글로벌 SNS 채널 구축·운영</div>
           <ul class="ea-points">
-            <li>정기 스터디 및 외부 세미나 참여 (임시 내용)</li>
-            <li>포트폴리오 피드백 세션 운영 (임시 내용)</li>
+            <li>브랜드 최초 글로벌 SNS 계정 개설 및 운영</li>
+            <li>콘텐츠 기획 담당 · 팔로워 0→3천 명 성장</li>
           </ul>
         </div>
       </div>
     </div>
 
     <div class="ea-group">
-      <div class="ea-group-head">Build &amp; Ops</div>
+      <div class="ea-group-head">Design &amp; Build</div>
       <div class="ea-grid">
         <div class="ea-card">
-          <div class="ea-date">2023.07</div>
-          <div class="ea-name">UX 리서치 워크숍 수료</div>
+          <div class="ea-date">2026.04 – 2026.07</div>
+          <div class="ea-name">주노소프트 카페24 스킨 제작 참여</div>
           <ul class="ea-points">
-            <li>사용자 인터뷰 및 리서치 방법론 실습 과정 이수 (임시 내용)</li>
+            <li>카페24 기반 쇼핑몰 스킨 디자인 및 퍼블리싱</li>
+            <li>브랜드 콘셉트에 맞춰 화면 구성과 UI 요소 제작</li>
+          </ul>
+        </div>
+        <div class="ea-card">
+          <div class="ea-date">2025</div>
+          <div class="ea-name">UX/UI 디자인 프로젝트 참여</div>
+          <ul class="ea-points">
+            <li>실무 프로젝트 기반 UX/UI 디자인 참여 (임시 내용)</li>
+            <li>기획부터 퍼블리싱까지 전 과정 참여 (임시 내용)</li>
           </ul>
         </div>
         <div class="ea-card">
           <div class="ea-date">2024</div>
-          <div class="ea-name">웹퍼블리싱 사이드 프로젝트</div>
+          <div class="ea-name">반응형 웹 퍼블리싱 사이드 프로젝트</div>
           <ul class="ea-points">
-            <li>반응형 레이아웃 · 브랜드 톤에 맞춘 UI 구현 (임시 내용)</li>
-          </ul>
-        </div>
-        <div class="ea-card">
-          <div class="ea-date">2023</div>
-          <div class="ea-name">SNS 콘텐츠 기획 · 운영</div>
-          <ul class="ea-points">
-            <li>정기 콘텐츠 기획·촬영·편집 전 과정 참여 (임시 내용)</li>
+            <li>반응형 UI 구현 (임시 내용)</li>
           </ul>
         </div>
       </div>
@@ -2080,6 +2089,22 @@
       });
     }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
     reveals.forEach((el) => io.observe(el));
+  })();
+
+  /* ── EXPERIENCE & ACTIVITIES: 카드 스크롤 페이드인 ── */
+  (function () {
+    const cards = document.querySelectorAll('#experience-activities .ea-card');
+    if (!cards.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en, i) => {
+        if (en.isIntersecting) {
+          en.target.style.transitionDelay = (i % 3 * 0.12) + 's';
+          en.target.classList.add('ea-in');
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+    cards.forEach((el) => io.observe(el));
   })();
 
   /* ── Card Ticker: 3D tilted card gallery infinite scroll ── */
