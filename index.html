@@ -650,12 +650,17 @@
       background: #0a0a0b;
       color: #fff;
     }
+    /* sticky 라벨 자체가 문서 흐름에서 높이(폰트 세로쓰기 기준 ~200px)를 차지해서
+       바로 아래 .pj-covers를 그만큼 밀어내림 → 커버 위에 빈 배경색 띠가 생김.
+       높이 0인 sticky wrapper로 감싸고 실제 라벨은 그 안에서 absolute + 50vh로 중앙 고정 (Banner Design 폴더와 동일 패턴) */
+    #projects .pj-eyebrow-wrap { position: sticky; top: 0; left: 0; height: 0; z-index: 2; }
     #projects .pj-eyebrow {
-      position: sticky;
+      position: absolute;
       left: 2vw;
-      top: 50%;
+      top: 50vh;
       transform: translateY(-50%) rotate(180deg);
       writing-mode: vertical-rl;
+      white-space: nowrap;
       font-size: clamp(1.2rem, 1.8vw, 1.7rem);
       font-weight: 500;
       letter-spacing: 0.2em;
@@ -730,7 +735,7 @@
       overflow: hidden;
       display: flex; align-items: center; justify-content: center;
     }
-    #app-works .aw-cover img { width: 100%; height: 100%; object-fit: cover; display: block; border: none; outline: none; box-shadow: none; }
+    #app-works .aw-cover img { width: 100%; height: 100%; object-fit: contain; display: block; border: none; outline: none; box-shadow: none; }
     #app-works .aw-top { font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); margin-bottom: 1.4rem; }
     #app-works .aw-title { font-size: clamp(2.8rem, 5.4vw, 4.6rem); font-weight: 700; letter-spacing: -0.01em; margin: 0 0 1.4rem; line-height: 1; }
     #app-works .aw-tagline { font-size: 1.3rem; color: rgba(255, 255, 255, 0.75); margin: 0 0 1.8rem; }
@@ -1969,6 +1974,72 @@
   </div>
 </section>
 
+<section id="projects">
+  <span class="pj-eyebrow-wrap"><span class="pj-eyebrow">Web Design</span></span>
+  <ul class="pj-covers" id="pjCovers"></ul>
+</section>
+
+<section id="app-works">
+  <span class="pj-eyebrow">App Design</span>
+  <div class="cw-inner">
+    <div class="aw-viewport">
+      <ul class="cw-list" id="awList"></ul>
+    </div>
+    <p class="cw-empty" id="awEmpty">Coming soon.</p>
+  </div>
+</section>
+
+<section id="banner-design">
+  <div class="bd-fade"></div>
+  <div class="bd-pin">
+    <h2 class="bd-title" aria-label="Banner Design">
+      <span class="bd-word bd-w-l">Banner&nbsp;</span>
+      <span class="bd-word bd-w-r">Design</span>
+    </h2>
+    <div class="bd-stage">
+      <div class="bd-banner" data-name="laneige_summer.jpg"><img src="Banner/image 43.jpg" alt="" loading="lazy"></div>
+      <div class="bd-banner" data-name="flyco_promo.jpg"><img src="Banner/image 44.jpg" alt="" loading="lazy"></div>
+      <div class="bd-banner" data-name="waterpark_coupon.jpg"><img src="Banner/image 45.jpg" alt="" loading="lazy"></div>
+      <div class="bd-banner" data-name="bazaar_new_era.jpg"><img src="Banner/image 46.jpg" alt="" loading="lazy"></div>
+      <div class="bd-banner" data-name="holiday_gift.jpg"><img src="Banner/image 47.jpg" alt="" loading="lazy"></div>
+      <div class="bd-banner" data-name="cosmetic_sale.jpg"><img src="Banner/image 48.jpg" alt="" loading="lazy"></div>
+      <div class="bd-banner" data-name="spring_event.jpg"><img src="Banner/image 49.jpg" alt="" loading="lazy"></div>
+      <div class="bd-banner" data-name="brand_campaign.jpg"><img src="Banner/image 52.jpg" alt="" loading="lazy"></div>
+    </div>
+    <!-- 드래그 폴더 -->
+    <div class="bd-folder" id="bdFolder">
+      <div class="bd-folder-wrap">
+        <img src="assets/img/folder.png" class="bd-folder-img" alt="folder" draggable="false">
+        <div class="bd-folder-docs" id="bdFolderDocs"></div>
+      </div>
+      <span class="bd-folder-arrow">↓</span>
+      <p class="bd-folder-hint" id="bdFolderHint">DROP HERE</p>
+      <p class="bd-folder-count"><span id="bdDelivered">0</span> / <span id="bdTotal">8</span></p>
+    </div>
+    <!-- 드래그 힌트 -->
+    <p class="bd-drag-hint" id="bdDragHint">DRAG TO DELIVER <span class="bd-drag-hint-arrow">→</span></p>
+    <!-- macOS 폴더 윈도 -->
+    <div class="bd-mac-win" id="bdMacWin" aria-hidden="true">
+      <div class="bd-mac-chrome">
+        <div class="bd-mac-dots">
+          <button class="bd-mac-dot dot-red"    id="bdMacClose"  aria-label="닫기" title="닫기"></button>
+          <button class="bd-mac-dot dot-yellow" aria-label="최소화" title="최소화"></button>
+          <button class="bd-mac-dot dot-green"  aria-label="전체화면" title="전체화면"></button>
+          <span class="bd-close-hint">↑</span>
+        </div>
+        <span class="bd-mac-title">Banner Design — <span id="bdMacCount">0</span> items</span>
+      </div>
+      <div class="bd-mac-body" id="bdMacBody"></div>
+    </div>
+    <!-- 파일 확대 뷰어 -->
+    <div class="bd-mac-lightbox" id="bdMacLightbox">
+      <button class="bd-mac-lb-close" id="bdMacLbClose">✕</button>
+      <img class="bd-mac-lb-img" id="bdMacLbImg" src="" alt="">
+      <p class="bd-mac-lb-name" id="bdMacLbName"></p>
+    </div>
+  </div>
+</section>
+
 <section id="experience-activities">
   <div class="ea-inner">
     <span class="ea-eyebrow">Experience</span>
@@ -2031,72 +2102,6 @@
           </ul>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<section id="projects">
-  <span class="pj-eyebrow">Web Design</span>
-  <ul class="pj-covers" id="pjCovers"></ul>
-</section>
-
-<section id="app-works">
-  <span class="pj-eyebrow">App Design</span>
-  <div class="cw-inner">
-    <div class="aw-viewport">
-      <ul class="cw-list" id="awList"></ul>
-    </div>
-    <p class="cw-empty" id="awEmpty">Coming soon.</p>
-  </div>
-</section>
-
-<section id="banner-design">
-  <div class="bd-fade"></div>
-  <div class="bd-pin">
-    <h2 class="bd-title" aria-label="Banner Design">
-      <span class="bd-word bd-w-l">Banner&nbsp;</span>
-      <span class="bd-word bd-w-r">Design</span>
-    </h2>
-    <div class="bd-stage">
-      <div class="bd-banner" data-name="laneige_summer.jpg"><img src="Banner/image 43.jpg" alt="" loading="lazy"></div>
-      <div class="bd-banner" data-name="flyco_promo.jpg"><img src="Banner/image 44.jpg" alt="" loading="lazy"></div>
-      <div class="bd-banner" data-name="waterpark_coupon.jpg"><img src="Banner/image 45.jpg" alt="" loading="lazy"></div>
-      <div class="bd-banner" data-name="bazaar_new_era.jpg"><img src="Banner/image 46.jpg" alt="" loading="lazy"></div>
-      <div class="bd-banner" data-name="holiday_gift.jpg"><img src="Banner/image 47.jpg" alt="" loading="lazy"></div>
-      <div class="bd-banner" data-name="cosmetic_sale.jpg"><img src="Banner/image 48.jpg" alt="" loading="lazy"></div>
-      <div class="bd-banner" data-name="spring_event.jpg"><img src="Banner/image 49.jpg" alt="" loading="lazy"></div>
-      <div class="bd-banner" data-name="brand_campaign.jpg"><img src="Banner/image 52.jpg" alt="" loading="lazy"></div>
-    </div>
-    <!-- 드래그 폴더 -->
-    <div class="bd-folder" id="bdFolder">
-      <div class="bd-folder-wrap">
-        <img src="assets/img/folder.png" class="bd-folder-img" alt="folder" draggable="false">
-        <div class="bd-folder-docs" id="bdFolderDocs"></div>
-      </div>
-      <span class="bd-folder-arrow">↓</span>
-      <p class="bd-folder-hint" id="bdFolderHint">DROP HERE</p>
-      <p class="bd-folder-count"><span id="bdDelivered">0</span> / <span id="bdTotal">8</span></p>
-    </div>
-    <!-- 드래그 힌트 -->
-    <p class="bd-drag-hint" id="bdDragHint">DRAG TO DELIVER <span class="bd-drag-hint-arrow">→</span></p>
-    <!-- macOS 폴더 윈도 -->
-    <div class="bd-mac-win" id="bdMacWin" aria-hidden="true">
-      <div class="bd-mac-chrome">
-        <div class="bd-mac-dots">
-          <button class="bd-mac-dot dot-red"    id="bdMacClose"  aria-label="닫기" title="닫기"></button>
-          <button class="bd-mac-dot dot-yellow" aria-label="최소화" title="최소화"></button>
-          <button class="bd-mac-dot dot-green"  aria-label="전체화면" title="전체화면"></button>
-          <span class="bd-close-hint">↑</span>
-        </div>
-        <span class="bd-mac-title">Banner Design — <span id="bdMacCount">0</span> items</span>
-      </div>
-      <div class="bd-mac-body" id="bdMacBody"></div>
-    </div>
-    <!-- 파일 확대 뷰어 -->
-    <div class="bd-mac-lightbox" id="bdMacLightbox">
-      <button class="bd-mac-lb-close" id="bdMacLbClose">✕</button>
-      <img class="bd-mac-lb-img" id="bdMacLbImg" src="" alt="">
-      <p class="bd-mac-lb-name" id="bdMacLbName"></p>
     </div>
   </div>
 </section>
@@ -2332,10 +2337,10 @@
       // About 구간을 한 화면 앞당겨 시작 → Passionate 문구가 보이기 전에 라벨이 ABOUT으로 전환
       { name: 'About',    top: Math.max(1, docTop(aboutEl) - window.innerHeight) },
       { name: 'Profile',  top: docTop(profileEl) - window.innerHeight * 0.5 },
-      { name: 'Experience', top: docTop(experienceEl) - window.innerHeight * 0.5 },
       { name: 'Projects', top: docTop(projectsEl) - window.innerHeight * 0.5 },
       { name: 'App', top: docTop(appWorksEl) - window.innerHeight * 0.5 },
       { name: 'Banner Design', top: docTop(bannerEl) - window.innerHeight * 0.5 },
+      { name: 'Experience', top: docTop(experienceEl) - window.innerHeight * 0.5 },
       { name: 'Contact',  top: docTop(contactEl) + window.innerHeight * 0.1 },
     ];
 
@@ -2441,6 +2446,9 @@
     /* ⬇️ 프로젝트 데이터 (단일 소스 — 여기만 고치면 리스트·뷰어·인덱스 전부 반영)
        thumb: 리스트 호버 썸네일(없으면 이름만), live: 라이브 사이트 URL(새 탭) */
     const PROJECTS = [
+      { name: 'Pinned', year: '2026.07', role: 'Personal', type: 'Web · Branding', live: 'https://itsmauvy.github.io/pinned/', thumb: 'pinned/pinned home.png', tagline: 'Vintage Fashion Archive', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
+        summary: '한 가지 취향으로 큐레이션한 빈티지 패션 아카이브,<br>핀으로 고정해두고 싶은 순간들을 담은 웹사이트.',
+        caseSoon: true },
       { name: 'Sledding Game', year: '2026.05', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Interaction', 'Responsive Web', 'KR / EN'],
         summary: '귀여운 캐릭터와 겨울의 즐거움을 담은\n인터랙티브 게임 웹사이트',
         caseHero: 'sledding/case study/hero.jpg',
@@ -2521,7 +2529,7 @@
         <div class="pj-cover-media">
           ${p.video
             ? '<video src="' + esc(p.video) + '" muted loop playsinline autoplay preload="auto"></video>'
-            : p.thumb ? '<img src="' + esc(p.thumb) + '" alt="" loading="lazy">' : ''}
+            : p.thumb ? '<img src="' + esc(p.thumb) + '" alt="" loading="lazy"' + (p.thumbPosition ? ' style="object-position: ' + esc(p.thumbPosition) + '"' : '') + '>' : ''}
         </div>
         <div class="pj-cover-info">
           <div class="pj-cover-toprow">
@@ -3408,13 +3416,13 @@
   (function () {
     const APP_WORKS = [
       { name: 'NOTALK', year: '2026.05', category: 'App Design', role: 'Team · UX/UI + Backend', stack: 'WEB · JAVASCRIPT',
-        thumb: 'notalk/notalk preview.png',
+        thumb: 'notalk/notalk mockup.png',
         tagline: 'Social App Design',
         desc: '대화에 대한 부담을 낮추고, 가볍게 함께할 수 있도록 설계한 팝업형 소셜 서비스',
         process: 'notalk/case.html', processLabel: '제작과정 보기', processSub: '기획 · 디자인 · 개발 전 과정 기록',
         live: 'http://4team-notalk.vercel.app/', liveLabel: 'LIVE SITE' },
       { name: '떡상', year: '2026', category: 'Web App Game', role: 'Personal', stack: 'WEB · JAVASCRIPT',
-        thumb: 'mochi/mochi cover img.jpg',
+        thumb: 'mochi/mochi mockup png.png',
         tagline: 'Web App Game',
         desc: '가볍게 즐길 수 있는 웹 기반 캐주얼 게임',
         live: 'https://itsmauvy.github.io/MochiUP/', liveLabel: 'LIVE SITE' },
