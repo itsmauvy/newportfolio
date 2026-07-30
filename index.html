@@ -163,6 +163,45 @@
     #site-header .nav a:hover .nav-link-inner span:first-child { transform: translateY(-100%); }
     #site-header .nav a:hover .nav-link-inner span:last-child { transform: translateY(0%); }
 
+    /* ── CLIENT WORKS 팝업 모달 (별도 페이지 대신 간단 팝업) ── */
+    .cw-modal {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .cw-modal.is-open { opacity: 1; pointer-events: auto; }
+    .cw-modal-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(5, 5, 6, 0.82);
+      backdrop-filter: blur(6px);
+    }
+    .cw-modal-panel {
+      position: relative; z-index: 1;
+      width: min(560px, 88vw);
+      padding: 6vh 3rem;
+      background: #0f0f11;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      text-align: center;
+      color: #fff;
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    .cw-modal.is-open .cw-modal-panel { transform: translateY(0) scale(1); }
+    .cw-modal-close {
+      position: absolute; top: 1.1rem; right: 1.1rem;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: none; border: 1px solid rgba(255,255,255,0.25); color: #fff;
+      font-size: 0.9rem; cursor: pointer; transition: background 0.25s;
+    }
+    .cw-modal-close:hover { background: rgba(255,255,255,0.1); }
+    .cw-modal-eyebrow {
+      display: block; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); margin-bottom: 1.2rem;
+    }
+    .cw-modal-empty { font-size: 1.1rem; color: rgba(255,255,255,0.6); margin: 0; }
+
     /* ── 스크롤 인디케이터 (하단 중앙: 마우스 + 화살표 + Scroll) ── */
     #scroll-cue {
       position: fixed;
@@ -516,6 +555,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr 0.8fr;
       gap: 4vw;
+      align-items: start;
     }
     #about-me .me-block { margin-bottom: 3.2rem; }
     #about-me .me-block h3 {
@@ -533,6 +573,11 @@
     #about-me .me-muted { color: #9a9a9a !important; font-size: 0.82rem !important; letter-spacing: 0.03em; }
     #about-me .me-tags { display: grid; grid-template-columns: repeat(3, minmax(max-content, 1fr)); gap: 0.5rem; }
     @media (max-width: 420px) { #about-me .me-tags { grid-template-columns: repeat(2, minmax(max-content, 1fr)); } }
+    #about-me .me-tools-row { margin-top: 1.5rem; }
+    #about-me .me-tags-flow { display: grid; grid-template-columns: repeat(6, max-content); gap: 0.5rem; }
+    @media (max-width: 900px) { #about-me .me-tags-flow { grid-template-columns: repeat(4, max-content); } }
+    @media (max-width: 560px) { #about-me .me-tags-flow { grid-template-columns: repeat(3, max-content); } }
+    #about-me .me-tags-flow .skill-chip { flex: 0 0 auto; }
     /* 스킬 칩 (롤업 + 블러 hover) */
     #about-me .skill-chip {
       position: relative; display: flex; align-items: center; justify-content: center;
@@ -598,24 +643,29 @@
 
 
 
-    /* ── SELECTED WORKS (밖: 좌=리스트+흐르는 라인(lukebaffait) / 우=프리뷰(mescubook)) ── */
+    /* ── WEB DESIGN (풀스크린 프로젝트 커버 스택, hanza-template.framer.website 참고) ── */
     #projects {
       position: relative;
       z-index: 2;
       background: #0a0a0b;
       color: #fff;
-      padding: 11vh 4vw 22vh;
-      min-height: 100vh;
     }
-    #projects .pj-inner { max-width: 1600px; margin: 0 auto; position: relative; z-index: 1; }
-    #projects .pj-item {
-      opacity: 0;
-      transform: translateY(45px);
-      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-                  transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    #projects .pj-eyebrow {
+      position: sticky;
+      left: 2vw;
+      top: 50%;
+      transform: translateY(-50%) rotate(180deg);
+      writing-mode: vertical-rl;
+      font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.85);
+      z-index: 2;
+      pointer-events: none;
     }
-    #projects .pj-item.pj-in { opacity: 1 !important; transform: none !important; }
-    #projects .pj-eyebrow, #client-works .pj-eyebrow, #app-works .pj-eyebrow {
+    /* App Design은 GSAP로 pin(position:fixed) 되는 섹션이라 sticky와 충돌해서 갑자기 위치가 튐 → absolute로 자체 중앙정렬 */
+    #app-works .pj-eyebrow {
       position: absolute;
       left: 2vw;
       top: 50%;
@@ -629,56 +679,58 @@
       z-index: 2;
       pointer-events: none;
     }
-    #projects .pj-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 11vw; align-items: center; }
 
-    /* ── CLIENT WORKS / APP (밖: SELECTED WORKS(Web) 아래 · 가벼운 리스트 톤 공유) ── */
-    #client-works, #app-works {
+    /* ── APP (밖: SELECTED WORKS(Web) 아래) ── */
+    #app-works {
       position: relative;
       z-index: 2;
       background: #0a0a0b;
       color: #fff;
-      padding: 11vh 4vw;
-      min-height: 60vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-height: 100vh;
     }
-    #client-works .cw-inner, #app-works .cw-inner {
-      max-width: 1600px; width: 100%; margin: 0 auto; position: relative; z-index: 1;
+    /* .cw-inner를 절대배치로 화면 정중앙에 정렬 — #app-works를 flex로 만들면 형제인 .pj-eyebrow(sticky)의 스티키 동작이 깨짐.
+       #app-works가 정확히 100vh이므로 top:50%가 곧 뷰포트 중앙과 일치함 */
+    #app-works .cw-inner {
+      position: absolute; top: 50%; left: 4vw; right: 4vw; transform: translateY(-50%);
+      max-width: 1600px; margin: 0 auto; z-index: 1;
       display: flex; flex-direction: column; align-items: center;
     }
-    #client-works .cw-tabs { display: flex; gap: 1.6rem; margin-bottom: 3rem; }
-    #client-works .cw-tab {
-      background: none; border: none; cursor: pointer; padding: 0.4rem 0;
-      font-family: inherit; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em;
-      text-transform: uppercase; color: rgba(255, 255, 255, 0.4); transition: color 0.3s;
-    }
-    #client-works .cw-tab.is-active, #client-works .cw-tab:hover { color: #fff; }
-    #client-works .cw-list, #app-works .cw-list { list-style: none; width: 100%; max-width: 900px; margin: 0; padding: 0; }
-    #client-works .cw-item, #app-works .cw-item { border-top: 1px solid rgba(255, 255, 255, 0.12); }
-    #client-works .cw-item:last-child, #app-works .cw-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
-    #client-works .cw-item a, #app-works .cw-item a {
+    #app-works .cw-list { list-style: none; width: 100%; max-width: 900px; margin: 0; padding: 0; }
+    #app-works .cw-item { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+    #app-works .cw-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+    #app-works .cw-item a {
       display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
       padding: 2.2vh 0.2rem; text-decoration: none; color: rgba(255, 255, 255, 0.6); transition: color 0.3s;
     }
-    #client-works .cw-item a:hover, #app-works .cw-item a:hover { color: #fff; }
-    #client-works .cw-name, #app-works .cw-name { font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 500; letter-spacing: -0.01em; }
-    #client-works .cw-meta, #app-works .cw-meta { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.6; white-space: nowrap; }
-    #client-works .cw-empty, #app-works .cw-empty { opacity: 0.5; font-size: 1rem; letter-spacing: 0.04em; }
+    #app-works .cw-item a:hover { color: #fff; }
+    #app-works .cw-name { font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 500; letter-spacing: -0.01em; }
+    #app-works .cw-meta { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.6; white-space: nowrap; }
+    #app-works .cw-empty { opacity: 0.5; font-size: 1rem; letter-spacing: 0.04em; }
 
     /* ── APP: 표지(폰 프레임) + 상세 텍스트 카드 (레퍼런스 참고) ── */
-    #app-works .cw-list { max-width: 1200px; }
+    /* 프로젝트 2개 이상일 때 세로 스크롤에 맞춰 천천히 가로로 넘어가는 트랙 */
+    #app-works .aw-viewport { width: 100%; max-width: 1200px; overflow: hidden; background: #0a0a0b; }
+    #app-works .cw-list {
+      display: flex; flex-wrap: nowrap;
+      width: 100%; max-width: none;
+      will-change: transform;
+      background: #0a0a0b;
+    }
+    #app-works .cw-item.aw-item {
+      flex: 0 0 100%;
+      border-top: none; border-bottom: none;
+      background: #0a0a0b;
+    }
     #app-works .aw-card {
       display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 6vw; align-items: center;
       padding: 5vh 0.2rem; text-decoration: none; color: inherit;
     }
     #app-works .aw-cover {
       width: 100%; max-width: 340px; aspect-ratio: 9 / 16; margin: 0 auto;
-      background: #f3ede0; border-radius: 28px; overflow: hidden;
+      overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
     }
-    #app-works .aw-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #app-works .aw-cover img { width: 100%; height: 100%; object-fit: cover; display: block; border: none; outline: none; box-shadow: none; }
     #app-works .aw-top { font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); margin-bottom: 1.4rem; }
     #app-works .aw-title { font-size: clamp(2.8rem, 5.4vw, 4.6rem); font-weight: 700; letter-spacing: -0.01em; margin: 0 0 1.4rem; line-height: 1; }
     #app-works .aw-tagline { font-size: 1.3rem; color: rgba(255, 255, 255, 0.75); margin: 0 0 1.8rem; }
@@ -891,39 +943,110 @@
     }
     #banner-design .bd-mac-lb-close:hover { color: #fff; }
 
-    /* LEFT: 키네틱 휠 인디케이터 + 리스트 */
-    #projects .pj-left { position: relative; }
-    #projects .pj-count { position: absolute; top: -3rem; left: 0; font-size: 0.7rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.4); }
-    #projects .pj-wheel { position: absolute; left: 0; top: 0; bottom: 0; width: 84px; perspective: 700px; pointer-events: none; z-index: 0; }
-    #projects .pj-wheel .pw-item { position: absolute; left: 50%; top: 50%; font-size: 1.5rem; font-weight: 500; color: #fff; font-variant-numeric: tabular-nums; backface-visibility: hidden; will-change: transform, opacity; }
-    #projects .pj-list { list-style: none; position: relative; z-index: 1; padding-left: 96px; }
-    #projects .pj-item { border-top: 1px solid rgba(255, 255, 255, 0.12); }
-    #projects .pj-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
-    #projects .pj-item a {
-      display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
-      padding: 3.6vh 0.2rem; text-decoration: none;
-      color: rgba(255, 255, 255, 0.3); transition: color 0.4s ease;
+    /* 풀스크린 프로젝트 커버 스택 */
+    #projects .pj-covers { list-style: none; margin: 0; padding: 0; }
+    #projects .pj-cover {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
-    #projects .pj-name { font-size: clamp(2rem, 3.4vw, 3.6rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.04; white-space: nowrap; }
-    #projects .pjp-title .ch { display: inline-block; will-change: transform; transition: transform 0.25s ease-out; }
-    #projects .pj-role { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.5; white-space: nowrap; align-self: center; }
-    #projects .pj-item.is-active a, #projects .pj-item a:hover { color: #fff; }
-    #projects .pj-item.is-active a .pj-role, #projects .pj-item a:hover .pj-role { opacity: 0.85; }
-
-    /* RIGHT: mescubook 스타일 프리뷰 패널 */
-    #projects .pj-preview { position: static; display: flex; flex-direction: column; }
-    #projects .pjp-top { display: flex; justify-content: space-between; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); margin-bottom: 1.4rem; }
-    #projects .pjp-num { font-size: 0.8rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); font-variant-numeric: tabular-nums; margin-bottom: 1rem; }
-    #projects .pjp-num b { font-size: 1.5rem; font-weight: 500; color: #fff; }
-    #projects .pjp-frame { width: 100%; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 10px; background: rgba(255, 255, 255, 0.02); transform-style: preserve-3d; will-change: transform; }
-    #projects .pjp-media { width: 100%; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #26262b, #141416); display: flex; align-items: center; justify-content: center; }
-    #projects .pjp-media img, #projects .pjp-media video { width: 100%; height: auto; object-fit: unset; display: block; }
-    #projects .pjp-media span { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255, 255, 255, 0.3); }
-    #projects .pjp-title { font-size: clamp(2.2rem, 4vw, 4.2rem); font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; text-align: center; margin: 1.8rem 0 1rem; line-height: 1; white-space: nowrap; }
-    #projects .pjp-tagline { font-size: 0.9rem; font-weight: 400; letter-spacing: 0; text-transform: none; text-align: center; color: rgba(255, 255, 255, 0.55); margin: 0 0 1.6rem; }
-    #projects .pjp-foot { display: flex; justify-content: space-between; align-items: center; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
-    #projects .pjp-cta { color: rgba(255, 255, 255, 0.8); text-decoration: none; pointer-events: auto; transition: opacity 0.25s; }
-    #projects .pjp-cta:hover { opacity: 0.55; }
+    #projects .pj-cover:first-child { border-top: none; }
+    #projects .pj-cover-media { position: absolute; left: 0; right: 0; top: -12%; height: 124%; z-index: 0; background: #141416; will-change: transform; }
+    #projects .pj-cover-media img,
+    #projects .pj-cover-media video {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: grayscale(0.3) brightness(0.65) contrast(1.15);
+      transition: filter 0.5s ease;
+    }
+    #projects .pj-cover:hover .pj-cover-media img,
+    #projects .pj-cover:hover .pj-cover-media video {
+      filter: grayscale(0.05) brightness(0.6) contrast(1.15);
+    }
+    #projects .pj-cover-media::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px 160px;
+      opacity: 0.16;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+    #projects .pj-cover::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+      pointer-events: none;
+    }
+    #projects .pj-cover-info {
+      position: absolute; inset: 0; z-index: 1;
+      display: flex; flex-direction: column;
+      padding: 4vh 5vw 6vh;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    }
+    #projects .pj-cover-info.pj-in { opacity: 1; transform: none; }
+    #projects .pj-cover-toprow {
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    #projects .pj-cover-num { font-size: 0.85rem; letter-spacing: 0.12em; color: rgba(255, 255, 255, 0.55); font-variant-numeric: tabular-nums; }
+    #projects .pj-cover-meta-top {
+      display: flex; gap: 2rem;
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45);
+    }
+    #projects .pj-cover-meta-top b { color: #fff; font-weight: 600; }
+    #projects .pj-cover-body {
+      display: flex; align-items: flex-end; gap: 2.4rem;
+      margin-top: auto;
+    }
+    #projects .pj-cover-inset {
+      position: relative;
+      flex: 0 0 auto; width: clamp(220px, 22vw, 380px); aspect-ratio: 4 / 3;
+      border-radius: 14px; overflow: hidden;
+    }
+    #projects .pj-cover-inset img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #projects .pj-ba-empty {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(255, 255, 255, 0.06); color: rgba(255, 255, 255, 0.4);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; padding: 1rem;
+    }
+    #projects .pj-ba-label {
+      position: absolute; top: 0.7rem; left: 0.7rem; z-index: 1;
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.55); color: #fff; padding: 0.3rem 0.6rem; border-radius: 999px;
+      pointer-events: none;
+    }
+    #projects .pj-ba-toggle {
+      position: absolute; bottom: 0.7rem; right: 0.7rem; z-index: 1;
+      font-family: inherit; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.55); color: #fff; border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px; padding: 0.4rem 0.8rem; cursor: pointer;
+      transition: background 0.25s;
+    }
+    #projects .pj-ba-toggle:hover { background: rgba(0, 0, 0, 0.8); }
+    #projects .pj-cover-text { flex: 1; min-width: 0; }
+    #projects .pj-cover-name { font-size: clamp(2.4rem, 5.6vw, 5.6rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin: 0 0 0.6rem; }
+    #projects .pj-cover-tagline { font-size: 1rem; color: rgba(255, 255, 255, 0.7); margin: 0 0 0.9rem; }
+    #projects .pj-cover-desc { font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.55); max-width: 46ch; margin: 0 0 1.2rem; }
+    #projects .pj-cover-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    #projects .pj-cover-tags span {
+      font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 999px; padding: 0.3rem 0.8rem;
+    }
+    #projects .pj-cover-cta {
+      display: inline-block; margin-top: 2.2rem; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4); padding-bottom: 0.25rem;
+      transition: opacity 0.3s;
+    }
+    #projects .pj-cover:hover .pj-cover-cta { opacity: 0.7; }
+    @media (max-width: 700px) {
+      #projects .pj-cover-body { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
+      #projects .pj-cover-inset { width: 140px; }
+    }
 
     /* 케이스 뷰어 목차 드래그 힌트 — 드래그하면 사라짐 */
     #pj-viewer .pjv-hint {
@@ -936,14 +1059,6 @@
     #pj-viewer .pjv-hint .pjh-arrow { font-style: normal; font-size: 0.9rem; animation: pjhBob 1.6s ease-in-out infinite; }
     #pj-viewer .pjv-hint.is-hidden { opacity: 0; }
     @keyframes pjhBob { 0%, 100% { transform: translateY(-2px); opacity: 0.5; } 50% { transform: translateY(2px); opacity: 1; } }
-
-    @media (max-width: 860px) {
-      #projects .pj-grid { grid-template-columns: 1fr; gap: 3rem; }
-      #projects .pj-line { display: none; }
-      #projects .pj-list { padding-left: 0; }
-      #projects .pj-preview { display: none; }
-      #projects .pj-name { font-size: clamp(1.5rem, 7vw, 2.2rem); }
-    }
 
     /* ── 풀스크린 케이스 스터디 뷰어 (안) ── */
     #pj-viewer {
@@ -1642,9 +1757,8 @@
     #contact .ct-dark { background: #0a0a0b; border-radius: 42vw 42vw 0 0; will-change: border-radius; }
     #contact .ct-body { min-height: 100vh; padding: 12vh 6vw 14vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5vh; }
     #contact .ct-eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); text-align: center; }
-    #contact .ct-cta { font-size: clamp(2rem, 6.5vw, 5.2rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.04; text-align: center; max-width: 14ch; }
+    #contact .ct-cta { font-size: clamp(1.8rem, 6vw, 4.6rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; text-align: center; max-width: 18ch; word-break: keep-all; }
     #contact .ct-cta em { font-style: normal; color: rgba(255, 255, 255, 0.38); }
-    #contact .ct-msg { font-size: 0.95rem; color: rgba(255,255,255,0.55); text-align: center; margin-top: -2vh; }
     #contact .ct-info { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; margin-top: 3vh; }
     #contact .ct-info .ct-eyebrow { margin-bottom: 0.4rem; align-self: center; }
     #contact .ct-line { display: flex; align-items: baseline; gap: 1.1rem; }
@@ -1672,11 +1786,20 @@
 <header id="site-header">
   <nav class="nav">
     <a href="#projects"><span class="nav-link-inner"><span>Work</span><span aria-hidden="true">Work</span></span></a>
-    <a href="#client-works"><span class="nav-link-inner"><span>Client Works</span><span aria-hidden="true">Client Works</span></span></a>
+    <a href="#" id="navClientWorks"><span class="nav-link-inner"><span>Client Works</span><span aria-hidden="true">Client Works</span></span></a>
     <a href="#about-me"><span class="nav-link-inner"><span>About</span><span aria-hidden="true">About</span></span></a>
     <a href="#contact"><span class="nav-link-inner"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
   </nav>
 </header>
+
+<div class="cw-modal" id="cwModal" aria-hidden="true">
+  <div class="cw-modal-backdrop" id="cwModalBackdrop"></div>
+  <div class="cw-modal-panel" role="dialog" aria-modal="true" aria-label="Client Works">
+    <button type="button" class="cw-modal-close" id="cwModalClose" aria-label="닫기">✕</button>
+    <span class="cw-modal-eyebrow">Client Works</span>
+    <p class="cw-modal-empty">Coming soon.</p>
+  </div>
+</div>
 
 <div id="scroll-progress" aria-hidden="true">
   <span class="sp-label">Intro</span>
@@ -1826,6 +1949,23 @@
         </dl>
       </div>
     </div>
+    <div class="me-block me-tools-row">
+      <h3><span class="material-symbols-outlined">widgets</span>Tools</h3>
+      <div class="me-tags me-tags-flow">
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Figma</span><span aria-hidden="true">Figma</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Photoshop</span><span aria-hidden="true">Photoshop</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Illustrator</span><span aria-hidden="true">Illustrator</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>GSAP</span><span aria-hidden="true">GSAP</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>VS Code</span><span aria-hidden="true">VS Code</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Cafe24</span><span aria-hidden="true">Cafe24</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Midjourney</span><span aria-hidden="true">Midjourney</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Runway ML</span><span aria-hidden="true">Runway ML</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Claude</span><span aria-hidden="true">Claude</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>ChatGPT</span><span aria-hidden="true">ChatGPT</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Manus</span><span aria-hidden="true">Manus</span></span></span>
+        <span class="skill-chip"><span class="skill-chip-inner"><span>Notion</span><span aria-hidden="true">Notion</span></span></span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1839,7 +1979,7 @@
       <div class="ea-grid">
         <div class="ea-card">
           <div class="ea-date">2026.08 – 현재</div>
-          <div class="ea-name">ROOTIN 서포터즈</div>
+          <div class="ea-name">ROOTIN 서포터즈 1기</div>
           <ul class="ea-points">
             <li>한국의 일상·문화를 주제로 콘텐츠 기획</li>
             <li>영상 촬영·편집까지 숏폼 콘텐츠 제작</li>
@@ -1897,44 +2037,16 @@
 
 <section id="projects">
   <span class="pj-eyebrow">Web Design</span>
-  <div class="pj-inner">
-    <div class="pj-grid">
-      <div class="pj-left">
-        <div class="pj-wheel" id="pjWheel" aria-hidden="true"></div>
-        <ul class="pj-list" id="pjList"></ul>
-      </div>
-      <div class="pj-preview" id="pjPreview" aria-hidden="true">
-        <div class="pjp-num"><b id="pjPrevNum">01</b> / <span id="pjPrevTotal">06</span></div>
-        <div class="pjp-frame"><div class="pjp-media" id="pjPrevImg"><span>Preview</span></div></div>
-        <h3 class="pjp-title" id="pjPrevTitle">Project One</h3>
-        <p class="pjp-tagline" id="pjPrevTagline"></p>
-        <div class="pjp-foot">
-          <span id="pjPrevMeta">Personal · 2026</span>
-          <a class="pjp-cta" id="pjPrevCta" href="#" target="_blank" rel="noopener noreferrer">View Live ↗</a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <ul class="pj-covers" id="pjCovers"></ul>
 </section>
 
 <section id="app-works">
   <span class="pj-eyebrow">App Design</span>
   <div class="cw-inner">
-    <ul class="cw-list" id="awList"></ul>
-    <p class="cw-empty" id="awEmpty">Coming soon.</p>
-  </div>
-</section>
-
-<section id="client-works">
-  <span class="pj-eyebrow">Client Works</span>
-  <div class="cw-inner">
-    <div class="cw-tabs" id="cwTabs">
-      <button type="button" class="cw-tab is-active" data-filter="all">All</button>
-      <button type="button" class="cw-tab" data-filter="web">Web</button>
-      <button type="button" class="cw-tab" data-filter="app">App</button>
+    <div class="aw-viewport">
+      <ul class="cw-list" id="awList"></ul>
     </div>
-    <ul class="cw-list" id="cwList"></ul>
-    <p class="cw-empty" id="cwEmpty">Coming soon.</p>
+    <p class="cw-empty" id="awEmpty">Coming soon.</p>
   </div>
 </section>
 
@@ -1993,8 +2105,7 @@
 <section id="contact">
   <div class="ct-dark">
   <div class="ct-body">
-    <h2 class="ct-cta ct-reveal">THANK YOU</h2>
-    <p class="ct-msg ct-reveal">끝까지 봐주셔서 감사합니다.</p>
+    <h2 class="ct-cta ct-reveal">끝까지 봐주셔서 감사합니다.</h2>
     <div class="ct-info ct-reveal">
       <span class="ct-eyebrow">[ Contact ]</span>
       <div class="ct-line"><span class="ct-line-label">Email.</span><a class="ct-email" href="mailto:itsmauvely@gmail.com">itsmauvely@gmail.com</a></div>
@@ -2038,6 +2149,10 @@
 <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
 (function () {
+  // 새로고침 시 브라우저가 이전 스크롤 위치를 복원하면 App Design 등 pin 구간이 중간부터 렌더되는 문제 방지
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
   gsap.registerPlugin(ScrollTrigger);
 
   /* ── Lenis 스무스 스크롤 + ScrollTrigger 연동 ── */
@@ -2075,8 +2190,14 @@
     }
     const topBtn = document.getElementById('ctTop');
     if (topBtn) topBtn.addEventListener('click', () => {
-      if (typeof lenis !== 'undefined' && lenis) lenis.scrollTo(0, { duration: 1.6 });
-      else window.scrollTo({ top: 0, behavior: 'smooth' });
+      // 맨 위로 가는 동안 Banner Design 등 구간의 onEnterBack 스킵 로직이 이 스크롤을 가로채지 못하게 플래그
+      window.__jumpingToTop = true;
+      if (typeof lenis !== 'undefined' && lenis) {
+        lenis.scrollTo(0, { duration: 1.6, onComplete: () => { window.__jumpingToTop = false; } });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { window.__jumpingToTop = false; }, 1600);
+      }
     });
     const reveals = document.querySelectorAll('#contact .ct-reveal');
     const io = new IntersectionObserver((entries) => {
@@ -2153,6 +2274,25 @@
     });
   })();
 
+  /* ── 1.5) CLIENT WORKS 팝업 모달 ── */
+  (function () {
+    const navBtn   = document.getElementById('navClientWorks');
+    const modal    = document.getElementById('cwModal');
+    const backdrop = document.getElementById('cwModalBackdrop');
+    const closeBtn = document.getElementById('cwModalClose');
+    if (!navBtn || !modal) return;
+
+    const open = (e) => { e.preventDefault(); modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); };
+    const close = () => { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); };
+
+    navBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+    });
+  })();
+
   /* ── 2) 스크롤 인디케이터: 영상 진입(스크롤 다운) 시 숨김, 맨 위로 돌아오면 다시 표시 ── */
   (function () {
     const cue = document.getElementById('scroll-cue');
@@ -2173,7 +2313,6 @@
     const experienceEl = document.getElementById('experience-activities');
     const projectsEl = document.getElementById('projects');
     const appWorksEl = document.getElementById('app-works');
-    const clientWorksEl = document.getElementById('client-works');
     const bannerEl   = document.getElementById('banner-design');
     const contactEl  = document.getElementById('contact');
 
@@ -2196,7 +2335,6 @@
       { name: 'Experience', top: docTop(experienceEl) - window.innerHeight * 0.5 },
       { name: 'Projects', top: docTop(projectsEl) - window.innerHeight * 0.5 },
       { name: 'App', top: docTop(appWorksEl) - window.innerHeight * 0.5 },
-      { name: 'Client Works', top: docTop(clientWorksEl) - window.innerHeight * 0.5 },
       { name: 'Banner Design', top: docTop(bannerEl) - window.innerHeight * 0.5 },
       { name: 'Contact',  top: docTop(contactEl) + window.innerHeight * 0.1 },
     ];
@@ -2349,10 +2487,12 @@
         tools: 'Figma · Photoshop · AI (Claude · ChatGPT)' },
       { name: '2XKO', year: '2026.06', role: 'Personal', type: 'Mobile · UI', live: 'https://itsmauvy.github.io/2XKO/', thumb: '2XKO/preview.jpg', tagline: '2v2 Tag-Team Fighting Game', tags: ['UX/UI Redesign', 'Web', 'Visual Design'],
         summary: '2XKO의 빠른 전투 흐름과 챔피언 중심의 경험을<br>시각적으로 강화한 반응형 웹사이트 리디자인.',
+        redesign: true, beforeImg: '', afterImg: '2XKO/preview.jpg',
         caseSoon: true },
       { name: '상상의문', year: '2026.06', role: 'Team',     type: 'Branding', live: 'https://doorlove1234-coder.github.io/sangsangDoor/', thumb: 'sangsang/sangsang preview.png', tagline: 'Escape Room Website', tags: ['UX/UI Redesign', 'Responsive Web', 'Admin System'],
         summary: '방탈출 테마와 스토리를 새롭게 기획하고,<br>탐색부터 예약까지의 사용자 경험을 개선한 웹사이트.',
         caseHero: 'sangsang/sansang hero.jpg',
+        redesign: true, beforeImg: '', afterImg: 'sangsang/sansang hero.jpg',
         caseSoon: true },
       { name: 'UNFRAME', year: '2026.06', role: 'Personal', type: 'Web · Dev', live: 'https://itsmauvy.github.io/unframe/', thumb: 'unframe/unframe hero.jpg', tagline: 'Fashion Brand Website', tags: ['UX/UI Design', 'Concept Design', 'Web'],
         summary: '개성 넘치는 해외 패션 사이트의 감성을<br>과감한 레이아웃과 비주얼로 풀어낸 웹사이트.',
@@ -2361,160 +2501,87 @@
         summary: '향을 중심으로 일상의 케어 경험을 제안하는<br>오브제 감성의 퍼스널 케어 브랜드 웹사이트.',
         caseHero: 'senne/senne case study hero.jpg',
         caseSoon: true },
-      { name: 'ICANNNOTE', year: '2026.06', role: 'Team', type: 'Web', live: 'https://jiwon12011.github.io/icannote/', thumb: 'icannote/icannote hero.jpg', tagline: 'Education Software Website', tags: ['UX/UI Design', 'Web Redesign', 'Responsive Web'],
-        summary: '수업 자료 위에 바로 쓰고 설명하는 판서 기능을<br>쉽게 이해하고 사용할 수 있도록 개선한 웹사이트.',
-        caseSoon: true },
     ];
 
-    const listEl     = document.getElementById('pjList');
+    const coversEl   = document.getElementById('pjCovers');
     const viewer     = document.getElementById('pj-viewer');
     const indexEl    = document.getElementById('pjvIndex');
     const prevBtn    = document.getElementById('pjvPrev');
     const nextBtn    = document.getElementById('pjvNext');
     const closeBtn   = document.getElementById('pjvClose');
-    if (!listEl || !viewer) return;
+    if (!coversEl || !viewer) return;
 
     const total = PROJECTS.length;
     const pad2  = (n) => String(n).padStart(2, '0');
     const esc   = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-    /* 글자 단위 span 분해 (오른쪽 대형 타이틀 흩어짐 효과용) */
-    const splitChars = (s) => s.split('').map((c) =>
-      '<span class="ch">' + (c === ' ' ? '&nbsp;' : esc(c)) + '</span>').join('');
-    /* 1) 밖 리스트 (왼쪽) — 일반 텍스트 (가독성·클릭 위해 모션 없음) */
-    listEl.innerHTML = PROJECTS.map((p, i) => `
-      <li class="pj-item" data-i="${i}">
-        <a href="${esc(p.live)}">
-          <span class="pj-name">${esc(p.name)}</span>
-          <span class="pj-role">${esc(p.role)}</span>
-        </a>
+    /* 1) 풀스크린 프로젝트 커버 스택 (hanza-template.framer.website 참고) — 클릭 시 케이스 스터디 뷰어 오픈 */
+    coversEl.innerHTML = PROJECTS.map((p, i) => `
+      <li class="pj-cover" data-i="${i}">
+        <div class="pj-cover-media">
+          ${p.video
+            ? '<video src="' + esc(p.video) + '" muted loop playsinline autoplay preload="auto"></video>'
+            : p.thumb ? '<img src="' + esc(p.thumb) + '" alt="" loading="lazy">' : ''}
+        </div>
+        <div class="pj-cover-info">
+          <div class="pj-cover-toprow">
+            <span class="pj-cover-num">${pad2(i + 1)}</span>
+            <span class="pj-cover-meta-top">
+              <span>TYPE <b>${esc(p.type || '')}</b></span>
+              <span>YEAR <b>${esc(p.year)}</b></span>
+            </span>
+          </div>
+          <div class="pj-cover-body">
+            ${p.redesign ? `
+            <div class="pj-cover-inset pj-ba" data-before="${esc(p.beforeImg || '')}" data-after="${esc(p.afterImg || p.caseHero || p.thumb || '')}">
+              <img class="pj-ba-img" src="${esc(p.afterImg || p.caseHero || p.thumb || '')}" alt="">
+              ${p.beforeImg ? '' : '<div class="pj-ba-empty">BEFORE 이미지 준비중</div>'}
+              <span class="pj-ba-label">AFTER</span>
+              <button type="button" class="pj-ba-toggle">BEFORE 보기</button>
+            </div>` : p.caseHero ? `<div class="pj-cover-inset"><img src="${esc(p.caseHero)}" alt="" loading="lazy"></div>` : ''}
+            <div class="pj-cover-text">
+              <h3 class="pj-cover-name">${esc(p.name)}</h3>
+              <p class="pj-cover-tagline">${esc(p.tagline || '')}</p>
+              ${p.summary ? `<p class="pj-cover-desc">${p.summary.replace(/\n/g, '<br>')}</p>` : ''}
+              ${p.tags && p.tags.length ? `<div class="pj-cover-tags">${p.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
+            </div>
+          </div>
+          <span class="pj-cover-cta">View Case →</span>
+        </div>
       </li>`).join('');
-    const items = [...listEl.querySelectorAll('.pj-item')];
 
-    /* 2) 오른쪽 프리뷰(mescubook) + 왼쪽 흐르는 라인(lukebaffait) + 클릭 → 뷰어 */
-    const prevImg   = document.getElementById('pjPrevImg');
-    const prevTitle = document.getElementById('pjPrevTitle');
-    const prevNum   = document.getElementById('pjPrevNum');
-    const prevMeta  = document.getElementById('pjPrevMeta');
-    const prevTagline = document.getElementById('pjPrevTagline');
-    const prevCta   = document.getElementById('pjPrevCta');
-    const prevTotal = document.getElementById('pjPrevTotal');
-    const wheelEl   = document.getElementById('pjWheel');
-    const countEl   = document.getElementById('pjCount');
-    const pjpFrame  = document.querySelector('#projects .pjp-frame');
-    if (countEl)   countEl.textContent   = '(' + pad2(total) + ')';
-    if (prevTotal) prevTotal.textContent = pad2(total);
+    [...coversEl.querySelectorAll('.pj-cover')].forEach((el) => {
+      const i = +el.dataset.i;
+      el.addEventListener('click', () => openViewer(i));
 
-    let activeOut = -1;
-    function applyActive(i) {
-      if (i === activeOut) return;
-      activeOut = i;
-      items.forEach((li, idx) => li.classList.toggle('is-active', idx === i));
-      const p = PROJECTS[i];
-      if (prevNum)   prevNum.textContent   = pad2(i + 1);
-      if (prevTitle) prevTitle.innerHTML   = splitChars(p.name);
-      if (prevMeta)  prevMeta.textContent  = p.role + ' · ' + p.year;
-      if (prevTagline) prevTagline.textContent = p.tagline || '';
-      if (prevCta)   prevCta.href = p.live || '#';
-      if (prevImg) {
-        if (p.video) {
-          prevImg.innerHTML = '<video src="' + esc(p.video) + '" muted loop playsinline preload="auto"' + (p.poster ? ' poster="' + esc(p.poster) + '"' : '') + '></video>';
-          const v = prevImg.querySelector('video');
-          if (v) { v.muted = true; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); }
-        } else if (p.thumb) prevImg.innerHTML = '<img src="' + esc(p.thumb) + '" alt="">';
-        else                prevImg.innerHTML = '<span>' + esc(p.name) + '</span>';
-        if (prevImg.animate) prevImg.animate(
-          [{ opacity: 0.3, transform: 'scale(1.06)' }, { opacity: 1, transform: 'scale(1)' }],
-          { duration: 520, easing: 'cubic-bezier(0.22,1,0.36,1)' });
+      /* 리디자인 프로젝트: 인셋 이미지 Before/After 토글 (카드 클릭으로 뷰어 열리는 것 방지) */
+      const baBox = el.querySelector('.pj-ba');
+      if (baBox) {
+        const btn = baBox.querySelector('.pj-ba-toggle');
+        const img = baBox.querySelector('.pj-ba-img');
+        const label = baBox.querySelector('.pj-ba-label');
+        const before = baBox.dataset.before;
+        const after = baBox.dataset.after;
+        let showingBefore = false;
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!before) return; // before 이미지 없으면 토글 비활성
+          showingBefore = !showingBefore;
+          img.src = showingBefore ? before : after;
+          label.textContent = showingBefore ? 'BEFORE' : 'AFTER';
+          btn.textContent = showingBefore ? 'AFTER 보기' : 'BEFORE 보기';
+        });
       }
-    }
-    items.forEach((li) => {
-      const i = +li.dataset.i;
-      li.addEventListener('mouseenter', () => applyActive(i));
-      li.querySelector('a').addEventListener('click', (e) => { e.preventDefault(); openViewer(i); });
-    });
 
-    /* 오른쪽 대형 타이틀: 전역 마우스 근접 시 글자가 상하좌우로 흩어지며 꼬불거림 */
-    let mpx = -9999, mpy = -9999, mpRaf = null;
-    function applyTitleProx() {
-      mpRaf = null;
-      if (!prevTitle) return;
-      const chs = prevTitle.querySelectorAll('.ch');
-      const R = 220, PUSH = 50;
-      chs.forEach((c, k) => {
-        const r = c.getBoundingClientRect();
-        const dx = (r.left + r.width / 2) - mpx;
-        const dy = (r.top + r.height / 2) - mpy;
-        const dist = Math.hypot(dx, dy) || 1;
-        const f = Math.max(0, 1 - dist / R);
-        if (f <= 0) { if (c.style.transform) c.style.transform = ''; return; }
-        const e = f * f;
-        c.style.transform = 'translate(' + ((dx / dist) * e * PUSH).toFixed(1) + 'px,' + ((dy / dist) * e * PUSH).toFixed(1) + 'px) rotate(' + (e * (k % 2 ? 12 : -12)).toFixed(1) + 'deg)';
-      });
-    }
-    window.addEventListener('mousemove', (e) => {
-      mpx = e.clientX; mpy = e.clientY;
-      if (!mpRaf) mpRaf = requestAnimationFrame(applyTitleProx);
-    });
-
-    /* 스크롤로 프로젝트 전환 + 키네틱 휠 인디케이터 회전 (번호가 원통처럼 굴러감) */
-    if (wheelEl) {
-      wheelEl.innerHTML = PROJECTS.map((p, i) => '<span class="pw-item">' + pad2(i + 1) + '</span>').join('');
-    }
-    const wItems = wheelEl ? [...wheelEl.querySelectorAll('.pw-item')] : [];
-    const WSTEP = 26, WRADIUS = 120;
-    function placeWheel(cf) {
-      wItems.forEach((el, i) => {
-        const ang = (i - cf) * WSTEP;
-        el.style.transform = 'translate(-50%, -50%) rotateX(' + ang + 'deg) translateZ(' + WRADIUS + 'px)';
-        el.style.opacity = Math.max(0, 1 - Math.abs(ang) / (WSTEP * 2.4)).toFixed(3);
-      });
-    }
-    /* 리스트를 스크롤 따라 세로로 흘려서 한 번에 다 안 보이게 (활성=중앙, 위아래 페이드) */
-    function placeList(cf) {
-      const rowH = (listEl.scrollHeight / total) || 80;
-      listEl.style.transform = 'translateY(' + (rowH * (total / 2 - 0.5 - cf)) + 'px)';
-      items.forEach((li, i) => {
-        li.style.opacity = Math.max(0.06, 1 - Math.abs(i - cf) * 0.5).toFixed(3);
-      });
-    }
-    applyActive(0);
-    placeWheel(0);
-    placeList(0);
-    ScrollTrigger.create({
-      trigger: '#projects',
-      start: 'top top',
-      end: '+=' + (total * 60) + '%',
-      pin: true,
-      scrub: true,
-      onUpdate: (self) => {
-        const cf = self.progress * (total - 1);
-        placeWheel(cf);
-        placeList(cf);
-        applyActive(Math.max(0, Math.min(total - 1, Math.round(cf))));
-      },
-    });
-
-    /* 프리뷰 카드 3D 틸트 (전역 마우스 따라 입체적으로 기울어짐, CSS 트랜지션으로 부드럽게) */
-    if (pjpFrame) {
-      const MAXT = 12;
-      let tgX = 0, tgY = 0, curX = 0, curY = 0, tRaf = null;
-      function tiltLoop() {
-        curX += (tgX - curX) * 0.12;
-        curY += (tgY - curY) * 0.12;
-        pjpFrame.style.transform = 'perspective(1200px) rotateY(' + curX.toFixed(2) + 'deg) rotateX(' + curY.toFixed(2) + 'deg)';
-        if (Math.abs(tgX - curX) > 0.04 || Math.abs(tgY - curY) > 0.04) tRaf = requestAnimationFrame(tiltLoop);
-        else tRaf = null;
+      /* 커버 이미지 패럴랙스 + Ken Burns: 스크롤에 따라 배경이 위/아래로 움직이며 서서히 확대 */
+      const media = el.querySelector('.pj-cover-media');
+      if (media) {
+        gsap.fromTo(media,
+          { yPercent: -10, scale: 1 },
+          { yPercent: 10, scale: 1.08, ease: 'none',
+            scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
       }
-      window.addEventListener('mousemove', (e) => {
-        const r = pjpFrame.getBoundingClientRect();
-        if (!r.width) return;
-        const px = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2)));
-        const py = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
-        tgX = px * MAXT; tgY = -py * MAXT;
-        if (!tRaf) tRaf = requestAnimationFrame(tiltLoop);
-      });
-    }
+    });
 
     /* 3) 안 뷰어: 좌(프로젝트 설명) + 우(케이스 스터디), 하단 인덱스/이전·다음으로 전환 */
     const infoNum     = document.getElementById('pjvNum');
@@ -3314,58 +3381,27 @@
     });
     renderViewer();
 
-    /* 6) 밖 리스트 등장(reveal) — 렌더 후 등록 */
-    const reveals = [...items];
-    reveals.forEach((el, i) => {
+    /* 6) 커버 텍스트 등장(reveal) — 렌더 후 등록 */
+    [...coversEl.querySelectorAll('.pj-cover-info')].forEach((el) => {
       ScrollTrigger.create({
         trigger: el,
-        start: 'top 90%',
-        onEnter: () => { el.style.transitionDelay = (i * 0.05) + 's'; el.classList.add('pj-in'); },
+        start: 'top 80%',
+        onEnter: () => el.classList.add('pj-in'),
       });
     });
-  })();
 
-  /* ── 8.5) CLIENT WORKS: All/Web/App 탭 필터 (데이터는 추후 채움) ── */
-  (function () {
-    /* ⬇️ 채용 시 여기만 채우면 됨: platform은 'web' 또는 'app' */
-    const CLIENT_WORKS = [
-      // { name: '', platform: 'web', year: '', role: '', live: '', tagline: '' },
-    ];
-
-    const tabs   = [...document.querySelectorAll('#cwTabs .cw-tab')];
-    const listEl = document.getElementById('cwList');
-    const emptyEl = document.getElementById('cwEmpty');
-    if (!tabs.length || !listEl) return;
-
-    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-    let activeFilter = 'all';
-    function render() {
-      const list = activeFilter === 'all'
-        ? CLIENT_WORKS
-        : CLIENT_WORKS.filter((p) => p.platform === activeFilter);
-
-      listEl.innerHTML = list.map((p) => `
-        <li class="cw-item">
-          <a href="${esc(p.live || '#')}" target="_blank" rel="noopener noreferrer">
-            <span class="cw-name">${esc(p.name)}</span>
-            <span class="cw-meta">${esc(p.platform === 'app' ? 'App' : 'Web')} · ${esc(p.year || '')}</span>
-          </a>
-        </li>`).join('');
-
-      if (emptyEl) emptyEl.style.display = list.length ? 'none' : 'block';
+    /* "Web Design" 세로 라벨: 이전 섹션(Experience & Activities)에 안 겹치게 진입 초반엔 숨김 */
+    const eyebrowEl = document.querySelector('#projects .pj-eyebrow');
+    if (eyebrowEl) {
+      gsap.set(eyebrowEl, { opacity: 0 });
+      ScrollTrigger.create({
+        trigger: '#projects',
+        start: 'top 60%',
+        end: 'top 20%',
+        onUpdate: (self) => gsap.set(eyebrowEl, { opacity: self.progress }),
+        onLeaveBack: () => gsap.set(eyebrowEl, { opacity: 0 }),
+      });
     }
-
-    tabs.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        if (btn.classList.contains('is-active')) return;
-        tabs.forEach((b) => b.classList.toggle('is-active', b === btn));
-        activeFilter = btn.dataset.filter;
-        render();
-      });
-    });
-
-    render();
   })();
 
   /* ── 8.6) APP: Web(Selected Works)에서 분리한 앱 프로젝트 카드 (표지 + 상세 정보) ── */
@@ -3377,6 +3413,11 @@
         desc: '대화에 대한 부담을 낮추고, 가볍게 함께할 수 있도록 설계한 팝업형 소셜 서비스',
         process: 'notalk/case.html', processLabel: '제작과정 보기', processSub: '기획 · 디자인 · 개발 전 과정 기록',
         live: 'http://4team-notalk.vercel.app/', liveLabel: 'LIVE SITE' },
+      { name: '떡상', year: '2026', category: 'Web App Game', role: 'Personal', stack: 'WEB · JAVASCRIPT',
+        thumb: 'mochi/mochi cover img.jpg',
+        tagline: 'Web App Game',
+        desc: '가볍게 즐길 수 있는 웹 기반 캐주얼 게임',
+        live: 'https://itsmauvy.github.io/MochiUP/', liveLabel: 'LIVE SITE' },
     ];
 
     const listEl  = document.getElementById('awList');
@@ -3397,14 +3438,31 @@
             <p class="aw-desc">— ${esc(p.desc)}</p>
             <div class="aw-role">${esc(p.role)}</div>
             <div class="aw-stack">${esc(p.stack)}</div>
+            ${p.process ? `
             <a class="aw-process" href="${esc(p.process)}" target="_blank" rel="noopener noreferrer">${esc(p.processLabel)} <span aria-hidden="true">→</span></a>
-            <p class="aw-process-sub">${esc(p.processSub)}</p>
+            <p class="aw-process-sub">${esc(p.processSub)}</p>` : ''}
             <a class="aw-live" href="${esc(p.live)}" target="_blank" rel="noopener noreferrer">${esc(p.liveLabel)} ↗</a>
           </div>
         </div>
       </li>`).join('');
 
     if (emptyEl) emptyEl.style.display = APP_WORKS.length ? 'none' : 'block';
+
+    /* 세로 스크롤에 맞춰 천천히 가로로 넘어가는 트랙 */
+    const N = APP_WORKS.length;
+    if (N > 1 && typeof ScrollTrigger !== 'undefined') {
+      ScrollTrigger.create({
+        trigger: document.getElementById('app-works'),
+        start: 'top top',
+        end: '+=' + ((N - 1) * 100) + '%',
+        pin: true,
+        scrub: 1,
+        onUpdate: (self) => {
+          const idx = self.progress * (N - 1);
+          gsap.set(listEl, { xPercent: -idx * 100 });
+        },
+      });
+    }
   })();
 
   /* ── 3.5) BANNER DESIGN: scrub 스택 → 한 번에 드래그 납품 (Projects 이후 초기화) ── */
@@ -3423,6 +3481,19 @@
     const totalEl   = document.getElementById('bdTotal');
     const N         = banners.length;
     if (totalEl) totalEl.textContent = N;
+
+    /* 폴더를 타이틀 실제 렌더 크기 기준으로 배치 — vh 고정값이면 타이틀 폰트가 vw로 커지는
+       와이드&쇼트 화면비에서 서로 겹치거나 너무 벌어짐. 항상 타이틀 바로 아래 일정 간격 유지 */
+    const titleEl = bdPin.querySelector('.bd-title');
+    function positionFolderBelowTitle() {
+      if (!titleEl || !folder) return;
+      const pinRect = bdPin.getBoundingClientRect();
+      const titleRect = titleEl.getBoundingClientRect();
+      const gap = 56;
+      folder.style.top = Math.round((titleRect.bottom - pinRect.top) + gap) + 'px';
+    }
+    positionFolderBelowTitle();
+    window.addEventListener('resize', positionFolderBelowTitle);
 
     const S = 0.5, GAP = 60;
     const splitX = (word, side) => {
@@ -3460,16 +3531,20 @@
     let bdST = ScrollTrigger.create({
       trigger: bdPin,
       start: 'top top',
-      end: '+=' + Math.round(tlDur * 60) + '%',
+      end: '+=' + Math.round(tlDur * 40) + '%',
       pin: true,
       scrub: 1,
       anticipatePin: 1,
       invalidateOnRefresh: true,
       onUpdate: (self) => { if (!dragging && !delivered) tl.progress(self.progress); },
-      onLeave: () => { if (!delivered) autoDeliver(); },
+      // 빠르게 스크롤하면 scrub(부드러운 지연)가 미처 못 따라와 배너가 안 보인 채로 납품될 수 있어 강제로 완료 상태로 스냅
+      onLeave: () => { if (!delivered) { tl.progress(1); autoDeliver(); } },
       // 이미 납품 완료된 상태면 애니메이션 재생 없이 곧장 위/아래 섹션으로 스킵 (다시 보려면 폴더 더블클릭)
-      onEnterBack: () => { if (delivered) lenis.scrollTo(bdST.start - 2, { immediate: true }); else resetBanners(); },
-      onEnter: () => { if (delivered) lenis.scrollTo(bdST.end + 2, { immediate: true }); },
+      onEnterBack: () => {
+        if (window.__jumpingToTop) return; // "맨 위로" 버튼으로 지나가는 중이면 가로채지 않음
+        if (delivered) lenis.scrollTo(bdST.start - 2, { immediate: true }); else resetBanners();
+      },
+      onEnter: () => { if (window.__jumpingToTop) return; if (delivered) lenis.scrollTo(bdST.end + 2, { immediate: true }); },
     });
 
     /* ── Phase 2: 드래그 모드 ── */
@@ -3507,9 +3582,10 @@
     /* ── 자동 납품 (스크롤 트리거) ── */
     function autoDeliver() {
       if (delivered) return;
+      delivered = true; // 배송 애니메이션 시작 즉시 scrub 업데이트 차단 (안 그러면 계속 스크롤할 때 tl.progress()가 deliverAll()과 동시에 같은 배너를 움직여서 위치가 꼬임)
       folder.classList.add('is-visible');
       gsap.delayedCall(0.5, () => {
-        if (!delivered) deliverAll();
+        deliverAll();
       });
     }
 
@@ -3624,8 +3700,15 @@
       window.removeEventListener('pointerup',   onUp);
       window.removeEventListener('pointercancel', onUp);
       delivered = true; // scrub 정지 (핀은 유지 → 레이아웃 점프 없음)
-      // 폴더를 아래로 내려 타이틀 닫힘과 겹치지 않게
-      gsap.to(folder, { y: '+=140', duration: 0.7, ease: 'power2.inOut', force3D: true });
+      // 폴더를 아래로 내려 타이틀 닫힘과 겹치지 않게 — 고정 140px 대신 타이틀 실제 렌더 크기 기준으로 계산
+      // (와이드&쇼트 화면비에서 타이틀 폰트가 vw로 커지면 고정값으론 겹침)
+      let deliveredDy = 140;
+      if (titleEl) {
+        const tRect = titleEl.getBoundingClientRect();
+        const fRect = folder.getBoundingClientRect();
+        deliveredDy = Math.max(140, Math.round((tRect.bottom + 40) - fRect.top));
+      }
+      gsap.to(folder, { y: `+=${deliveredDy}`, duration: 0.7, ease: 'power2.inOut', force3D: true });
       // 타이틀 좌우 닫기
       gsap.to([wL, wR], {
         x: 0, scale: 1, duration: 0.9, ease: 'power2.inOut',
