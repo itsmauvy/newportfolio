@@ -75,6 +75,15 @@
       object-fit: cover;
       display: block;
     }
+    .tc-card::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px 160px;
+      opacity: 0.16;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
 
     /* ── 영상 (화면 중앙) ── */
     #video-wrap {
@@ -166,41 +175,72 @@
     /* ── CLIENT WORKS 팝업 모달 (별도 페이지 대신 간단 팝업) ── */
     .cw-modal {
       position: fixed; inset: 0; z-index: 200;
-      display: flex; align-items: center; justify-content: center;
       opacity: 0; pointer-events: none;
       transition: opacity 0.35s ease;
     }
     .cw-modal.is-open { opacity: 1; pointer-events: auto; }
     .cw-modal-backdrop {
       position: absolute; inset: 0;
-      background: rgba(5, 5, 6, 0.82);
-      backdrop-filter: blur(6px);
+      background: #0a0a0b;
     }
     .cw-modal-panel {
       position: relative; z-index: 1;
-      width: min(560px, 88vw);
-      padding: 6vh 3rem;
-      background: #0f0f11;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 18px;
+      width: 100%; height: 100%;
+      overflow-y: auto;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 4vh 5vw;
+      background: #0a0a0b;
       text-align: center;
       color: #fff;
-      transform: translateY(16px) scale(0.98);
-      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+      transform: translateY(24px);
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
     }
-    .cw-modal.is-open .cw-modal-panel { transform: translateY(0) scale(1); }
+    .cw-modal.is-open .cw-modal-panel { transform: translateY(0); }
     .cw-modal-close {
-      position: absolute; top: 1.1rem; right: 1.1rem;
-      width: 32px; height: 32px; border-radius: 50%;
-      background: none; border: 1px solid rgba(255,255,255,0.25); color: #fff;
-      font-size: 0.9rem; cursor: pointer; transition: background 0.25s;
+      position: fixed; top: 3vh; right: 4vw; z-index: 14;
+      width: 52px; height: 52px; border-radius: 100px; cursor: pointer;
+      background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff;
+      display: flex; align-items: center; justify-content: center; padding: 0;
+      transition: border-color 0.4s ease, transform 0.5s cubic-bezier(0.65,0,0.35,1);
+      overflow: hidden;
     }
-    .cw-modal-close:hover { background: rgba(255,255,255,0.1); }
+    .cw-modal-close::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      background: #fff; transform: scale(0); transition: transform 0.45s cubic-bezier(0.65,0,0.35,1);
+    }
+    .cw-modal-close svg { position: relative; z-index: 1; width: 16px; height: 16px; transition: color 0.4s ease; }
+    .cw-modal-close:hover { border-color: #fff; transform: rotate(90deg); }
+    .cw-modal-close:hover::before { transform: scale(1); }
+    .cw-modal-close:hover svg { color: #0a0a0b; }
     .cw-modal-eyebrow {
-      display: block; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
-      color: rgba(255,255,255,0.45); margin-bottom: 1.2rem;
+      display: block; font-size: 0.78rem; letter-spacing: 0.24em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); margin-bottom: 1.4vh;
     }
+    .cw-modal-title { font-size: clamp(2.4rem, 4.6vw, 4rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 2vh; }
+    .cw-modal-sub { font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,0.6); max-width: 640px; margin: 0 auto 5vh; }
     .cw-modal-empty { font-size: 1.1rem; color: rgba(255,255,255,0.6); margin: 0; }
+    #cwWorks {
+      width: 100%; max-width: 1600px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 2.5vh 2.5vw;
+    }
+    .cw-work { text-align: left; }
+    .cw-work-media {
+      position: relative; width: 100%; overflow: hidden;
+      border-radius: 12px; margin-bottom: 1rem; background: #141416;
+    }
+    .cw-work-media img { width: 100%; height: auto; display: block;
+      filter: grayscale(0.3) brightness(0.75) contrast(1.1); }
+    @media (max-width: 700px) { #cwWorks { grid-template-columns: 1fr; } }
+    .cw-work-media::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px 160px; opacity: 0.16; mix-blend-mode: overlay; pointer-events: none;
+    }
+    .cw-work-name { font-size: clamp(1.3rem, 1.8vw, 1.6rem); font-weight: 700; letter-spacing: -0.01em; margin: 0 0 0.4rem; }
+    .cw-work-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin: 0 0 0.6rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cw-work-desc { font-size: 0.88rem; line-height: 1.5; color: rgba(255,255,255,0.75); margin: 0; }
 
     /* ── 스크롤 인디케이터 (하단 중앙: 마우스 + 화살표 + Scroll) ── */
     #scroll-cue {
@@ -389,7 +429,7 @@
     /* 스크롤하며 단어별로 색이 채워지는 ABOUT 문장 */
     #about .about-fill {
       margin-top: 0;
-      font-size: clamp(1.8rem, 4.4vw, 4.2rem);
+      font-size: clamp(2rem, 5.2vw, 5.2rem);
       font-weight: 700;
       letter-spacing: -0.01em;
       line-height: 1.2;
@@ -397,6 +437,12 @@
     #about .about-fill .w {
       color: rgba(255, 255, 255, 0.16);
       will-change: color;
+    }
+    /* 레퍼런스처럼 굵은 산세리프 문장 + 이탤릭 세리프 포인트 조합 */
+    #about .about-fill .w-serif {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 500;
     }
     #about .about-support {
       margin-top: 2.6rem;
@@ -765,6 +811,16 @@
     #banner-design .bd-stage { position: absolute; inset: 0; z-index: 2; }
     #banner-design .bd-banner { position: absolute; left: 50%; top: 50vh; width: min(40vh, 80vw); aspect-ratio: 4 / 5; opacity: 0; will-change: transform, opacity; }
     #banner-design .bd-banner img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 10px; box-shadow: 0 26px 60px rgba(0, 0, 0, 0.22); pointer-events: none; user-select: none; -webkit-user-drag: none; }
+    #banner-design .bd-banner::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      border-radius: 10px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px 160px;
+      opacity: 0.14;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
     #banner-design .bd-banner.is-active { cursor: grab; }
     #banner-design .bd-banner.is-dragging { cursor: grabbing; z-index: 20; }
     #banner-design .bd-banner.is-dragging img { box-shadow: 0 40px 80px rgba(0,0,0,0.35); }
@@ -965,12 +1021,12 @@
     #projects .pj-cover-media img,
     #projects .pj-cover-media video {
       width: 100%; height: 100%; object-fit: cover; display: block;
-      filter: grayscale(0.3) brightness(0.65) contrast(1.15);
+      filter: grayscale(0.3) brightness(0.65) contrast(1.15) blur(var(--pj-blur, 0px));
       transition: filter 0.5s ease;
     }
     #projects .pj-cover:hover .pj-cover-media img,
     #projects .pj-cover:hover .pj-cover-media video {
-      filter: grayscale(0.05) brightness(0.6) contrast(1.15);
+      filter: grayscale(0.05) brightness(0.6) contrast(1.15) blur(var(--pj-blur, 0px));
     }
     #projects .pj-cover-media::before {
       content: '';
@@ -1035,27 +1091,38 @@
     #projects .pj-ba-toggle:hover { background: rgba(0, 0, 0, 0.8); }
     #projects .pj-cover-text { flex: 1; min-width: 0; }
     #projects .pj-cover-name { font-size: clamp(2.4rem, 5.6vw, 5.6rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin: 0 0 0.6rem; }
-    #projects .pj-cover-tagline { font-size: 1rem; color: rgba(255, 255, 255, 0.7); margin: 0 0 0.9rem; }
-    #projects .pj-cover-desc { font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.55); max-width: 46ch; margin: 0 0 1.2rem; }
+    #projects .pj-cover-tagline { font-size: 1.3rem; color: rgba(255, 255, 255, 0.75); margin: 0 0 1.1rem; }
+    #projects .pj-cover-desc { font-size: 1.15rem; line-height: 1.65; color: rgba(255, 255, 255, 0.62); max-width: 46ch; margin: 0 0 1.4rem; }
     #projects .pj-cover-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
     #projects .pj-cover-tags span {
       font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 999px; padding: 0.3rem 0.8rem;
     }
+    #projects .pj-cover-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.6rem; margin-top: 2.2rem; }
     #projects .pj-cover-cta {
-      display: inline-block; margin-top: 2.2rem; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      display: inline-block; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.85);
       border-bottom: 1px solid rgba(255, 255, 255, 0.4); padding-bottom: 0.25rem;
-      transition: opacity 0.3s;
+      transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
     }
-    #projects .pj-cover:hover .pj-cover-cta { opacity: 0.7; }
+    #projects .pj-cover-cta:hover { color: #fff; border-color: #fff; transform: translateX(4px); }
+    #projects .pj-cover-live {
+      display: inline-block; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55); text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 0.25rem;
+      transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    }
+    #projects .pj-cover-live:hover { color: #fff; border-color: #fff; transform: translateX(4px); }
     @media (max-width: 700px) {
       #projects .pj-cover-body { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
       #projects .pj-cover-inset { width: 140px; }
     }
 
+    /* 케이스 뷰어 안에선 해당 프로젝트만 보고, 다음/이전은 우측 하단 Prev/Next 버튼으로만 이동 → 목차 휠/드래그 힌트 숨김 */
+    #pj-viewer .pjv-index, #pj-viewer .pjv-hint { display: none; }
     /* 케이스 뷰어 목차 드래그 힌트 — 드래그하면 사라짐 */
     #pj-viewer .pjv-hint {
-      display: flex; flex-direction: row; align-items: center; gap: 0.5rem;
+      flex-direction: row; align-items: center; gap: 0.5rem;
       font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
       color: rgba(255, 255, 255, 0.85); pointer-events: none;
       margin-top: 1rem; padding-left: 0.2rem;
@@ -1108,7 +1175,8 @@
     #pj-viewer .pjv-tags span { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 100px; padding: 0.5rem 1rem; }
     /* View Site CTA — 테두리를 도는 빛 + 반짝임, hover 시 채워짐 */
     @property --pjla { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
-    #pj-viewer .pjv-live {
+    /* 케이스 스터디 뷰어 전용이 아니라 재사용 가능한 CTA 버튼(빛나는 회전 테두리) — Client Works에서도 그대로 사용 */
+    .pjv-live {
       position: relative; isolation: isolate;
       display: inline-flex; align-items: center; gap: 0.6rem; width: max-content; margin-top: 3.2vh;
       padding: 0.95rem 2rem; border-radius: 100px;
@@ -1116,13 +1184,13 @@
       background: rgba(255, 255, 255, 0.03);
       transition: background 0.35s ease, color 0.35s ease;
     }
-    #pj-viewer .pjv-live-arrow { width: 16px; height: 16px; flex: 0 0 auto; transition: transform 0.35s cubic-bezier(0.65,0,0.35,1); }
-    #pj-viewer .pjv-live:hover .pjv-live-arrow { transform: translate(3px, -3px); }
-    #pj-viewer .pjv-live::after {
+    .pjv-live-arrow { width: 16px; height: 16px; flex: 0 0 auto; transition: transform 0.35s cubic-bezier(0.65,0,0.35,1); }
+    .pjv-live:hover .pjv-live-arrow { transform: translate(3px, -3px); }
+    .pjv-live::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
       border: 1px solid rgba(255, 255, 255, 0.18); pointer-events: none; z-index: -1;
     }
-    #pj-viewer .pjv-live::before {
+    .pjv-live::before {
       content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
       background: conic-gradient(from var(--pjla), transparent 0deg 215deg, rgba(255,255,255,0.35) 290deg, #fff 335deg, transparent 360deg);
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -1131,9 +1199,14 @@
       animation: pjlaSpin 3.2s linear infinite; pointer-events: none; z-index: -1;
     }
     @keyframes pjlaSpin { to { --pjla: 360deg; } }
-    #pj-viewer .pjv-live:hover { background: #fff; color: #0a0a0b; }
-    #pj-viewer .pjv-live:hover::before { animation-duration: 1s; }
-    @media (prefers-reduced-motion: reduce) { #pj-viewer .pjv-live::before { animation: none; } }
+    .pjv-live:hover { background: #fff; color: #0a0a0b; }
+    .pjv-live:hover::before { animation-duration: 1s; }
+    @media (prefers-reduced-motion: reduce) { .pjv-live::before { animation: none; } }
+    .pjv-cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 3.2vh; }
+    /* Notion 등 보조 CTA는 메인 Live Site 버튼의 빛나는 테두리 효과 없이 은은하게 */
+    #pj-viewer .pjv-doc::before { display: none; }
+    #pj-viewer .pjv-doc:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .pjv-cta-row .pjv-live { margin-top: 0; }
     /* 목차 = 키네틱 휠 (밖과 동일 컨셉, 활성=중앙, 마우스로 드래그해 다이얼처럼 돌림) */
     #pj-viewer .pjv-index { list-style: none; margin-top: auto; position: relative; width: 100%; height: 250px; perspective: 850px; perspective-origin: 0 50%; cursor: grab; touch-action: none; }
     #pj-viewer .pjv-index::before {
@@ -1799,10 +1872,12 @@
 
 <div class="cw-modal" id="cwModal" aria-hidden="true">
   <div class="cw-modal-backdrop" id="cwModalBackdrop"></div>
-  <div class="cw-modal-panel" role="dialog" aria-modal="true" aria-label="Client Works">
-    <button type="button" class="cw-modal-close" id="cwModalClose" aria-label="닫기">✕</button>
-    <span class="cw-modal-eyebrow">Client Works</span>
-    <p class="cw-modal-empty">Coming soon.</p>
+  <div class="cw-modal-panel" role="dialog" aria-modal="true" aria-label="Client Works" data-lenis-prevent>
+    <button type="button" class="cw-modal-close" id="cwModalClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+    <span class="cw-modal-eyebrow">[ Client Works ]</span>
+    <h2 class="cw-modal-title">Client Works</h2>
+    <p class="cw-modal-sub">실무 맥락 안에서 클라이언트와 함께 문제를 풀어나간 프로젝트입니다.<br>브랜드의 요구와 사용자 경험 사이를 조율했습니다.</p>
+    <div id="cwWorks"></div>
   </div>
 </div>
 
@@ -1859,8 +1934,8 @@
   <div class="about-inner">
     <span class="about-eyebrow">About</span>
     <p class="about-fill">
-      <span class="w">Passionate</span> <span class="w">about</span> <span class="w">learning,</span> <span class="w">growing,</span><br>
-      <span class="w">and</span> <span class="w">taking</span> <span class="w">on</span> <span class="w">new</span> <span class="w">challenges.</span>
+      <span class="w">Passionate</span>&nbsp;<span class="w">about</span>&nbsp;<span class="w">learning,</span>&nbsp;<span class="w">growing,</span><br>
+      <span class="w w-serif">and</span>&nbsp;<span class="w w-serif">taking</span>&nbsp;<span class="w w-serif">on</span>&nbsp;<span class="w w-serif">new</span>&nbsp;<span class="w w-serif">challenges.</span>
     </p>
     <p class="about-support">새로운 것을 빠르게 배우고, 낯선 도전도 주저하지 않습니다.<br>작은 디테일까지 놓치지 않으며 시작한 일은 끝까지 완성합니다.</p>
   </div>
@@ -2135,8 +2210,11 @@
         <h2 class="pjv-title" id="pjvTitle">Project One</h2>
         <span class="pjv-sub" id="pjvSub">Tagline</span>
         <p class="pjv-desc" id="pjvDesc">설명 placeholder</p>
+        <div class="pjv-cta-row">
+          <a class="pjv-live" id="pjvLive" href="#" target="_blank" rel="noopener"><span>View Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+          <a class="pjv-live pjv-doc" id="pjvDoc" href="#" target="_blank" rel="noopener" style="display:none"><span>View Notion</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+        </div>
         <div class="pjv-tags" id="pjvTags"></div>
-        <a class="pjv-live" id="pjvLive" href="#" target="_blank" rel="noopener"><span>View Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
       </div>
       <ul class="pjv-index" id="pjvIndex" aria-label="프로젝트 목차"></ul>
       <div class="pjv-hint" id="pjvHint"><em class="pjh-arrow">↕</em><span>드래그로 프로젝트 전환</span></div>
@@ -2285,7 +2363,34 @@
     const modal    = document.getElementById('cwModal');
     const backdrop = document.getElementById('cwModalBackdrop');
     const closeBtn = document.getElementById('cwModalClose');
+    const worksEl  = document.getElementById('cwWorks');
     if (!navBtn || !modal) return;
+
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const CLIENT_WORKS = [
+      { name: 'ICANNNOTE', tagline: 'Educational Whiteboard Program Redesign',
+        summary: '교육용 판서 프로그램의 다양한 기능과 활용 사례를<br>직관적으로 전달한 웹사이트 리디자인 프로젝트',
+        thumb: 'icannote/icannote hero.jpg', live: 'https://icannote.com/help/intro.html' },
+      { name: 'ODE', tagline: 'POCKET BEAUTY BRAND',
+        summary: '뷰티 실무에서 발견한 휴대성과 사용성의 문제를<br>브랜드 기획부터 반응형 웹 구현까지 풀어냈습니다.',
+        thumb: 'ode/ode hero.jpg' },
+      { name: 'UNFRAME', tagline: 'Fashion Brand Website',
+        summary: '개성 넘치는 해외 패션 사이트의 감성을<br>과감한 레이아웃과 비주얼로 풀어낸 웹사이트.',
+        thumb: 'unframe/unframe hero.jpg' },
+      { name: 'FLUSH', tagline: 'Color Cosmetics Brand Website',
+        summary: '맑고 투명한 컬러 표현을 중심으로 제품의 발색부터 탐색과 구매까지<br>자연스럽게 연결한 색조 코스메틱 브랜드 웹사이트입니다.',
+        thumb: 'flush/hero img.jpg' },
+    ];
+    if (worksEl) {
+      worksEl.innerHTML = CLIENT_WORKS.map((w) => `
+        <div class="cw-work">
+          <div class="cw-work-media"><img src="${esc(w.thumb)}" alt="" loading="lazy"></div>
+          <h3 class="cw-work-name">${esc(w.name)}</h3>
+          <p class="cw-work-tagline">${esc(w.tagline)}</p>
+          <p class="cw-work-desc">${w.summary}</p>
+          ${w.live ? `<a class="pjv-live" href="${esc(w.live)}" target="_blank" rel="noopener noreferrer"><span>View Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>` : ''}
+        </div>`).join('');
+    }
 
     const open = (e) => { e.preventDefault(); modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); };
     const close = () => { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); };
@@ -2446,8 +2551,21 @@
     /* ⬇️ 프로젝트 데이터 (단일 소스 — 여기만 고치면 리스트·뷰어·인덱스 전부 반영)
        thumb: 리스트 호버 썸네일(없으면 이름만), live: 라이브 사이트 URL(새 탭) */
     const PROJECTS = [
-      { name: 'Pinned', year: '2026.07', role: 'Personal', type: 'Web · Branding', live: 'https://itsmauvy.github.io/pinned/', thumb: 'pinned/pinned home.png', tagline: 'Vintage Fashion Archive', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
-        summary: '한 가지 취향으로 큐레이션한 빈티지 패션 아카이브,<br>핀으로 고정해두고 싶은 순간들을 담은 웹사이트.',
+      { name: 'Pinned', year: '2026.07', role: 'Personal', type: 'Web · Branding', live: 'https://itsmauvy.github.io/pinned/', caseDoc: 'https://app.notion.com/p/Pinned-Fashion-Lookbook-Archive-3ae5dfe6ec178066a40bfc59765da43e', thumb: 'pinned/pinned home.png', tagline: 'Fashion Lookbook Archive', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
+        summary: '개별 상품보다 완성된 스타일을 먼저 경험할 수 있도록<br>룩 중심의 탐색과 쇼핑 흐름을 설계한 패션 아카이브입니다.',
+        caseSoon: true },
+      { name: 'SENNE', year: '2026.06', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/SENNE/', thumb: 'senne/senne hero.jpg', tagline: 'Lifestyle Personal Care Brand', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
+        summary: '향을 중심으로 일상의 케어 경험을 제안하는<br>오브제 감성의 퍼스널 케어 브랜드 웹사이트.',
+        caseHero: 'senne/senne case study hero.jpg',
+        caseSoon: true },
+      { name: '상상의문', year: '2026.06', role: 'Team',     type: 'Branding', live: 'https://doorlove1234-coder.github.io/sangsangDoor/', thumb: 'sangsang/sangsang preview.png', tagline: 'Escape Room Website', tags: ['UX/UI Redesign', 'Responsive Web', 'Admin System'],
+        summary: '방탈출 테마와 스토리를 새롭게 기획하고,<br>탐색부터 예약까지의 사용자 경험을 개선한 웹사이트.',
+        caseHero: 'sangsang/sansang hero.jpg',
+        redesign: true, beforeImg: '', afterImg: 'sangsang/sansang hero.jpg',
+        caseSoon: true },
+      { name: '2XKO', year: '2026.06', role: 'Personal', type: 'Mobile · UI', live: 'https://itsmauvy.github.io/2XKO/', thumb: '2XKO/preview.jpg', tagline: '2v2 Tag-Team Fighting Game', tags: ['UX/UI Redesign', 'Web', 'Visual Design'],
+        summary: '2XKO의 빠른 전투 흐름과 챔피언 중심의 경험을<br>시각적으로 강화한 반응형 웹사이트 리디자인.',
+        redesign: true, beforeImg: '', afterImg: '2XKO/preview.jpg',
         caseSoon: true },
       { name: 'Sledding Game', year: '2026.05', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Interaction', 'Responsive Web', 'KR / EN'],
         summary: '귀여운 캐릭터와 겨울의 즐거움을 담은\n인터랙티브 게임 웹사이트',
@@ -2470,45 +2588,6 @@
           { h: 'Process',  p: '진행 과정·역할·의사결정 placeholder.' },
           { h: 'Outcome',  p: '결과·배운 점 placeholder.' },
         ] },
-      { name: 'ODE',   year: '2026.06', role: 'Personal', type: 'Web · UX/UI', live: 'https://itsmauvy.github.io/ODE/', thumb: 'ode/ode hero.jpg', tagline: 'POCKET BEAUTY BRAND', tags: ['UX/UI Design', 'Branding', 'Responsive Web'],
-        summary: '뷰티 실무에서 발견한 휴대성과 사용성의 문제를\n브랜드 기획부터 반응형 웹 구현까지 풀어냈습니다.',
-        caseHero: 'ode/ode case study hero.jpg',
-        caseTheme: 'ode',
-        caseOdeOverview: true,
-        caseOdeProblem: true,
-        caseOdeMarket: true,
-        caseOdeBrandNaming: true,
-        caseOdeDesignSystem: true,
-        caseOdeMainPage: true,
-        caseOdeAbout: true,
-        caseOdeShop: true,
-        caseOdeStore: true,
-        caseClosing: true,
-        reflection: [
-          ['What I Learned', '사용자의 시선으로 생각하기', "'내가 소비자라면 어떤 제품을 원할까?'<br>가장 중요한 출발점이라는 것을 다시 배웠습니다."],
-          ['Room to Grow', '제품 디자인의 완성도', '손에 쥐는 경험과 패키지 아이덴티티는<br>앞으로 더 발전시키고 싶습니다.'],
-          ['Next Step', '브랜드 경험의 확장', 'ODE를 제품이 아닌,<br>일상 속 브랜드 경험으로 발전시키고 싶습니다.'],
-        ],
-        caseTitle: '실무의 경험에서 시작한\n데일리 포켓 뷰티',
-        caseLead: '뷰티 실무에서 발견한 니즈를 바탕으로,\n포켓 뷰티 브랜드 ODE를 기획했습니다.',
-        period: '9 Days',
-        tools: 'Figma · Photoshop · AI (Claude · ChatGPT)' },
-      { name: '2XKO', year: '2026.06', role: 'Personal', type: 'Mobile · UI', live: 'https://itsmauvy.github.io/2XKO/', thumb: '2XKO/preview.jpg', tagline: '2v2 Tag-Team Fighting Game', tags: ['UX/UI Redesign', 'Web', 'Visual Design'],
-        summary: '2XKO의 빠른 전투 흐름과 챔피언 중심의 경험을<br>시각적으로 강화한 반응형 웹사이트 리디자인.',
-        redesign: true, beforeImg: '', afterImg: '2XKO/preview.jpg',
-        caseSoon: true },
-      { name: '상상의문', year: '2026.06', role: 'Team',     type: 'Branding', live: 'https://doorlove1234-coder.github.io/sangsangDoor/', thumb: 'sangsang/sangsang preview.png', tagline: 'Escape Room Website', tags: ['UX/UI Redesign', 'Responsive Web', 'Admin System'],
-        summary: '방탈출 테마와 스토리를 새롭게 기획하고,<br>탐색부터 예약까지의 사용자 경험을 개선한 웹사이트.',
-        caseHero: 'sangsang/sansang hero.jpg',
-        redesign: true, beforeImg: '', afterImg: 'sangsang/sansang hero.jpg',
-        caseSoon: true },
-      { name: 'UNFRAME', year: '2026.06', role: 'Personal', type: 'Web · Dev', live: 'https://itsmauvy.github.io/unframe/', thumb: 'unframe/unframe hero.jpg', tagline: 'Fashion Brand Website', tags: ['UX/UI Design', 'Concept Design', 'Web'],
-        summary: '개성 넘치는 해외 패션 사이트의 감성을<br>과감한 레이아웃과 비주얼로 풀어낸 웹사이트.',
-        caseSoon: true },
-      { name: 'SENNE', year: '2026.06', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/SENNE/', thumb: 'senne/senne hero.jpg', tagline: 'Lifestyle Personal Care Brand', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
-        summary: '향을 중심으로 일상의 케어 경험을 제안하는<br>오브제 감성의 퍼스널 케어 브랜드 웹사이트.',
-        caseHero: 'senne/senne case study hero.jpg',
-        caseSoon: true },
     ];
 
     const coversEl   = document.getElementById('pjCovers');
@@ -2536,6 +2615,7 @@
             <span class="pj-cover-num">${pad2(i + 1)}</span>
             <span class="pj-cover-meta-top">
               <span>TYPE <b>${esc(p.type || '')}</b></span>
+              <span>ROLE <b>${esc(p.role || '')}</b></span>
               <span>YEAR <b>${esc(p.year)}</b></span>
             </span>
           </div>
@@ -2554,13 +2634,20 @@
               ${p.tags && p.tags.length ? `<div class="pj-cover-tags">${p.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
             </div>
           </div>
-          <span class="pj-cover-cta">View Case →</span>
+          <div class="pj-cover-ctas">
+            ${p.live ? `<a class="pj-cover-live" href="${esc(p.live)}" target="_blank" rel="noopener noreferrer">View Live Site ↗</a>` : ''}
+            <span class="pj-cover-cta">View Case Study →</span>
+          </div>
         </div>
       </li>`).join('');
 
     [...coversEl.querySelectorAll('.pj-cover')].forEach((el) => {
       const i = +el.dataset.i;
       el.addEventListener('click', () => openViewer(i));
+
+      /* Live Site 링크는 새 탭으로 바로 이동 — 카드 클릭으로 뷰어 열리는 것 방지 */
+      const liveLink = el.querySelector('.pj-cover-live');
+      if (liveLink) liveLink.addEventListener('click', (e) => e.stopPropagation());
 
       /* 리디자인 프로젝트: 인셋 이미지 Before/After 토글 (카드 클릭으로 뷰어 열리는 것 방지) */
       const baBox = el.querySelector('.pj-ba');
@@ -2589,6 +2676,16 @@
           { yPercent: 10, scale: 1.08, ease: 'none',
             scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
       }
+
+      /* 흐리다가 스크롤하면서 선명해지는 효과 — grayscale/brightness는 CSS(:hover 포함)가 계속 담당하고,
+         GSAP은 --pj-blur 커스텀 프로퍼티만 건드려서 hover 효과랑 충돌 안 나게 함 */
+      const mediaVisual = el.querySelector('.pj-cover-media img, .pj-cover-media video');
+      if (mediaVisual) {
+        gsap.fromTo(mediaVisual,
+          { '--pj-blur': '14px' },
+          { '--pj-blur': '0px', ease: 'none',
+            scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 35%', scrub: true } });
+      }
     });
 
     /* 3) 안 뷰어: 좌(프로젝트 설명) + 우(케이스 스터디), 하단 인덱스/이전·다음으로 전환 */
@@ -2600,6 +2697,7 @@
     const infoDesc    = document.getElementById('pjvDesc');
     const infoTags    = document.getElementById('pjvTags');
     const infoLive    = document.getElementById('pjvLive');
+    const infoDoc     = document.getElementById('pjvDoc');
     const caseEl      = document.getElementById('pjvCase');
     const stageEl     = viewer.querySelector('.pjv-stage');
     if (infoTotal) infoTotal.textContent = pad2(total);
@@ -3265,6 +3363,10 @@
       if (infoDesc)    infoDesc.innerHTML       = p.summary || '';
       if (infoTags)    infoTags.innerHTML      = (p.tags || []).map((t) => '<span>' + esc(t) + '</span>').join('');
       if (infoLive)    infoLive.setAttribute('href', p.live || '#');
+      if (infoDoc) {
+        if (p.caseDoc) { infoDoc.setAttribute('href', p.caseDoc); infoDoc.style.display = ''; }
+        else { infoDoc.style.display = 'none'; }
+      }
       if (caseEl)    {
         caseEl.innerHTML = caseHTML(p); caseEl.scrollTop = 0; revealCase();
         requestAnimationFrame(positionCaseConnectors);
