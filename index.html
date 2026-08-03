@@ -222,7 +222,7 @@
     #cwWorks {
       width: 100%; max-width: 1600px; margin: 0 auto;
       display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 2.5vh 2.5vw;
+      gap: 6vh 4.5vw;
     }
     .cw-work { text-align: left; }
     .cw-work-media {
@@ -1048,15 +1048,16 @@
       display: flex; flex-direction: column;
       padding: 4vh 5vw 6vh;
       opacity: 0; transform: translateY(30px);
-      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+      transition: opacity 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1);
     }
     #projects .pj-cover-info.pj-in { opacity: 1; transform: none; }
     #projects .pj-cover-toprow {
       display: flex; justify-content: space-between; align-items: baseline;
     }
     #projects .pj-cover-num { font-size: 0.85rem; letter-spacing: 0.12em; color: rgba(255, 255, 255, 0.55); font-variant-numeric: tabular-nums; }
+    /* 우측 상단 nav(고정)랑 스크롤 중 겹쳐서 텍스트 블록 쪽(제목 위)으로 이동 */
     #projects .pj-cover-meta-top {
-      display: flex; gap: 2rem;
+      display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-bottom: 1rem;
       font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45);
     }
     #projects .pj-cover-meta-top b { color: #fff; font-weight: 600; }
@@ -1164,7 +1165,7 @@
       transition: opacity 0.25s ease;
     }
     #pj-viewer .pjv-info { position: relative; display: flex; flex-direction: column; height: 100%; min-height: 0; }
-    #pj-viewer .pjv-main { margin-top: auto; display: flex; flex-direction: column; }
+    #pj-viewer .pjv-main { margin-top: auto; margin-bottom: auto; display: flex; flex-direction: column; }
     #pj-viewer .pjv-num { font-size: 0.8rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); font-variant-numeric: tabular-nums; margin-bottom: 3vh; }
     #pj-viewer .pjv-num b { font-size: 1.6rem; font-weight: 500; color: #fff; }
     #pj-viewer .pjv-eyebrow { font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); }
@@ -1830,9 +1831,10 @@
     }
 
     /* ── CONTACT (다크 복귀 · mescubook 감성 플립 명함) ── */
-    #contact { position: relative; z-index: 2; background: #ffffff; color: #fff; overflow: hidden; padding-top: 16vh; }
-    /* 다크 패널: 둥근 아치로 차오르며 스크롤에 따라 평평해짐 (JS scrub) */
-    #contact .ct-dark { background: #0a0a0b; border-radius: 42vw 42vw 0 0; will-change: border-radius; }
+    /* Experience & Activities(다크)에서 바로 이어지므로 흰 배경 없이 다크로 통일 —
+       대신 .ct-dark 콘텐츠가 살짝 확대+페이드되며 등장하는 것으로 전환 효과를 줌 */
+    #contact { position: relative; z-index: 2; background: #0a0a0b; color: #fff; overflow: hidden; padding-top: 16vh; }
+    #contact .ct-dark { background: #0a0a0b; will-change: transform, opacity; }
     #contact .ct-body { min-height: 100vh; padding: 12vh 6vw 14vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5vh; }
     #contact .ct-eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); text-align: center; }
     #contact .ct-cta { font-size: clamp(1.8rem, 6vw, 4.6rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; text-align: center; max-width: 18ch; word-break: keep-all; }
@@ -2263,13 +2265,14 @@
 
   /* ── CONTACT: 다크 곡선 전환 + reveal ── */
   (function () {
-    // 흰 배경 → 다크: 둥근 아치가 차오르며 펴짐
+    // Experience(다크) → Contact(다크)로 이어지므로 색 전환 대신, 콘텐츠가 살짝 확대되며 서서히 나타나는 것으로 전환감을 줌
     const dark = document.querySelector('#contact .ct-dark');
     if (dark && typeof ScrollTrigger !== 'undefined') {
       gsap.fromTo(dark,
-        { borderTopLeftRadius: '42vw', borderTopRightRadius: '42vw', y: 60 },
-        { borderTopLeftRadius: '0vw', borderTopRightRadius: '0vw', y: 0, ease: 'none',
-          scrollTrigger: { trigger: '#contact', start: 'top 85%', end: 'top 12%', scrub: 1, invalidateOnRefresh: true } });
+        { opacity: 0.4, scale: 0.94 },
+        { opacity: 1, scale: 1, ease: 'none',
+          transformOrigin: '50% 50%',
+          scrollTrigger: { trigger: '#contact', start: 'top 85%', end: 'top 40%', scrub: 1, invalidateOnRefresh: true } });
     }
     const topBtn = document.getElementById('ctTop');
     if (topBtn) topBtn.addEventListener('click', () => {
@@ -2551,7 +2554,7 @@
     /* ⬇️ 프로젝트 데이터 (단일 소스 — 여기만 고치면 리스트·뷰어·인덱스 전부 반영)
        thumb: 리스트 호버 썸네일(없으면 이름만), live: 라이브 사이트 URL(새 탭) */
     const PROJECTS = [
-      { name: 'Pinned', year: '2026.07', role: 'Personal', type: 'Web · Branding', live: 'https://itsmauvy.github.io/pinned/', caseDoc: 'https://app.notion.com/p/Pinned-Fashion-Lookbook-Archive-3ae5dfe6ec178066a40bfc59765da43e', thumb: 'pinned/pinned home.png', tagline: 'Fashion Lookbook Archive', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
+      { name: 'Pinned', year: '2026.07', role: 'Personal', type: 'Web · Branding', live: 'https://itsmauvy.github.io/pinned/', caseDoc: 'https://app.notion.com/p/Pinned-Fashion-Lookbook-Archive-3ae5dfe6ec178066a40bfc59765da43e', thumb: 'pinned/pinned home.png', caseHero: 'pinned/pinned home.png', tagline: 'Fashion Lookbook Archive', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
         summary: '개별 상품보다 완성된 스타일을 먼저 경험할 수 있도록<br>룩 중심의 탐색과 쇼핑 흐름을 설계한 패션 아카이브입니다.',
         caseSoon: true },
       { name: 'SENNE', year: '2026.06', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/SENNE/', thumb: 'senne/senne hero.jpg', tagline: 'Lifestyle Personal Care Brand', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
@@ -2613,11 +2616,6 @@
         <div class="pj-cover-info">
           <div class="pj-cover-toprow">
             <span class="pj-cover-num">${pad2(i + 1)}</span>
-            <span class="pj-cover-meta-top">
-              <span>TYPE <b>${esc(p.type || '')}</b></span>
-              <span>ROLE <b>${esc(p.role || '')}</b></span>
-              <span>YEAR <b>${esc(p.year)}</b></span>
-            </span>
           </div>
           <div class="pj-cover-body">
             ${p.redesign ? `
@@ -2628,6 +2626,11 @@
               <button type="button" class="pj-ba-toggle">BEFORE 보기</button>
             </div>` : p.caseHero ? `<div class="pj-cover-inset"><img src="${esc(p.caseHero)}" alt="" loading="lazy"></div>` : ''}
             <div class="pj-cover-text">
+              <span class="pj-cover-meta-top">
+                <span>TYPE <b>${esc(p.type || '')}</b></span>
+                <span>ROLE <b>${esc(p.role || '')}</b></span>
+                <span>YEAR <b>${esc(p.year)}</b></span>
+              </span>
               <h3 class="pj-cover-name">${esc(p.name)}</h3>
               <p class="pj-cover-tagline">${esc(p.tagline || '')}</p>
               ${p.summary ? `<p class="pj-cover-desc">${p.summary.replace(/\n/g, '<br>')}</p>` : ''}
@@ -2685,6 +2688,16 @@
           { '--pj-blur': '14px' },
           { '--pj-blur': '0px', ease: 'none',
             scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 35%', scrub: true } });
+      }
+
+      /* 텍스트 한 줄씩(메타·이름·태그라인·설명·태그) — 시간 기반이 아니라 스크롤 위치에 정확히 맞춰서 순서대로 나타남 */
+      const coverTextEl = el.querySelector('.pj-cover-text');
+      const textLines = el.querySelectorAll('.pj-cover-text > *');
+      if (textLines.length) {
+        gsap.fromTo(textLines,
+          { opacity: 0, y: 22 },
+          { opacity: 1, y: 0, ease: 'none', stagger: 0.5,
+            scrollTrigger: { trigger: coverTextEl, start: 'top 95%', end: 'top 35%', scrub: true } });
       }
     });
 
