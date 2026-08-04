@@ -1835,6 +1835,8 @@
        대신 .ct-dark 콘텐츠가 살짝 확대+페이드되며 등장하는 것으로 전환 효과를 줌 */
     #contact { position: relative; z-index: 2; background: #0a0a0b; color: #fff; overflow: hidden; padding-top: 16vh; }
     #contact .ct-dark { background: #0a0a0b; will-change: transform, opacity; }
+    /* Experience에서 넘어올 때 화면 가로로 그어지는 얇은 선 — 섹션 경계를 표시하는 전환 */
+    #contact .ct-divider { width: 100%; height: 2px; margin-top: 4vh; background: rgba(255, 255, 255, 0.55); transform-origin: 0% 50%; }
     #contact .ct-body { min-height: 100vh; padding: 12vh 6vw 14vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5vh; }
     #contact .ct-eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); text-align: center; }
     #contact .ct-cta { font-size: clamp(1.8rem, 6vw, 4.6rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; text-align: center; max-width: 18ch; word-break: keep-all; }
@@ -1851,6 +1853,9 @@
     #contact .ct-top svg { width: 18px; height: 18px; }
     #contact .ct-top:hover { background: #fff; color: #0a0a0b; border-color: #fff; transform: translateY(-4px); }
     #contact .ct-reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+    /* 인사말: 한 글자씩 타이핑되듯 나타남 */
+    #contact .ct-char { display: inline-block; opacity: 0; transition: opacity 0.05s linear; }
+    #contact .ct-char.ct-in { opacity: 1; }
     #contact .ct-in { opacity: 1; transform: none; }
   </style>
 </head>
@@ -2186,8 +2191,9 @@
 <!-- ── CONTACT (다크 복귀 · 플립 명함) ── -->
 <section id="contact">
   <div class="ct-dark">
+  <div class="ct-divider" id="ctDivider"></div>
   <div class="ct-body">
-    <h2 class="ct-cta ct-reveal">끝까지 봐주셔서 감사합니다.</h2>
+    <h2 class="ct-cta" id="ctCta">끝까지 봐주셔서<br>감사합니다.</h2>
     <div class="ct-info ct-reveal">
       <span class="ct-eyebrow">[ Contact ]</span>
       <div class="ct-line"><span class="ct-line-label">Email.</span><a class="ct-email" href="mailto:itsmauvely@gmail.com">itsmauvely@gmail.com</a></div>
@@ -2274,6 +2280,13 @@
           transformOrigin: '50% 50%',
           scrollTrigger: { trigger: '#contact', start: 'top 85%', end: 'top 40%', scrub: 1, invalidateOnRefresh: true } });
     }
+    const divider = document.getElementById('ctDivider');
+    if (divider && typeof ScrollTrigger !== 'undefined') {
+      gsap.fromTo(divider,
+        { scaleX: 0 },
+        { scaleX: 1, ease: 'none',
+          scrollTrigger: { trigger: divider, start: 'top bottom', end: 'top 20%', scrub: 1, invalidateOnRefresh: true } });
+    }
     const topBtn = document.getElementById('ctTop');
     if (topBtn) topBtn.addEventListener('click', () => {
       // 맨 위로 가는 동안 Banner Design 등 구간의 onEnterBack 스킵 로직이 이 스크롤을 가로채지 못하게 플래그
@@ -2296,6 +2309,31 @@
       });
     }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
     reveals.forEach((el) => io.observe(el));
+
+    /* 인사말 한 글자씩 타이핑 등장 — <br> 줄바꿈은 그대로 유지하고 텍스트만 글자별로 감쌈 */
+    const cta = document.getElementById('ctCta');
+    if (cta) {
+      const html = [...cta.childNodes].map((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          return [...node.textContent].map((ch) => `<span class="ct-char">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
+        }
+        return node.outerHTML || '';
+      }).join('');
+      cta.innerHTML = html;
+      const chars = cta.querySelectorAll('.ct-char');
+      const ctaIo = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            chars.forEach((ch, i) => {
+              ch.style.transitionDelay = (i * 0.045) + 's';
+              ch.classList.add('ct-in');
+            });
+            ctaIo.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+      ctaIo.observe(cta);
+    }
   })();
 
   /* ── EXPERIENCE & ACTIVITIES: 카드 스크롤 페이드인 ── */
@@ -2312,6 +2350,7 @@
       });
     }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
     cards.forEach((el) => io.observe(el));
+
   })();
 
   /* ── Card Ticker: 3D tilted card gallery infinite scroll ── */
@@ -2696,8 +2735,8 @@
       if (textLines.length) {
         gsap.fromTo(textLines,
           { opacity: 0, y: 22 },
-          { opacity: 1, y: 0, ease: 'none', stagger: 0.5,
-            scrollTrigger: { trigger: coverTextEl, start: 'top 95%', end: 'top 35%', scrub: true } });
+          { opacity: 1, y: 0, ease: 'none', stagger: 0.25,
+            scrollTrigger: { trigger: coverTextEl, start: 'top 98%', end: 'top 68%', scrub: true } });
       }
     });
 
