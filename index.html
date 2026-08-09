@@ -1067,29 +1067,43 @@
     }
     #projects .pj-cover-inset {
       position: relative;
-      flex: 0 0 auto; width: clamp(220px, 22vw, 380px); aspect-ratio: 4 / 3;
+      flex: 0 0 auto; width: clamp(280px, 30vw, 520px); aspect-ratio: 4 / 3;
       border-radius: 14px; overflow: hidden;
     }
     #projects .pj-cover-inset img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    #projects .pj-ba-empty {
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      background: rgba(255, 255, 255, 0.06); color: rgba(255, 255, 255, 0.4);
-      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; padding: 1rem;
+    /* 리디자인 프로젝트: 드래그로 Before/After 비교하는 슬라이더 */
+    #projects .pj-cmp { cursor: ew-resize; touch-action: none; user-select: none; }
+    #projects .pj-cmp .pj-cmp-img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+      -webkit-user-drag: none;
     }
-    #projects .pj-ba-label {
-      position: absolute; top: 0.7rem; left: 0.7rem; z-index: 1;
-      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
-      background: rgba(0, 0, 0, 0.55); color: #fff; padding: 0.3rem 0.6rem; border-radius: 999px;
+    #projects .pj-cmp .pj-cmp-after { clip-path: inset(0 0 0 50%); }
+    #projects .pj-cmp-label {
+      position: absolute; top: 0.9rem; z-index: 2;
+      font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      background: rgba(10, 10, 11, 0.78); color: #fff; padding: 0.4rem 0.85rem; border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    #projects .pj-cmp-label-before { left: 0.9rem; }
+    #projects .pj-cmp-label-after { right: 0.9rem; }
+    #projects .pj-cmp-label.is-hidden { opacity: 0; }
+    #projects .pj-cmp-handle {
+      position: absolute; top: 0; bottom: 0; left: 50%; z-index: 3;
+      width: 2px; margin-left: -1px; background: rgba(255, 255, 255, 0.9);
       pointer-events: none;
     }
-    #projects .pj-ba-toggle {
-      position: absolute; bottom: 0.7rem; right: 0.7rem; z-index: 1;
-      font-family: inherit; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
-      background: rgba(0, 0, 0, 0.55); color: #fff; border: 1px solid rgba(255, 255, 255, 0.4);
-      border-radius: 999px; padding: 0.4rem 0.8rem; cursor: pointer;
-      transition: background 0.25s;
+    #projects .pj-cmp-grip {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95); color: #0a0a0b;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
     }
-    #projects .pj-ba-toggle:hover { background: rgba(0, 0, 0, 0.8); }
+    #projects .pj-cmp.is-dragging .pj-cmp-grip { transform: translate(-50%, -50%) scale(1.12); }
     #projects .pj-cover-text { flex: 1; min-width: 0; }
     #projects .pj-cover-name { font-size: clamp(2.4rem, 5.6vw, 5.6rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin: 0 0 0.6rem; }
     #projects .pj-cover-tagline { font-size: 1.3rem; color: rgba(255, 255, 255, 0.75); margin: 0 0 1.1rem; }
@@ -1116,7 +1130,8 @@
     #projects .pj-cover-live:hover { color: #fff; border-color: #fff; transform: translateX(4px); }
     @media (max-width: 700px) {
       #projects .pj-cover-body { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
-      #projects .pj-cover-inset { width: 140px; }
+      #projects .pj-cover-inset { width: min(78vw, 320px); }
+      #projects .pj-cmp-label { font-size: 0.66rem; padding: 0.32rem 0.7rem; }
     }
 
     /* 케이스 뷰어 안에선 해당 프로젝트만 보고, 다음/이전은 우측 하단 Prev/Next 버튼으로만 이동 → 목차 휠/드래그 힌트 숨김 */
@@ -2616,11 +2631,11 @@
       { name: '상상의문', year: '2026.06', role: 'Team',     type: 'Branding', live: 'https://doorlove1234-coder.github.io/sangsangDoor/', thumb: 'sangsang/sangsang preview.png', tagline: 'Escape Room Website', tags: ['UX/UI Redesign', 'Responsive Web', 'Admin System'],
         summary: '방탈출 테마와 스토리를 새롭게 기획하고,<br>탐색부터 예약까지의 사용자 경험을 개선한 웹사이트.',
         caseHero: 'sangsang/sansang hero.jpg',
-        redesign: true, beforeImg: '', afterImg: 'sangsang/sansang hero.jpg',
+        redesign: true, beforeImg: 'sangsang/sangsang hero_before.jpg', afterImg: 'sangsang/sangsang hero_after.jpg',
         caseSoon: true },
       { name: '2XKO', year: '2026.06', role: 'Personal', type: 'Mobile · UI', live: 'https://itsmauvy.github.io/2XKO/', caseDoc: 'https://app.notion.com/p/2XKO-Game-Website-Redesign-3b15dfe6ec17804ca429ed49df6aad82', thumb: '2XKO/preview.jpg', tagline: '2v2 Tag-Team Fighting Game', tags: ['UX/UI Redesign', 'Web', 'Visual Design'],
         summary: '2XKO의 빠른 전투 흐름과 챔피언 중심의 경험을<br>시각적으로 강화한 반응형 웹사이트 리디자인.',
-        redesign: true, beforeImg: '', afterImg: '2XKO/preview.jpg',
+        redesign: true, beforeImg: '2XKO/2xko hero_before.jpg', afterImg: '2XKO/2xko hero_after.jpg',
         caseSoon: true },
       { name: 'Sledding Game', year: '2026.05', role: 'Personal', type: 'Web · Game', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Interaction', 'Responsive Web', 'KR / EN'],
         summary: '귀여운 캐릭터와 겨울의 즐거움을 담은\n인터랙티브 게임 웹사이트',
@@ -2670,12 +2685,13 @@
             <span class="pj-cover-num">${pad2(i + 1)}</span>
           </div>
           <div class="pj-cover-body">
-            ${p.redesign ? `
-            <div class="pj-cover-inset pj-ba" data-before="${esc(p.beforeImg || '')}" data-after="${esc(p.afterImg || p.caseHero || p.thumb || '')}">
-              <img class="pj-ba-img" src="${esc(p.afterImg || p.caseHero || p.thumb || '')}" alt="">
-              ${p.beforeImg ? '' : '<div class="pj-ba-empty">BEFORE 이미지 준비중</div>'}
-              <span class="pj-ba-label">AFTER</span>
-              <button type="button" class="pj-ba-toggle">BEFORE 보기</button>
+            ${p.redesign && p.beforeImg ? `
+            <div class="pj-cover-inset pj-cmp">
+              <img class="pj-cmp-img pj-cmp-before" src="${esc(p.beforeImg)}" alt="" loading="lazy" draggable="false">
+              <img class="pj-cmp-img pj-cmp-after" src="${esc(p.afterImg || p.caseHero || p.thumb || '')}" alt="" loading="lazy" draggable="false">
+              <span class="pj-cmp-label pj-cmp-label-before">BEFORE</span>
+              <span class="pj-cmp-label pj-cmp-label-after">AFTER</span>
+              <div class="pj-cmp-handle"><span class="pj-cmp-grip">↔</span></div>
             </div>` : p.caseHero ? `<div class="pj-cover-inset"><img src="${esc(p.caseHero)}" alt="" loading="lazy"></div>` : ''}
             <div class="pj-cover-text">
               <span class="pj-cover-meta-top">
@@ -2704,23 +2720,50 @@
       const liveLink = el.querySelector('.pj-cover-live');
       if (liveLink) liveLink.addEventListener('click', (e) => e.stopPropagation());
 
-      /* 리디자인 프로젝트: 인셋 이미지 Before/After 토글 (카드 클릭으로 뷰어 열리는 것 방지) */
-      const baBox = el.querySelector('.pj-ba');
-      if (baBox) {
-        const btn = baBox.querySelector('.pj-ba-toggle');
-        const img = baBox.querySelector('.pj-ba-img');
-        const label = baBox.querySelector('.pj-ba-label');
-        const before = baBox.dataset.before;
-        const after = baBox.dataset.after;
-        let showingBefore = false;
-        btn.addEventListener('click', (e) => {
+      /* 리디자인 프로젝트: Before/After 드래그 비교 슬라이더 (카드 클릭으로 뷰어 열리는 것 방지) */
+      const cmp = el.querySelector('.pj-cmp');
+      if (cmp) {
+        const afterImg = cmp.querySelector('.pj-cmp-after');
+        const handle = cmp.querySelector('.pj-cmp-handle');
+        const labelBefore = cmp.querySelector('.pj-cmp-label-before');
+        const labelAfter = cmp.querySelector('.pj-cmp-label-after');
+        let dragging = false;
+        let didDrag = false;
+
+        const setPos = (clientX) => {
+          const r = cmp.getBoundingClientRect();
+          const pct = Math.min(100, Math.max(0, ((clientX - r.left) / r.width) * 100));
+          afterImg.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
+          handle.style.left = pct + '%';
+          // 남은 폭이 좁아지면 그쪽 라벨은 숨김 (안 보이는 쪽 라벨이 남아 헷갈리는 것 방지)
+          if (labelBefore) labelBefore.classList.toggle('is-hidden', pct < 22);
+          if (labelAfter) labelAfter.classList.toggle('is-hidden', pct > 78);
+        };
+
+        const onDown = (e) => {
+          dragging = true;
+          didDrag = false;
+          cmp.classList.add('is-dragging');
+          if (cmp.setPointerCapture) { try { cmp.setPointerCapture(e.pointerId); } catch (err) {} }
+          setPos(e.clientX);
+          e.preventDefault();
           e.stopPropagation();
-          if (!before) return; // before 이미지 없으면 토글 비활성
-          showingBefore = !showingBefore;
-          img.src = showingBefore ? before : after;
-          label.textContent = showingBefore ? 'BEFORE' : 'AFTER';
-          btn.textContent = showingBefore ? 'AFTER 보기' : 'BEFORE 보기';
-        });
+        };
+        const onMove = (e) => { if (dragging) { didDrag = true; setPos(e.clientX); } };
+        const onUp = () => { dragging = false; cmp.classList.remove('is-dragging'); };
+
+        cmp.addEventListener('pointerdown', onDown);
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+        window.addEventListener('pointercancel', onUp);
+        // 슬라이더에서 시작한 클릭은(드래그로 커버 밖에서 끝나도) 카드 클릭으로 이어지지 않게 캡처 단계에서 차단
+        el.addEventListener('click', (e) => {
+          if (didDrag || cmp.contains(e.target)) {
+            didDrag = false;
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          }
+        }, true);
       }
 
       /* 커버 이미지 패럴랙스 + Ken Burns: 스크롤에 따라 배경이 위/아래로 움직이며 서서히 확대 */
