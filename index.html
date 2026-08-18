@@ -1255,7 +1255,7 @@
        cs-hero처럼 16/9로 자르지 않는 이유: 커버 안에 로고·문구가 들어있어 크롭되면 잘린다. */
     /* 스크롤 없이 한 화면에 다 들어오도록 컬럼 높이(스테이지 패딩 9vh+11vh 제외)에 맞춰 크롭.
        pinned 워드마크가 원본 정중앙에 있어 object-position: center면 로고가 가운데 남는다. */
-    #pj-viewer .cs-cover { position: relative; width: 100%; height: 80vh; overflow: hidden; }
+    #pj-viewer .cs-cover { position: relative; width: 100%; height: 80vh; overflow: hidden; border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
     #pj-viewer .cs-cover > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
     /* 로고·부제·상세를 한 덩어리로 — 사진 왼쪽 아래 (Sledding Game .cs-hero-text와 같은 자리) */
     #pj-viewer .cs-cover-overlay {
@@ -1707,6 +1707,34 @@
     #pj-viewer .cs-shot { width: 100%; overflow: hidden; }
     #pj-viewer .cs-shot img { vertical-align: top; }
     #pj-viewer .cs-shot img { width: 100%; height: auto; display: block; }
+    /* Pinned: Project Background (흰 배경 섹션 — 텍스트 + 이미지 2장 + 워드마크) */
+    #pj-viewer .cs-pinned-bg { display: grid; grid-template-columns: 0.78fr 1fr; gap: 5%; align-items: center; background: #fff; padding: 11vh 0 11vh 5%; }
+    #pj-viewer .cs-pinned-bg-eyebrow { display: block; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(17, 17, 17, 0.45); }
+    #pj-viewer .cs-pinned-bg-title { margin-top: 22px; font-size: clamp(1.2rem, 1.7vw, 1.5rem); font-weight: 700; line-height: 1.5; color: #111; }
+    #pj-viewer .cs-pinned-bg-desc { margin-top: 22px; font-size: 0.95rem; line-height: 1.75; color: rgba(17, 17, 17, 0.68); }
+    #pj-viewer .cs-pinned-bg-media { display: grid; grid-template-columns: 34% 1fr; gap: 3%; padding-right: 5%; }
+    #pj-viewer .cs-pinned-bg-media-left { display: flex; flex-direction: column; height: 100%; }
+    #pj-viewer .cs-pinned-bg-mark { display: block; margin-top: auto; padding-top: 10px; width: 100%; height: auto; }
+    #pj-viewer .cs-pinned-bg-img { overflow: hidden; }
+    #pj-viewer .cs-pinned-bg-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    #pj-viewer .cs-pinned-bg-img--left { width: 100%; aspect-ratio: 371 / 678; }
+    #pj-viewer .cs-pinned-bg-img--right { aspect-ratio: 644 / 859; }
+    @media (max-width: 900px) {
+      #pj-viewer .cs-pinned-bg { grid-template-columns: 1fr; padding: 8vh 6% ; }
+      #pj-viewer .cs-pinned-bg-media { margin-top: 6vh; padding-right: 0; }
+    }
+    /* Pinned: Project Goals (카드 3장 그리드) */
+    #pj-viewer .cs-pinned-goals { background: #fff; padding: 2vh 5% 14vh; }
+    #pj-viewer .cs-pinned-goals-eyebrow { display: block; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; color: #111; margin-bottom: 5vh; }
+    #pj-viewer .cs-pinned-goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    #pj-viewer .cs-pinned-goals-card { position: relative; background: #fff; border: 1px solid rgba(17, 17, 17, 0.08); border-radius: 6px; padding: 48px 28px; text-align: center; }
+    #pj-viewer .cs-pinned-goals-icon { position: absolute; top: -13px; left: 50%; display: inline-flex; color: #111; transform: translateX(-50%) rotate(30deg); }
+    #pj-viewer .cs-pinned-goals-num { display: block; margin-top: 34px; font-size: 0.85rem; font-weight: 700; color: #111; }
+    #pj-viewer .cs-pinned-goals-title { margin-top: 14px; font-size: 1.05rem; font-weight: 700; color: #111; }
+    #pj-viewer .cs-pinned-goals-desc { margin-top: 16px; font-size: 0.88rem; line-height: 1.7; color: rgba(17, 17, 17, 0.62); }
+    @media (max-width: 900px) {
+      #pj-viewer .cs-pinned-goals-grid { grid-template-columns: 1fr; }
+    }
     /* 스크롤 reveal (흔히 쓰는 fade + 살짝 상승) */
     #pj-viewer .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.8s var(--d, 0s) ease, transform 0.85s var(--d, 0s) cubic-bezier(0.22, 0.61, 0.36, 1); will-change: opacity, transform; }
     #pj-viewer .reveal.cs-in { opacity: 1; transform: none; }
@@ -2671,7 +2699,9 @@
         period: '3 Weeks',
         tools: 'Figma · Photoshop · Illustrator · Midjourney',
         /* 커버 아래 섹션 이미지 — 디자인 나오는 대로 순서대로 추가 */
-        caseShots: [] },
+        caseShots: [],
+        casePinnedBg: true,
+        casePinnedGoals: true },
       { name: 'SENNE', year: '2026.06', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/SENNE/', caseDoc: 'https://app.notion.com/p/SENNE-Lifestyle-Personal-Care-Brand-3b15dfe6ec1780ce856effcbf01f61c0', thumb: 'senne/senne hero.jpg', tagline: 'Lifestyle Personal Care Brand', tags: ['UX/UI Design', 'Branding', 'E-Commerce'],
         summary: '향을 중심으로 일상의 케어 경험을 제안하는<br>오브제 감성의 퍼스널 케어 브랜드 웹사이트.',
         caseHero: 'senne/senne case study hero.jpg',
@@ -2903,6 +2933,51 @@
     indexEl.addEventListener('click', (e) => {
       if (ixMoved > 6) { e.stopPropagation(); e.preventDefault(); ixMoved = 0; }
     }, true);
+
+    function pinnedBgSectionHTML() {
+      return `
+        <section class="cs-pinned-bg">
+          <div class="cs-pinned-bg-text">
+            <span class="cs-pinned-bg-eyebrow">Project Background</span>
+            <h3 class="cs-pinned-bg-title">개별 상품이 아닌,<br>완성된 룩에서 쇼핑을 시작합니다.</h3>
+            <p class="cs-pinned-bg-desc">대부분의 패션 쇼핑몰은 카테고리나 개별 상품을<br>기준으로 탐색하기 때문에, 사용자가 직접 여러 아이템을<br>조합하며 스타일을 완성해야 합니다.</p>
+            <p class="cs-pinned-bg-desc">PINNED는 이러한 상품 중심의 탐색 방식에서 벗어나,<br>이미 완성된 하나의 '룩'을 먼저 발견하는 방식에서 출발했습니다.</p>
+            <p class="cs-pinned-bg-desc">사용자가 다양한 스타일을 자연스럽게 둘러보며<br>자신의 취향을 발견하고, 마음에 드는 룩에서<br>구성 아이템까지 이어갈 수 있는 경험을 만들고자 했습니다.</p>
+          </div>
+          <div class="cs-pinned-bg-media">
+            <div class="cs-pinned-bg-media-left">
+              <div class="cs-pinned-bg-img cs-pinned-bg-img--left"><img src="pinned/case study background_left.jpg" alt=""></div>
+              <img class="cs-pinned-bg-mark" src="pinned/pinned-logo.webp" alt="Pinned 로고">
+            </div>
+            <div class="cs-pinned-bg-img cs-pinned-bg-img--right"><img src="pinned/case study background_right.jpg" alt=""></div>
+          </div>
+        </section>`;
+    }
+
+    function pinnedGoalsSectionHTML() {
+      const pinIcon = `<svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="8" r="5"/>
+        <line x1="11" y1="13" x2="11" y2="24"/>
+      </svg>`;
+      const goals = [
+        { title: 'Look-first Discovery', desc: '개별 상품보다 완성된 룩을<br>먼저 탐색하는 경험 설계' },
+        { title: 'Editorial Shopping Experience', desc: '일반적인 쇼핑몰보다 룩북·에디토리얼을<br>보는 듯한 탐색 경험 구축' },
+        { title: 'Natural Look-to-Item Flow', desc: '마음에 든 룩에서 실제 착용 아이템과<br>구매 정보까지 자연스럽게 연결' },
+      ];
+      return `
+        <section class="cs-pinned-goals">
+          <span class="cs-pinned-goals-eyebrow">Project Goals</span>
+          <div class="cs-pinned-goals-grid">
+            ${goals.map((g, i) => `
+            <div class="cs-pinned-goals-card">
+              <span class="cs-pinned-goals-icon">${pinIcon}</span>
+              <span class="cs-pinned-goals-num">${String(i + 1).padStart(2, '0')}</span>
+              <h4 class="cs-pinned-goals-title">${esc(g.title)}</h4>
+              <p class="cs-pinned-goals-desc">${g.desc}</p>
+            </div>`).join('')}
+          </div>
+        </section>`;
+    }
 
     function bgSectionHTML() {
       const flake = 'sledding/case study/background snowflake.png';
@@ -3381,9 +3456,19 @@
       if (p.caseCover) {
         let below = '';
         if (Array.isArray(p.caseShots) && p.caseShots.length) {
-          below = '<div class="cs-shots">' + p.caseShots.map((src) =>
+          below += '<div class="cs-shots">' + p.caseShots.map((src) =>
             '<div class="cs-shot reveal"><img src="' + esc(src) + '" alt=""></div>').join('') + '</div>';
-        } else if (p.caseSoon) {
+        }
+        if (p.casePinnedBg) below += pinnedBgSectionHTML();
+        if (p.casePinnedGoals) below += pinnedGoalsSectionHTML();
+        if (Array.isArray(p.sections) && p.sections.length) {
+          below += '<div class="cs-body">' + p.sections.map((s) => `
+            <section class="cs-section reveal">
+              <div class="cs-text"><h3>${esc(s.h)}</h3><p>${esc(s.p)}</p></div>
+              ${s.img ? `<div class="cs-figure"><img src="${esc(s.img)}" alt=""></div>` : '<div class="cs-figure cs-figure--ph"><span>Figure</span></div>'}
+            </section>`).join('') + '</div>';
+        }
+        if (!below && p.caseSoon) {
           below = '<div class="cs-soon"><span class="cs-soon-label">Case Study</span><p class="cs-soon-title">Coming Soon</p><p class="cs-soon-desc">케이스 스터디를 준비하고 있어요.<br>View Site에서 프로젝트를 먼저 만나보세요.</p></div>';
         }
         const meta = (p.period || p.tools) ? '<div class="cs-meta">'
