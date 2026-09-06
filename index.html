@@ -552,10 +552,13 @@
 
     /* ── EXPERIENCE & ACTIVITIES (Profile 아래 · 다크 톤 카드 그리드, 내용은 임시) ── */
     #experience-activities {
-      position: relative; z-index: 2; background: #0a0a0b; color: #fff;
+      position: relative; z-index: 3; background: #0a0a0b; color: #fff;
       padding: 12vh 4vw 14vh;
+      /* 좌우 상단 모서리의 둥근 정도(스크롤 위치에 실시간으로 연동, JS가 매 프레임 갱신)
+         — 트랜지션 없이 스크롤 값에 그대로 따라가야 "스크롤하면서" 바뀌는 느낌이 난다 */
+      will-change: transform, border-radius;
     }
-    #experience-activities .ea-inner { max-width: 1400px; margin: 0 auto; }
+    #experience-activities .ea-inner { position: relative; max-width: 1400px; margin: 0 auto; }
     #experience-activities .ea-title {
       font-weight: 800;
       font-size: clamp(2.4rem, 5.6vw, 4.6rem); letter-spacing: -0.02em;
@@ -2450,6 +2453,44 @@
 
   })();
 
+  /* ── EXPERIENCE & ACTIVITIES: 상단 좌우 모서리 — 스크롤 위치에 실시간으로 연동해
+     둥근(오벌) 상태에서 직선(네모)으로 바뀐다. CSS 트랜지션 대신 매 프레임 스크롤 위치를
+     읽어 값을 직접 계산 — 지연 없이 스크롤 자체와 1:1로 맞물려 움직인다. */
+  (function () {
+    const section = document.getElementById('experience-activities');
+    if (!section) return;
+    const MAX_LIFT = 140;  // 코너가 위쪽(흰 배경) 방향으로 튀어나오는 최대 높이(px)
+    const CORNER_W = 24;   // 코너 반경의 가로 폭(%) — 가운데는 항상 평평하게 남긴다
+    let ticking = false;
+
+    function update() {
+      ticking = false;
+      const r = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 섹션 상단이 화면 90% 지점에 걸리면 progress 0(둥근 상태),
+      // 화면 40% 지점까지 올라오면 progress 1(완전한 직선)
+      const startY = vh * 0.9;
+      const endY = vh * 0.4;
+      let progress = (startY - r.top) / (startY - endY);
+      progress = Math.max(0, Math.min(1, progress));
+      const lift = MAX_LIFT * (1 - progress);
+      if (lift > 0.5) {
+        section.style.transform = `translateY(-${lift}px)`;
+        section.style.borderTopLeftRadius = CORNER_W + '% ' + lift + 'px';
+        section.style.borderTopRightRadius = CORNER_W + '% ' + lift + 'px';
+      } else {
+        section.style.transform = '';
+        section.style.borderTopLeftRadius = '';
+        section.style.borderTopRightRadius = '';
+      }
+    }
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+  })();
+
   /* ── Card Ticker: 3D tilted card gallery infinite scroll ── */
   (function () {
     const track = document.getElementById('card-ticker-track');
@@ -2694,9 +2735,9 @@
         summary: '개별 상품보다 완성된 스타일을 먼저 경험할 수 있도록<br>룩 중심의 탐색과 쇼핑 흐름을 설계한 패션 아카이브입니다.',
         caseCover: 'pinned/case study hero img.jpg',
         caseMarkImg: 'pinned/pinned-logo.webp',
-        caseLead: '빈티지 패션을 한 사람의 취향으로 엮은 아카이브.\n개별 상품이 아니라 완성된 룩에서 탐색이 시작되도록 설계했습니다.',
-        period: '3 Weeks',
-        tools: 'Figma · Photoshop · Illustrator · Midjourney',
+        caseLead: '일반적인 패션 쇼핑몰에서 벗어나, 완성된 룩을 중심으로 스타일을 탐색하는\n패션 아카이브 브랜드 PINNED를 기획했습니다.',
+        period: '2 Weeks',
+        tools: 'Figma · Photoshop · Runway',
         /* 커버 아래 섹션 이미지 — 디자인 나오는 대로 순서대로 추가 */
         caseShots: [],
         casePinnedBg: true,
