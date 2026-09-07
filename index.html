@@ -1092,6 +1092,20 @@
     #projects .pj-cmp-label-before { left: 0.9rem; }
     #projects .pj-cmp-label-after { right: 0.9rem; }
     #projects .pj-cmp-label.is-hidden { opacity: 0; }
+    /* 리디자인 이전 원본 사이트 링크 — BEFORE 라벨과 헷갈리지 않도록 라벨(필 모양)이 아닌
+       밑줄 텍스트로 명확히 구분. 드래그 영역과 별개로 pointer-events를 살려둔 유일한
+       클릭 가능 요소 (나머지 라벨/핸들은 none) */
+    #projects .pj-cmp-original {
+      position: absolute; top: 3.1rem; left: 1rem; z-index: 2;
+      display: inline-block; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.75); text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4); padding-bottom: 0.15rem;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+      pointer-events: auto; cursor: pointer;
+      transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    #projects .pj-cmp-original:hover { color: #fff; border-color: #fff; }
+    #projects .pj-cmp-original.is-hidden { opacity: 0; pointer-events: none; }
     #projects .pj-cmp-handle {
       position: absolute; top: 0; bottom: 0; left: 50%; z-index: 3;
       width: 2px; margin-left: -1px; background: rgba(255, 255, 255, 0.9);
@@ -1115,20 +1129,20 @@
       border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 999px; padding: 0.3rem 0.8rem;
     }
     #projects .pj-cover-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.6rem; margin-top: 2.2rem; }
-    #projects .pj-cover-cta {
+    #projects .pj-cover-cta,
+    #projects .pj-cover-notion {
       display: inline-block; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.85); cursor: pointer;
+      color: rgba(255, 255, 255, 0.85); cursor: pointer; text-decoration: none;
       border-bottom: 1px solid rgba(255, 255, 255, 0.4); padding-bottom: 0.25rem;
       transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
     }
-    #projects .pj-cover-cta:hover { color: #fff; border-color: #fff; transform: translateX(4px); }
-    #projects .pj-cover-live {
-      display: inline-block; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.55); text-decoration: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 0.25rem;
-      transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-    }
-    #projects .pj-cover-live:hover { color: #fff; border-color: #fff; transform: translateX(4px); }
+    #projects .pj-cover-cta:hover,
+    #projects .pj-cover-notion:hover { color: #fff; border-color: #fff; transform: translateX(4px); }
+    /* Live Site 버튼만 앱 카드·케이스 뷰어와 동일한 pjv-live 필 버튼으로 통일.
+       View Notion/Case Study는 계속 밑줄 텍스트 스타일 유지.
+       pjv-live 기본 margin-top(3.2vh)은 사이드바 세로 배치 기준이라, 가로로 늘어서는
+       커버 CTA 줄에서는 0으로 지우고 부모(.pj-cover-ctas)의 gap으로만 간격을 준다. */
+    #projects .pj-cover-ctas .pjv-live { margin-top: 0; }
     @media (max-width: 700px) {
       #projects .pj-cover-body { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
       #projects .pj-cover-inset { width: min(78vw, 320px); }
@@ -2752,10 +2766,12 @@
         summary: '방탈출 테마와 스토리를 새롭게 기획하고,<br>탐색부터 예약까지의 사용자 경험을 개선한 웹사이트.',
         caseHero: 'sangsang/sansang hero.jpg',
         redesign: true, beforeImg: 'sangsang/sangsang hero_before.jpg', afterImg: 'sangsang/sangsang hero_after.jpg',
+        originalLive: 'https://xn--z92b74ha268d.com/layout/res/home.php?go=main',
         caseSoon: true },
       { name: '2XKO', year: '2026.06', role: 'Personal', type: 'Web Redesign', live: 'https://itsmauvy.github.io/2XKO/', caseDoc: 'https://app.notion.com/p/2XKO-Game-Website-Redesign-3b15dfe6ec17804ca429ed49df6aad82', thumb: '2XKO/preview.jpg', tagline: '2v2 Tag-Team Fighting Game', tags: ['UX/UI Redesign', 'Web', 'Visual Design'],
         summary: '2XKO의 빠른 전투 흐름과 챔피언 중심의 경험을<br>시각적으로 강화한 반응형 웹사이트 리디자인.',
         redesign: true, beforeImg: '2XKO/2xko hero_before.jpg', afterImg: '2XKO/2xko hero_after.jpg',
+        originalLive: 'https://2xko.riotgames.com/ko-kr/',
         caseSoon: true },
       { name: 'Sledding Game', year: '2026.05', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Interaction', 'Responsive Web', 'KR / EN'],
         summary: '귀여운 캐릭터와 겨울의 즐거움을 담은\n인터랙티브 게임 웹사이트',
@@ -2812,6 +2828,7 @@
               <span class="pj-cmp-label pj-cmp-label-before">BEFORE</span>
               <span class="pj-cmp-label pj-cmp-label-after">AFTER</span>
               <div class="pj-cmp-handle"><span class="pj-cmp-grip">↔</span></div>
+              ${p.originalLive ? `<a class="pj-cmp-original" href="${esc(p.originalLive)}" target="_blank" rel="noopener noreferrer">Original Site ↗</a>` : ''}
             </div>` : p.caseHero ? `<div class="pj-cover-inset"><img src="${esc(p.caseHero)}" alt="" loading="lazy"></div>` : ''}
             <div class="pj-cover-text">
               <span class="pj-cover-meta-top">
@@ -2826,9 +2843,9 @@
             </div>
           </div>
           <div class="pj-cover-ctas">
-            ${p.live ? `<a class="pj-cover-live" href="${esc(p.live)}" target="_blank" rel="noopener noreferrer">View Live Site ↗</a>` : ''}
+            ${p.live ? `<a class="pjv-live" href="${esc(p.live)}" target="_blank" rel="noopener noreferrer"><span>View Live Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>` : ''}
             ${(p.caseSoon || p.caseNotionOnly)
-              ? (p.caseDoc ? `<a class="pj-cover-live" href="${esc(p.caseDoc)}" target="_blank" rel="noopener noreferrer">View Notion ↗</a>` : '')
+              ? (p.caseDoc ? `<a class="pj-cover-notion" href="${esc(p.caseDoc)}" target="_blank" rel="noopener noreferrer">View Notion →</a>` : '')
               : `<span class="pj-cover-cta">View Case Study →</span>`}
           </div>
         </div>
@@ -2844,7 +2861,7 @@
       if (caseCta) caseCta.addEventListener('click', (e) => { e.stopPropagation(); openViewer(i); });
 
       /* Live Site · View Notion 링크는 새 탭으로 바로 이동 */
-      el.querySelectorAll('.pj-cover-live').forEach((a) => a.addEventListener('click', (e) => e.stopPropagation()));
+      el.querySelectorAll('.pjv-live, .pj-cover-notion').forEach((a) => a.addEventListener('click', (e) => e.stopPropagation()));
 
       /* 리디자인 프로젝트: Before/After 드래그 비교 슬라이더 (카드 클릭으로 뷰어 열리는 것 방지) */
       const cmp = el.querySelector('.pj-cmp');
@@ -2853,6 +2870,7 @@
         const handle = cmp.querySelector('.pj-cmp-handle');
         const labelBefore = cmp.querySelector('.pj-cmp-label-before');
         const labelAfter = cmp.querySelector('.pj-cmp-label-after');
+        const originalLink = cmp.querySelector('.pj-cmp-original');
         let dragging = false;
         let didDrag = false;
 
@@ -2864,9 +2882,12 @@
           // 남은 폭이 좁아지면 그쪽 라벨은 숨김 (안 보이는 쪽 라벨이 남아 헷갈리는 것 방지)
           if (labelBefore) labelBefore.classList.toggle('is-hidden', pct < 22);
           if (labelAfter) labelAfter.classList.toggle('is-hidden', pct > 78);
+          // 원본 사이트 링크는 BEFORE 라벨과 함께 숨김
+          if (originalLink) originalLink.classList.toggle('is-hidden', pct < 22);
         };
 
         const onDown = (e) => {
+          if (originalLink && originalLink.contains(e.target)) return; // 원본 사이트 링크는 드래그 대상이 아님
           dragging = true;
           didDrag = false;
           cmp.classList.add('is-dragging');
@@ -2883,7 +2904,9 @@
         window.addEventListener('pointerup', onUp);
         window.addEventListener('pointercancel', onUp);
         // 슬라이더에서 시작한 클릭은(드래그로 커버 밖에서 끝나도) 카드 클릭으로 이어지지 않게 캡처 단계에서 차단
+        // 단, 원본 사이트 링크는 이 차단에서 제외 — 정상적으로 새 탭 이동해야 한다
         el.addEventListener('click', (e) => {
+          if (originalLink && originalLink.contains(e.target)) return;
           if (didDrag || cmp.contains(e.target)) {
             didDrag = false;
             e.stopPropagation();
@@ -3837,13 +3860,13 @@
   /* ── 8.6) APP: Web(Selected Works)에서 분리한 앱 프로젝트 카드 (표지 + 상세 정보) ── */
   (function () {
     const APP_WORKS = [
-      { name: 'NOTALK', year: '2026.05', category: 'App Design', role: 'Team · UX/UI + Backend', stack: 'WEB · JAVASCRIPT',
+      { name: 'NOTALK', year: '2026.05', category: 'App Design', role: 'Team Project', stack: 'UX Research · UX/UI Design · Backend · QA',
         thumb: 'notalk/notalk mockup.png',
         tagline: 'Social App Design',
         desc: '대화에 대한 부담을 낮추고, 가볍게 함께할 수 있도록 설계한 팝업형 소셜 서비스',
         process: 'notalk/case.html', processLabel: '제작과정 보기',
         live: 'http://4team-notalk.vercel.app/', liveLabel: 'LIVE SITE' },
-      { name: '떡상', year: '2026', category: 'Web App Game', role: 'Personal', stack: 'Planning · UI/UX Design · Development',
+      { name: '떡상', year: '2026', category: 'Web App Game', role: 'Personal Project', stack: 'Planning · UI/UX Design · Development',
         thumb: 'mochi/mochi mockup png.png',
         tagline: 'Web App Game',
         desc: '가볍게 즐길 수 있는 웹 기반 캐주얼 게임',
