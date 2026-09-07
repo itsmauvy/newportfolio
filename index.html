@@ -3946,8 +3946,20 @@
       const gap = 56;
       folder.style.top = Math.round((titleRect.bottom - pinRect.top) + gap) + 'px';
     }
+    // 납품 완료 후 폴더가 가로 중앙에 오도록 필요한 x 오프셋을 미리 계산해둔다.
+    // offsetLeft/offsetWidth는 transform(GSAP로 움직이는 중이어도)의 영향을 받지 않는
+    // 레이아웃 상 정적 위치라서, deliverAll() 애니메이션이 어느 타이밍에 끝나든
+    // 항상 같은 값이 나온다 (스크롤 속도에 따라 결과가 달라지던 문제와 같은 원인 방지).
+    let folderCenterX = 0;
+    function computeFolderCenterX() {
+      if (!folder || !bdPin) return;
+      const pinWidth = bdPin.getBoundingClientRect().width;
+      const staticCenterX = folder.offsetLeft + folder.offsetWidth / 2;
+      folderCenterX = Math.round(pinWidth / 2 - staticCenterX);
+    }
     positionFolderBelowTitle();
-    window.addEventListener('resize', positionFolderBelowTitle);
+    computeFolderCenterX();
+    window.addEventListener('resize', () => { positionFolderBelowTitle(); computeFolderCenterX(); });
 
     const S = 0.5, GAP = 60;
     const splitX = (word, side) => {
@@ -4154,15 +4166,11 @@
       window.removeEventListener('pointerup',   onUp);
       window.removeEventListener('pointercancel', onUp);
       delivered = true; // scrub 정지 (핀은 유지 → 레이아웃 점프 없음)
-      // 폴더를 아래로 내려 타이틀 닫힘과 겹치지 않게 — 고정 140px 대신 타이틀 실제 렌더 크기 기준으로 계산
-      // (와이드&쇼트 화면비에서 타이틀 폰트가 vw로 커지면 고정값으론 겹침)
-      let deliveredDy = 140;
-      if (titleEl) {
-        const tRect = titleEl.getBoundingClientRect();
-        const fRect = folder.getBoundingClientRect();
-        deliveredDy = Math.max(140, Math.round((tRect.bottom + 40) - fRect.top));
-      }
-      gsap.to(folder, { y: `+=${deliveredDy}`, duration: 0.7, ease: 'power2.inOut', force3D: true });
+      // 폴더를 항상 같은 자리(세로: 타이틀 바로 아래 / 가로: 화면 중앙)로 복귀시킨다.
+      // 이전엔 그 시점의 폴더 위치에 오프셋을 "더하는"(y: +=) 방식이라, 직전 deliverAll()
+      // 애니메이션이 스크롤 속도에 따라 다른 지점에서 끝나면 최종 위치가 매번 달라졌다.
+      // x/y/scale을 고정값으로 스냅하면 항상 같은 자리로 돌아온다.
+      gsap.to(folder, { x: folderCenterX, y: 0, scale: 1, duration: 0.7, ease: 'power2.inOut', force3D: true });
       // 타이틀 좌우 닫기
       gsap.to([wL, wR], {
         x: 0, scale: 1, duration: 0.9, ease: 'power2.inOut',
