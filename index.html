@@ -240,6 +240,11 @@
     }
     .cw-work-name { font-size: clamp(1.3rem, 1.8vw, 1.6rem); font-weight: 700; letter-spacing: -0.01em; margin: 0 0 0.4rem; }
     .cw-work-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin: 0 0 0.6rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cw-work-platform {
+      display: inline-block; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px;
+      padding: 0.25rem 0.7rem; margin-bottom: 0.8rem;
+    }
     .cw-work-desc { font-size: 0.88rem; line-height: 1.5; color: rgba(255,255,255,0.75); margin: 0; }
 
     /* ── 스크롤 인디케이터 (하단 중앙: 마우스 + 화살표 + Scroll) ── */
@@ -1196,8 +1201,6 @@
     }
     #pj-viewer .pjv-info { position: relative; display: flex; flex-direction: column; height: 100%; min-height: 0; }
     #pj-viewer .pjv-main { margin-top: auto; margin-bottom: auto; display: flex; flex-direction: column; }
-    #pj-viewer .pjv-num { font-size: 0.8rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); font-variant-numeric: tabular-nums; margin-bottom: 3vh; }
-    #pj-viewer .pjv-num b { font-size: 1.6rem; font-weight: 500; color: #fff; }
     #pj-viewer .pjv-eyebrow { font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); }
     #pj-viewer .pjv-title { font-size: clamp(2.1rem, 3.4vw, 3.3rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.02; margin: 1.2vh 0 0.7rem; }
     #pj-viewer .pjv-sub { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
@@ -1909,21 +1912,6 @@
     #pj-viewer .pjv-section { margin-bottom: 6vh; }
     #pj-viewer .pjv-section h3 { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); margin-bottom: 1.4vh; }
     #pj-viewer .pjv-section p { font-size: 1rem; line-height: 1.7; color: rgba(255, 255, 255, 0.82); max-width: 680px; }
-    #pj-viewer .pjv-nav {
-      position: absolute; bottom: 0; right: 4vw; z-index: 12;
-      display: flex; align-items: center; gap: 2.2rem; padding: 3vh 0;
-    }
-    #pj-viewer .pjv-btn {
-      background: none; border: none; color: rgba(255, 255, 255, 0.5); cursor: pointer; font: inherit;
-      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
-      display: inline-flex; align-items: center; gap: 0.55rem;
-      transition: color 0.3s ease, letter-spacing 0.3s ease;
-    }
-    #pj-viewer .pjv-btn span { display: inline-block; transition: transform 0.35s cubic-bezier(0.65,0,0.35,1); }
-    #pj-viewer .pjv-btn:hover:not(:disabled) { color: #fff; letter-spacing: 0.2em; }
-    #pj-viewer #pjvPrev:hover:not(:disabled) span { transform: translateX(-5px); }
-    #pj-viewer #pjvNext:hover:not(:disabled) span { transform: translateX(5px); }
-    #pj-viewer .pjv-btn:disabled { opacity: 0.22; cursor: default; }
     @media (max-width: 860px) {
       #pj-viewer .pjv-stage { grid-template-columns: 1fr; gap: 4vh; padding: 10vh 6vw 12vh; overflow-y: auto; }
       #pj-viewer .pjv-info { height: auto; }
@@ -2320,7 +2308,6 @@
   <div class="pjv-stage">
     <div class="pjv-info">
       <div class="pjv-main">
-        <div class="pjv-num"><b id="pjvNum">01</b> / <span id="pjvTotal">06</span></div>
         <span class="pjv-eyebrow" id="pjvEyebrow">Personal Project</span>
         <h2 class="pjv-title" id="pjvTitle">Project One</h2>
         <span class="pjv-sub" id="pjvSub">Tagline</span>
@@ -2335,10 +2322,6 @@
       <div class="pjv-hint" id="pjvHint"><em class="pjh-arrow">↕</em><span>드래그로 프로젝트 전환</span></div>
     </div>
     <div class="pjv-case" id="pjvCase" data-lenis-prevent></div>
-  </div>
-  <div class="pjv-nav">
-    <button class="pjv-btn" id="pjvPrev" type="button"><span aria-hidden="true">←</span> Prev</button>
-    <button class="pjv-btn" id="pjvNext" type="button">Next <span aria-hidden="true">→</span></button>
   </div>
 </div>
 
@@ -2566,13 +2549,13 @@
       { name: 'ICANNNOTE', tagline: 'Educational Whiteboard Program Redesign',
         summary: '교육용 판서 프로그램의 다양한 기능과 활용 사례를<br>직관적으로 전달한 웹사이트 리디자인 프로젝트',
         thumb: 'icannote/icannote hero.jpg', live: 'https://icannote.com/help/intro.html' },
-      { name: 'ODE', tagline: 'POCKET BEAUTY BRAND',
+      { name: 'ODE', tagline: 'POCKET BEAUTY BRAND', platform: 'Cafe24 Skin',
         summary: '뷰티 실무에서 발견한 휴대성과 사용성의 문제를<br>브랜드 기획부터 반응형 웹 구현까지 풀어냈습니다.',
         thumb: 'ode/ode hero.jpg' },
-      { name: 'UNFRAME', tagline: 'Fashion Brand Website',
+      { name: 'UNFRAME', tagline: 'Fashion Brand Website', platform: 'Cafe24 Skin',
         summary: '개성 넘치는 해외 패션 사이트의 감성을<br>과감한 레이아웃과 비주얼로 풀어낸 웹사이트.',
         thumb: 'unframe/unframe hero.jpg' },
-      { name: 'FLUSH', tagline: 'Color Cosmetics Brand Website',
+      { name: 'FLUSH', tagline: 'Color Cosmetics Brand Website', platform: 'Cafe24 Skin',
         summary: '맑고 투명한 컬러 표현을 중심으로 제품의 발색부터 탐색과 구매까지<br>자연스럽게 연결한 색조 코스메틱 브랜드 웹사이트입니다.',
         thumb: 'flush/hero img.jpg' },
     ];
@@ -2582,6 +2565,7 @@
           <div class="cw-work-media"><img src="${esc(w.thumb)}" alt="" loading="lazy"></div>
           <h3 class="cw-work-name">${esc(w.name)}</h3>
           <p class="cw-work-tagline">${esc(w.tagline)}</p>
+          ${w.platform ? `<span class="cw-work-platform">${esc(w.platform)}</span>` : ''}
           <p class="cw-work-desc">${w.summary}</p>
           ${w.live ? `<a class="pjv-live" href="${esc(w.live)}" target="_blank" rel="noopener noreferrer"><span>View Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>` : ''}
         </div>`).join('');
@@ -2800,8 +2784,6 @@
     const coversEl   = document.getElementById('pjCovers');
     const viewer     = document.getElementById('pj-viewer');
     const indexEl    = document.getElementById('pjvIndex');
-    const prevBtn    = document.getElementById('pjvPrev');
-    const nextBtn    = document.getElementById('pjvNext');
     const closeBtn   = document.getElementById('pjvClose');
     if (!coversEl || !viewer) return;
 
@@ -3718,8 +3700,6 @@
         caseEl.querySelectorAll('.ode-shop img, .ode-store img').forEach((im) => { if (!im.complete) im.addEventListener('load', positionCaseConnectors); });
       }
       indexItems.forEach((li, k) => li.classList.toggle('is-active', k === i));
-      prevBtn.disabled = i === 0;
-      nextBtn.disabled = i === total - 1;
     }
     function renderViewer() { loadProject(current); placeIndexWheel(current); }
     window.addEventListener('resize', positionCaseConnectors);
@@ -3824,14 +3804,10 @@
       if (typeof lenis !== 'undefined' && lenis) lenis.start();
       stopCaseFX();
     }
-    prevBtn.addEventListener('click', () => goTo(current - 1));
-    nextBtn.addEventListener('click', () => goTo(current + 1));
     closeBtn.addEventListener('click', closeViewer);
     document.addEventListener('keydown', (e) => {
       if (!viewer.classList.contains('is-open')) return;
       if (e.key === 'Escape') closeViewer();
-      else if (e.key === 'ArrowRight') goTo(current + 1);
-      else if (e.key === 'ArrowLeft') goTo(current - 1);
     });
     renderViewer();
 
