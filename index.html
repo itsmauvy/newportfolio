@@ -224,6 +224,8 @@
       display: grid; grid-template-columns: repeat(2, 1fr);
       gap: 6vh 4.5vw;
     }
+    #cwWorks.is-single { grid-template-columns: 1fr; max-width: 920px; }
+    #cwWorks.is-single .cw-work { text-align: center; }
     .cw-work { text-align: left; }
     .cw-work-media {
       position: relative; width: 100%; overflow: hidden;
@@ -626,9 +628,12 @@
     #about-me .me-block h3 .material-symbols-outlined { font-size: 1.2rem; }
     #about-me .me-block > p { font-size: 0.95rem; line-height: 1.6; color: #333; }
     #about-me .me-muted { color: #9a9a9a !important; font-size: 0.82rem !important; letter-spacing: 0.03em; }
+    /* Work Experience 서브라인(역할 키워드 나열)이 컬럼 폭에서 줄바꿈되는 걸 막기 위한 축소 버전 */
+    #about-me .me-muted-sm { font-size: 0.68rem !important; white-space: nowrap; }
+    @media (max-width: 480px) { #about-me .me-muted-sm { white-space: normal; } }
     #about-me .me-tags { display: grid; grid-template-columns: repeat(3, minmax(max-content, 1fr)); gap: 0.5rem; }
     @media (max-width: 420px) { #about-me .me-tags { grid-template-columns: repeat(2, minmax(max-content, 1fr)); } }
-    #about-me .me-tags-flow { display: grid; grid-template-columns: repeat(6, max-content); gap: 0.5rem; }
+    #about-me .me-tags-flow { display: grid; grid-template-columns: repeat(5, max-content); gap: 0.5rem; }
     @media (max-width: 900px) { #about-me .me-tags-flow { grid-template-columns: repeat(4, max-content); } }
     @media (max-width: 560px) { #about-me .me-tags-flow { grid-template-columns: repeat(3, max-content); } }
     #about-me .me-tags-flow .skill-chip { flex: 0 0 auto; }
@@ -1976,7 +1981,7 @@
     <button type="button" class="cw-modal-close" id="cwModalClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
     <span class="cw-modal-eyebrow">[ Client Works ]</span>
     <h2 class="cw-modal-title">Client Works</h2>
-    <p class="cw-modal-sub">다양한 프로젝트의 요구사항과 목적에 맞춰 진행한 작업입니다.<br>브랜드와 사용자 경험을 고려해 디자인하고 웹으로 구현했습니다.</p>
+    <p class="cw-modal-sub">클라이언트의 요구사항과 서비스 목적을 바탕으로<br>기획·디자인·구현까지 진행한 프로젝트입니다.</p>
     <div id="cwWorks"></div>
   </div>
 </div>
@@ -2073,7 +2078,8 @@
         <div class="me-block">
           <h3><span class="material-symbols-outlined">work</span>Work Experience</h3>
           <p class="me-muted">2022.08 – 2026.03 &nbsp;(주) 쌤시크코스메틱</p>
-          <p>해외영업 / 이커머스 MD</p>
+          <p>해외영업 · Global E-commerce MD</p>
+          <p class="me-muted me-muted-sm">Global Sales · E-commerce Operations · SNS Content Planning</p>
         </div>
         <div class="me-block">
           <h3><span class="material-symbols-outlined">language</span>Languages</h3>
@@ -2114,7 +2120,7 @@
           <div class="me-cert">
             <span class="me-cert-label">Others</span>
             <p><span class="cy">2025</span>네트워크관리사 2급</p>
-            <p><span class="cy">2025</span>운전면허 2종</p>
+            <p>운전면허 2종</p>
           </div>
         </div>
       </div>
@@ -2142,8 +2148,6 @@
         <span class="skill-chip"><span class="skill-chip-inner"><span>Gemini</span><span aria-hidden="true">Gemini</span></span></span>
         <span class="skill-chip"><span class="skill-chip-inner"><span>Claude</span><span aria-hidden="true">Claude</span></span></span>
         <span class="skill-chip"><span class="skill-chip-inner"><span>ChatGPT</span><span aria-hidden="true">ChatGPT</span></span></span>
-        <span class="skill-chip"><span class="skill-chip-inner"><span>Manus</span><span aria-hidden="true">Manus</span></span></span>
-        <span class="skill-chip"><span class="skill-chip-inner"><span>Notion</span><span aria-hidden="true">Notion</span></span></span>
       </div>
     </div>
   </div>
@@ -2544,21 +2548,15 @@
     if (!navBtn || !modal) return;
 
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    // ODE·UNFRAME·FLUSH는 나중에 별도 Archive 섹션으로 옮길 예정이라 잠시 뺐다 (에셋은 그대로 둠)
     const CLIENT_WORKS = [
       { name: 'ICANNNOTE', tagline: 'Educational Whiteboard Program Redesign',
         summary: '교육용 판서 프로그램의 다양한 기능과 활용 사례를<br>직관적으로 전달한 웹사이트 리디자인 프로젝트',
         thumb: 'icannote/icannote hero.jpg', live: 'https://icannote.com/help/intro.html' },
-      { name: 'ODE', tagline: 'POCKET BEAUTY BRAND', platform: 'Cafe24 Skin',
-        summary: '뷰티 실무에서 발견한 휴대성과 사용성의 문제를<br>브랜드 기획부터 반응형 웹 구현까지 풀어냈습니다.',
-        thumb: 'ode/ode hero.jpg' },
-      { name: 'UNFRAME', tagline: 'Fashion Brand Website', platform: 'Cafe24 Skin',
-        summary: '개성 넘치는 해외 패션 사이트의 감성을<br>과감한 레이아웃과 비주얼로 풀어낸 웹사이트.',
-        thumb: 'unframe/unframe hero.jpg' },
-      { name: 'FLUSH', tagline: 'Color Cosmetics Brand Website', platform: 'Cafe24 Skin',
-        summary: '맑고 투명한 컬러 표현을 중심으로 제품의 발색부터 탐색과 구매까지<br>자연스럽게 연결한 색조 코스메틱 브랜드 웹사이트입니다.',
-        thumb: 'flush/hero img.jpg' },
     ];
     if (worksEl) {
+      // 지금은 ICANNNOTE 하나뿐 — 2열 그리드 왼쪽에 붙지 않게 단일 카드일 땐 가운데+확대
+      worksEl.classList.toggle('is-single', CLIENT_WORKS.length === 1);
       worksEl.innerHTML = CLIENT_WORKS.map((w) => `
         <div class="cw-work">
           <div class="cw-work-media"><img src="${esc(w.thumb)}" alt="" loading="lazy"></div>
