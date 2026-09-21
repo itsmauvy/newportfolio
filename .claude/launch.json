@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "newportfolio",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", ".", "-p", "5502", "--no-clipboard"],
-      "port": 5502
+      "name": "portfolio",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5500"],
+      "port": 5500
     }
   ]
 }

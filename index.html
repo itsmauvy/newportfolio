@@ -11,7 +11,7 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { background: #0a0a0b; }
     body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Helvetica Neue', 'Pretendard', Helvetica, Arial, sans-serif;
       overflow-x: hidden;
     }
     /* 기본 스크롤바 숨김 (우측 커스텀 scroll-progress로 대체) */
@@ -334,7 +334,18 @@
       height: 0%;
       background: #fff;
     }
-    #scroll-progress .sp-label {
+    /* 라벨은 #scroll-progress 밖으로 뺐다 — mix-blend-mode:difference인 부모 안에
+       있으면, isolation으로 분리해도 사진/그라데이션 배경 위에서 색이 이상하게
+       반전되는 게 실제로 확인됐다. 아예 블렌드 그룹 밖에 둬서 항상 순수 흰색으로 */
+    #scroll-progress-label {
+      position: fixed;
+      right: 26px; top: 50%;
+      transform: translateY(-50%);
+      height: 56vh;
+      z-index: 46;
+      pointer-events: none;
+    }
+    #scroll-progress-label .sp-label {
       position: absolute;
       right: 16px;
       top: 0;
@@ -345,6 +356,11 @@
       text-transform: uppercase;
       color: #fff;
       white-space: nowrap;
+      /* 부모의 mix-blend-mode(difference)는 사진처럼 순수 흑백이 아닌 배경 위에서
+         텍스트 색을 이상하게 반전시킨다 — 라벨만 별도 합성 그룹으로 분리해서 항상
+         진짜 흰색 그대로 보이게 하고, 배경 칩 대신 그림자로 가독성을 보강한다 */
+      isolation: isolate;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.95), 0 1px 2px rgba(0, 0, 0, 0.95);
       transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -557,6 +573,118 @@
     #about-me .me-sub strong { font-weight: 700; color: #111; }
     #about-me .me-head { border-bottom: 1px solid #ececec; padding-bottom: 4vh; margin-bottom: 6vh; }
 
+    /* ── WORKING EXPERIENCE (Profile 아래 · 세로 타임라인, 스크롤에 따라 라인이 빛나며 채워짐) ── */
+    #working-experience { position: relative; background: #0a0a0b; color: #fff; padding: 14vh 4vw 16vh; overflow: hidden; }
+    #working-experience .we-inner { position: relative; max-width: 1600px; margin: 0 auto; }
+    #working-experience .we-head {
+      text-align: center; margin-bottom: 18vh;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    }
+    #working-experience .we-head.we-in { opacity: 1; transform: none; }
+    #working-experience .we-title { font-weight: 800; font-size: clamp(2rem, 4.4vw, 3.4rem); letter-spacing: -0.02em; margin: 0; }
+    /* 중앙 세로선: 배경 트랙 없이, 스크롤한 만큼만 위에서부터 실제로 그려진다.
+       top/height는 JS가 .we-timeline의 실제 위치에 맞춰 지정한다 (헤드 문구를 관통하지 않게). */
+    #working-experience .we-line {
+      position: absolute; left: 50%; width: 2px; transform: translateX(-50%);
+    }
+    #working-experience .we-line-fill {
+      position: absolute; left: 0; top: 0; width: 100%; height: 0%;
+      background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.4) 100%);
+      box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.5);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    #working-experience .we-line-fill.is-lit { opacity: 1; }
+    /* 빛을 선과 따로 떨어진 점으로 두지 않고, 채워진 선의 맨 끝(::after)이 곧 빛이
+       되게 한다 — 별도 요소로 위치를 맞추면 살짝의 오차나 인지 차이로 "선과 점이
+       따로 논다"는 느낌이 났는데, 이러면 항상 선 끝에 물리적으로 붙어있다 */
+    #working-experience .we-line-fill::after {
+      content: ''; position: absolute; left: 50%; bottom: 0;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #fff; box-shadow: 0 0 18px 6px rgba(255, 255, 255, 0.75);
+      transform: translate(-50%, 50%);
+    }
+    #working-experience .we-timeline { position: relative; }
+    #working-experience .we-item {
+      position: relative; width: calc(50% - 48px); margin-bottom: 15vh;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+    }
+    #working-experience .we-item.we-in { opacity: 1; transform: none; }
+    #working-experience .we-item:last-child { margin-bottom: 15vh; }
+    #working-experience .we-item:nth-child(odd) { margin-right: auto; text-align: right; }
+    #working-experience .we-item:nth-child(even) { margin-left: auto; text-align: left; }
+    /* 상세 내역(B2B/B2C/...)이 있는 항목은 좌우 어느 쪽이든 항목 전체를 왼쪽 정렬로
+       통일한다 — 정보량이 많아서 오른쪽 정렬로 두면 읽기 불편하다는 피드백 반영 */
+    /* 상세 항목은 텍스트가 길어서 컬럼 절반 폭을 다 쓰면 왼쪽 끝과 중앙 타임라인 선
+       사이가 너무 벌어져 보인다 — 폭을 좁히고, 왼쪽(홀수) 항목은 좁힌 만큼 오른쪽으로
+       당겨서 노드/선 위치(오른쪽 끝)는 그대로 유지한 채 안쪽으로 모은다 */
+    #working-experience .we-item.we-item--detailed { text-align: left; width: min(580px, calc(50% - 48px)); }
+    #working-experience .we-item.we-item--detailed:nth-child(odd) { margin-left: max(0px, calc(50% - 48px - 580px)); }
+    /* 짝수(오른쪽) 항목은 폭이 줄어도 선 쪽 안쪽 모서리(왼쪽 끝) 위치가 그대로여야
+       노드가 선에서 어긋나지 않는다 — auto 마진 대신 안쪽 모서리를 직접 고정한다 */
+    #working-experience .we-item.we-item--detailed:nth-child(even) { margin-left: calc(50% + 48px); margin-right: 0; }
+    #working-experience .we-node {
+      position: absolute; top: 0.4rem; width: 10px; height: 10px; border-radius: 50%;
+      background: #0a0a0b; border: 2px solid rgba(255, 255, 255, 0.5);
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+    }
+    /* 첫 번째 점은 타임라인 맨 위(선이 그려지기 시작하는 지점)에 있어서, 스크롤이
+       거기 닿기도 전에 화면에 미리 보여버린다 — 도달 전까지는 숨겨둔다 */
+    #working-experience .we-item:first-child .we-node { opacity: 0; }
+    #working-experience .we-item:first-child.we-in .we-node { opacity: 1; }
+    #working-experience .we-item:nth-child(odd) .we-node { right: -53px; }
+    #working-experience .we-item:nth-child(even) .we-node { left: -53px; }
+    #working-experience .we-item.we-in .we-node { background: #fff; border-color: #fff; box-shadow: 0 0 10px 2px rgba(255,255,255,0.6); }
+    #working-experience .we-year { display: block; font-size: 1.3rem; font-weight: 700; font-variant-numeric: tabular-nums; color: rgba(255, 255, 255, 0.5); margin-bottom: 1.4vh; }
+    #working-experience .we-role { font-size: clamp(1.05rem, 1.6vw, 1.3rem); font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; margin: 0 0 1.4vh; }
+    #working-experience .we-result { font-size: 0.92rem; line-height: 1.7; color: rgba(255, 255, 255, 0.6); margin: 0; }
+    /* 역할 태그 — 연도/직함 아래, 짧은 설명 위에 오는 작은 필 */
+    #working-experience .we-tag {
+      display: inline-block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.85); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 999px;
+      padding: 0.35rem 0.9rem; margin-bottom: 1.6vh;
+    }
+    /* 상세 내역(B2B/B2C/...) — 항목 위쪽(연도/직함/태그/요약)과 같은 방향으로 정렬해서
+       카드 안에서 좌우가 갈리지 않게 한다 (오른쪽 항목이면 상세 내역도 오른쪽으로) */
+    #working-experience .we-detail { margin-top: 1.4vh; }
+    #working-experience .we-detail-row {
+      margin-bottom: 1vh;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    #working-experience .we-detail-row:last-child { margin-bottom: 0; }
+    /* 시간 지연이 아니라 스크롤로 선이 그 줄 높이까지 실제로 내려왔을 때 한 줄씩 켜진다
+       (JS의 update()에서 rowOffsets 기준으로 dr-in을 토글) */
+    #working-experience .we-detail-row.dr-in { opacity: 1; transform: none; }
+    #working-experience .we-detail-label {
+      display: block; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5); margin-bottom: 0.5vh;
+    }
+    #working-experience .we-detail-list { font-size: 0.98rem; line-height: 1.65; color: rgba(255, 255, 255, 0.65); margin: 0; }
+    /* 타임라인 끝에 오는 결과 요약 — 숫자를 크게 강조하고 짧은 설명을 바로 옆에 둔다 */
+    #working-experience .we-outcomes {
+      display: flex; flex-wrap: nowrap; justify-content: space-between; gap: 6vh 3vw;
+      margin-top: 16vh; padding-top: 8vh; border-top: 1px solid rgba(255, 255, 255, 0.12);
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    }
+    #working-experience .we-outcomes.we-in { opacity: 1; transform: none; }
+    /* 항목마다 숫자 길이(5K+ Followers vs 3Y 7M)가 달라서 3등분으로 강제 분할하면
+       라벨 쪽이 한 글자씩 쪼개질 정도로 눌리는 문제가 있었다 — 내용 크기대로
+       자연스럽게 차지하게 하고, 라벨에는 최소 폭을 둬서 단어 단위로만 줄바꿈되게 한다 */
+    #working-experience .we-outcome { display: flex; align-items: baseline; gap: 0.8rem; flex: 1 1 auto; min-width: 0; }
+    #working-experience .we-outcome-num { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    #working-experience .we-outcome-label { font-size: 0.82rem; line-height: 1.5; color: rgba(255, 255, 255, 0.55); margin: 0; min-width: 160px; word-break: keep-all; overflow-wrap: break-word; }
+    #working-experience .we-outcome-sub { display: inline-block; margin-top: 0.6vh; font-size: 0.74rem; color: rgba(255, 255, 255, 0.35); }
+    @media (max-width: 760px) {
+      #working-experience .we-line { left: 20px; }
+      #working-experience .we-item, #working-experience .we-item:nth-child(odd), #working-experience .we-item:nth-child(even) {
+        width: 100%; margin-left: 48px; margin-right: 0; text-align: left;
+      }
+      #working-experience .we-item:nth-child(odd) .we-node, #working-experience .we-item:nth-child(even) .we-node { left: -33px; right: auto; }
+    }
+
     /* ── EXPERIENCE & ACTIVITIES (Profile 아래 · 다크 톤 카드 그리드, 내용은 임시) ── */
     #experience-activities {
       position: relative; z-index: 3; background: #0a0a0b; color: #fff;
@@ -725,7 +853,8 @@
       font-weight: 500;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.85);
+      color: #fff;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0, 0, 0, 0.85);
       z-index: 2;
       pointer-events: none;
     }
@@ -740,7 +869,8 @@
       font-weight: 500;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.85);
+      color: #fff;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0, 0, 0, 0.85);
       z-index: 2;
       pointer-events: none;
     }
@@ -1968,7 +2098,7 @@
 
 <header id="site-header">
   <nav class="nav">
-    <a href="#projects"><span class="nav-link-inner"><span>Work</span><span aria-hidden="true">Work</span></span></a>
+    <a href="#projects"><span class="nav-link-inner"><span>Project</span><span aria-hidden="true">Project</span></span></a>
     <a href="#" id="navClientWorks"><span class="nav-link-inner"><span>Client Works</span><span aria-hidden="true">Client Works</span></span></a>
     <a href="#about-me"><span class="nav-link-inner"><span>About</span><span aria-hidden="true">About</span></span></a>
     <a href="#contact"><span class="nav-link-inner"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
@@ -1987,8 +2117,10 @@
 </div>
 
 <div id="scroll-progress" aria-hidden="true">
-  <span class="sp-label">Intro</span>
   <div class="sp-segs"></div>
+</div>
+<div id="scroll-progress-label" aria-hidden="true">
+  <span class="sp-label">Intro</span>
 </div>
 
 <div id="scene">
@@ -2065,9 +2197,9 @@
   </div>
   <div class="me-inner">
     <header class="me-head">
-      <span class="me-eyebrow">UX / UI Designer &amp; Publisher</span>
+      <span class="me-eyebrow">PLANNING · MARKETING · UX/UI Design</span>
       <h2 class="me-title">PROFILE</h2>
-      <p class="me-sub">기획부터 디자인, 구현까지 연결해 사용자 경험을 완성하는 디자이너 <strong>장수빈</strong>입니다.</p>
+      <p class="me-sub">기획과 운영 경험에 디자인 역량을 더해, 아이디어를 실제 결과물로 구체화해왔습니다.</p>
     </header>
     <div class="me-grid">
       <div class="me-col">
@@ -2148,6 +2280,103 @@
         <span class="skill-chip"><span class="skill-chip-inner"><span>Gemini</span><span aria-hidden="true">Gemini</span></span></span>
         <span class="skill-chip"><span class="skill-chip-inner"><span>Claude</span><span aria-hidden="true">Claude</span></span></span>
         <span class="skill-chip"><span class="skill-chip-inner"><span>ChatGPT</span><span aria-hidden="true">ChatGPT</span></span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="working-experience">
+  <div class="we-inner">
+    <div class="we-head">
+      <h2 class="we-title">Work Experience</h2>
+    </div>
+    <div class="we-line" id="weLine" aria-hidden="true">
+      <div class="we-line-fill" id="weLineFill"></div>
+    </div>
+    <div class="we-timeline">
+      <div class="we-item we-item--detailed">
+        <span class="we-node"></span>
+        <span class="we-year">2022.08</span>
+        <h3 class="we-role">(주) 쌤시크코스메틱 입사</h3>
+        <span class="we-tag">Overseas Sales</span>
+        <p class="we-result">해외영업을 시작으로 이커머스와 마케팅까지<br>글로벌 비즈니스 전반의 실무를 경험했습니다.</p>
+        <div class="we-detail">
+          <div class="we-detail-row">
+            <span class="we-detail-label">B2B</span>
+            <p class="we-detail-list">해외 바이어 발굴·관리 · 수출 프로세스 운영 · 해외 인허가 신청·관리 · 영/중 자료 제작·번역</p>
+          </div>
+          <div class="we-detail-row">
+            <span class="we-detail-label">B2C</span>
+            <p class="we-detail-list">Shopee 입점·운영 · Double Day 프로모션 기획</p>
+          </div>
+          <div class="we-detail-row">
+            <span class="we-detail-label">Marketing</span>
+            <p class="we-detail-list">글로벌 SNS 운영 · Meta 광고 집행 · 인플루언서 시딩</p>
+          </div>
+          <div class="we-detail-row">
+            <span class="we-detail-label">Content Planning</span>
+            <p class="we-detail-list">SNS 콘텐츠 · 상세페이지 · 프로모션 배너 기획</p>
+          </div>
+        </div>
+      </div>
+      <div class="we-item we-item--detailed">
+        <span class="we-node"></span>
+        <span class="we-year">2025.01</span>
+        <h3 class="we-role">북미 Amazon MD 전환</h3>
+        <div class="we-detail">
+          <div class="we-detail-row">
+            <span class="we-detail-label">Marketplace Operations</span>
+            <p class="we-detail-list">Amazon US · TikTok Shop 입점 및 운영</p>
+          </div>
+          <div class="we-detail-row">
+            <span class="we-detail-label">SEO &amp; Content</span>
+            <p class="we-detail-list">Amazon Listing SEO, 상세페이지 · A+ Content · 배너 기획</p>
+          </div>
+          <div class="we-detail-row">
+            <span class="we-detail-label">Influencer Marketing</span>
+            <p class="we-detail-list">TikTok 크리에이터 시딩 및 콘텐츠 운영</p>
+          </div>
+          <div class="we-detail-row">
+            <span class="we-detail-label">Paid Ads</span>
+            <p class="we-detail-list">Meta Ads · TikTok Spark Ads 집행</p>
+          </div>
+          <div class="we-detail-row">
+            <span class="we-detail-label">Inventory &amp; Fulfillment</span>
+            <p class="we-detail-list">FBA 출고, 재고 및 물류 협업</p>
+          </div>
+        </div>
+      </div>
+      <div class="we-item">
+        <span class="we-node"></span>
+        <span class="we-year">2026.02</span>
+        <h3 class="we-role">AI 활용 UX/UI · 반응형 웹 제작 과정 참여</h3>
+        <p class="we-result">기획부터 UI 디자인, 반응형 퍼블리싱까지<br>웹 제작 전반의 실무 역량을 확장했습니다.</p>
+      </div>
+      <div class="we-item">
+        <span class="we-node"></span>
+        <span class="we-year">2026.03</span>
+        <h3 class="we-role">(주) 쌤시크코스메틱 퇴사</h3>
+        <p class="we-result">기존 실무 경험에 디자인 역량을 더해<br>업무 영역을 확장했습니다.</p>
+      </div>
+      <div class="we-item">
+        <span class="we-node"></span>
+        <span class="we-year">2026.07 - Now</span>
+        <h3 class="we-role">AI 활용 UX/UI · 반응형 웹 제작 과정 수료</h3>
+        <p class="we-result">기획부터 UI 디자인, 반응형 퍼블리싱까지<br>웹 제작 전 과정을 프로젝트로 수행했습니다.</p>
+      </div>
+    </div>
+    <div class="we-outcomes" id="weOutcomes">
+      <div class="we-outcome">
+        <span class="we-outcome-num"><span class="wo-num" data-target="5000">0</span>+ Followers</span>
+        <p class="we-outcome-label">글로벌 SNS 채널<br>누적 팔로워 성장<br><span class="we-outcome-sub">Global 3K+ · US 2K+</span></p>
+      </div>
+      <div class="we-outcome">
+        <span class="we-outcome-num"><span class="wo-num" data-target="5">0</span> Channels</span>
+        <p class="we-outcome-label">SNS · Marketplace<br>운영 경험<br><span class="we-outcome-sub">Instagram Global · Instagram US · Shopee · Amazon US · TikTok Shop</span></p>
+      </div>
+      <div class="we-outcome">
+        <span class="we-outcome-num"><span class="wo-num" data-target="3">0</span>Y <span class="wo-num" data-target="7">0</span>M</span>
+        <p class="we-outcome-label">해외영업 · 이커머스 · 마케팅<br>실무 경험</p>
       </div>
     </div>
   </div>
@@ -2437,6 +2666,130 @@
     }
   })();
 
+  /* ── WORKING EXPERIENCE: 제목 스크롤 페이드인 (1회성) ── */
+  (function () {
+    const head = document.querySelector('#working-experience .we-head');
+    if (!head) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) { head.classList.add('we-in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -15% 0px' });
+    io.observe(head);
+  })();
+
+  /* ── WORKING EXPERIENCE: 선·빛·노드·텍스트를 전부 같은 스크롤 계산 하나로 구동 ──
+     이전엔 노드/텍스트는 IntersectionObserver(뷰포트 진입 즉시), 선은 별도 스크롤
+     계산으로 따로 움직여서 — 빛이 아직 도착하지도 않았는데 텍스트가 먼저 나와버리는
+     "너무 빨리 나온다" 문제가 있었다. 화면 중간 지점(플레이헤드)이 타임라인의 어디를
+     지나는지 딱 하나의 기준으로 계산해서, 그 지점이 실제로 닿은 노드만 켜지게 한다. */
+  (function () {
+    const section = document.getElementById('working-experience');
+    const inner = section?.querySelector('.we-inner');
+    const timeline = section?.querySelector('.we-timeline');
+    const line = document.getElementById('weLine');
+    const fill = document.getElementById('weLineFill');
+    const items = section ? [...section.querySelectorAll('.we-item')] : [];
+    const detailRows = section ? [...section.querySelectorAll('.we-detail-row')] : [];
+    const outcomes = document.getElementById('weOutcomes');
+    const outcomeNums = outcomes ? [...outcomes.querySelectorAll('.wo-num')] : [];
+    if (!section || !inner || !timeline || !line || !fill || !items.length) return;
+
+    // 결과 요약의 숫자를 0→목표값 순서로 세는 대신, 슬롯머신처럼 무작위 숫자가
+    // 짧게 깜빡이다가 실제 값에 착지하는 셔플 모션. 자릿수가 큰 숫자(5,000)는
+    // 무작위 값도 같은 자릿수 범위에서 나오게 해서 "숫자가 요동친다" 느낌을 준다
+    function animateCount(el) {
+      const target = Math.round(parseFloat(el.dataset.target));
+      const digits = Math.max(1, String(target).length);
+      const randomMax = Math.pow(10, digits);
+      const format = (n) => String(Math.round(n));
+      const duration = 1000;
+      const shuffleInterval = 40;
+      const start = performance.now();
+      let lastShuffle = 0;
+      // 숫자 자릿수가 바뀔 때마다(5 → 8,789 등) 폭이 달라져서 주변 텍스트까지 같이
+      // 밀렸다 당겨졌다 하며 렉 걸린 것처럼 보였다 — 최종 자릿수 기준으로 폭을
+      // 고정해서 숫자만 그 안에서 바뀌게 한다
+      el.style.display = 'inline-block';
+      el.style.minWidth = format(target).length + 'ch';
+      function frame(now) {
+        const elapsed = now - start;
+        if (elapsed >= duration) {
+          el.textContent = format(target);
+          return;
+        }
+        if (elapsed - lastShuffle >= shuffleInterval) {
+          lastShuffle = elapsed;
+          const randomVal = Math.floor(Math.random() * randomMax);
+          el.textContent = format(randomVal);
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    let lineHeight = 0;
+    let nodeOffsets = [];
+    let rowOffsets = [];
+    let outcomesTriggered = false;
+    function measure() {
+      const innerRect = inner.getBoundingClientRect();
+      const tlRect = timeline.getBoundingClientRect();
+      const lineTop = tlRect.top - innerRect.top;
+      // 선이 항목 끝에서 멈추지 않고 결과 요약 상단까지 실제로 이어지게 한다 —
+      // 그래야 "빛이 결과 섹션에 닿는 순간 = 결과가 나타나는 순간"이 성립한다
+      lineHeight = outcomes ? (outcomes.offsetTop - timeline.offsetTop) : tlRect.height;
+      line.style.top = lineTop + 'px';
+      line.style.height = lineHeight + 'px';
+      nodeOffsets = items.map((el) => {
+        const node = el.querySelector('.we-node');
+        return el.offsetTop + (node ? node.offsetTop + node.offsetHeight / 2 : 0);
+      });
+      // B2B/B2C 같은 상세 줄도 다른 요소들과 같은 glowY 기준으로 — 각 줄이 선이
+      // 그 높이까지 실제로 내려왔을 때 한 줄씩 켜지도록 줄마다 위치를 미리 재둔다
+      rowOffsets = detailRows.map((row) => {
+        const item = row.closest('.we-item');
+        return (item ? item.offsetTop : 0) + row.offsetTop;
+      });
+    }
+
+    let ticking = false;
+    function update() {
+      ticking = false;
+      const tlRect = timeline.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 화면 35% 지점을 플레이헤드로 — 노드가 켜지는 순간 항목 텍스트가 화면 위쪽 끝에
+      // 바짝 붙지 않고 눈에 편하게 들어오는 위치에 오도록 (헤더 여백으로 "도착 전 대기
+      // 시간"을, 이 값으로 "도착 시 화면 위치"를 따로 조절한다)
+      const playheadFromTimelineTop = vh * 0.22 - tlRect.top;
+      const glowY = Math.max(0, Math.min(lineHeight, playheadFromTimelineTop));
+      const pct = (lineHeight ? (glowY / lineHeight * 100) : 0).toFixed(2) + '%';
+      fill.style.height = pct;
+      // 빛을 선과 따로 떨어진 별도 요소로 두지 않고 채워진 선(fill) 자체의 끝(::after)이
+      // 곧 빛이 되게 한다 — 위치를 따로 계산해서 맞추던 예전 방식은 살짝의 인지 차이로
+      // "선과 점이 따로 논다"는 느낌을 줬는데, 이러면 항상 선 끝에 물리적으로 붙어있다
+      fill.classList.toggle('is-lit', nodeOffsets.length && glowY >= nodeOffsets[0]);
+      // 한 번 나타난 텍스트는 위로 다시 스크롤해도 사라지지 않고 고정되어 있는다
+      // (toggle이 아니라 add만 — 조건이 거짓이 돼도 클래스를 떼지 않는다)
+      items.forEach((el, i) => { if (glowY >= nodeOffsets[i]) el.classList.add('we-in'); });
+      detailRows.forEach((row, i) => { if (glowY >= rowOffsets[i]) row.classList.add('dr-in'); });
+      // 결과 요약은 선이 결과 섹션 상단까지 실제로 다 그려졌을 때(lineHeight가 이제
+      // 결과 섹션 위치까지 포함하므로) 나타난다 — 빛이 닿는 순간 = 결과가 뜨는 순간
+      if (!outcomesTriggered && outcomes && lineHeight && glowY >= lineHeight - 0.5) {
+        outcomesTriggered = true;
+        outcomes.classList.add('we-in');
+        outcomeNums.forEach(animateCount);
+      }
+    }
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => { measure(); update(); });
+    measure();
+    update();
+  })();
+
   /* ── EXPERIENCE & ACTIVITIES: 카드 스크롤 페이드인 ── */
   (function () {
     const cards = document.querySelectorAll('#experience-activities .ea-card');
@@ -2593,7 +2946,7 @@
   (function () {
     const root    = document.getElementById('scroll-progress');
     const segWrap = root.querySelector('.sp-segs');
-    const label   = root.querySelector('.sp-label');
+    const label   = document.querySelector('#scroll-progress-label .sp-label');
     const aboutEl    = document.getElementById('about');
     const profileEl  = document.getElementById('about-me');
     const experienceEl = document.getElementById('experience-activities');
@@ -2617,8 +2970,8 @@
       { name: 'Intro',    top: 0 },
       // About 구간을 한 화면 앞당겨 시작 → Passionate 문구가 보이기 전에 라벨이 ABOUT으로 전환
       { name: 'About',    top: Math.max(1, docTop(aboutEl) - window.innerHeight) },
-      { name: 'Profile',  top: docTop(profileEl) - window.innerHeight * 0.5 },
-      { name: 'Projects', top: docTop(projectsEl) - window.innerHeight * 0.5 },
+      { name: 'Profile & Experience',  top: docTop(profileEl) - window.innerHeight * 0.5 },
+      { name: 'Web Design', top: docTop(projectsEl) - window.innerHeight * 0.5 },
       { name: 'App', top: docTop(appWorksEl) - window.innerHeight * 0.5 },
       { name: 'Banner Design', top: docTop(bannerEl) - window.innerHeight * 0.5 },
       { name: 'Experience', top: docTop(experienceEl) - window.innerHeight * 0.5 },
