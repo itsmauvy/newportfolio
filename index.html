@@ -172,83 +172,6 @@
     #site-header .nav a:hover .nav-link-inner span:first-child { transform: translateY(-100%); }
     #site-header .nav a:hover .nav-link-inner span:last-child { transform: translateY(0%); }
 
-    /* ── CLIENT WORKS 팝업 모달 (별도 페이지 대신 간단 팝업) ── */
-    .cw-modal {
-      position: fixed; inset: 0; z-index: 200;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.35s ease;
-    }
-    .cw-modal.is-open { opacity: 1; pointer-events: auto; }
-    .cw-modal-backdrop {
-      position: absolute; inset: 0;
-      background: #0a0a0b;
-    }
-    .cw-modal-panel {
-      position: relative; z-index: 1;
-      width: 100%; height: 100%;
-      overflow-y: auto;
-      display: flex; flex-direction: column; align-items: center;
-      padding: 4vh 5vw;
-      background: #0a0a0b;
-      text-align: center;
-      color: #fff;
-      transform: translateY(24px);
-      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
-    }
-    .cw-modal.is-open .cw-modal-panel { transform: translateY(0); }
-    .cw-modal-close {
-      position: fixed; top: 3vh; right: 4vw; z-index: 14;
-      width: 52px; height: 52px; border-radius: 100px; cursor: pointer;
-      background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff;
-      display: flex; align-items: center; justify-content: center; padding: 0;
-      transition: border-color 0.4s ease, transform 0.5s cubic-bezier(0.65,0,0.35,1);
-      overflow: hidden;
-    }
-    .cw-modal-close::before {
-      content: ''; position: absolute; inset: 0; border-radius: inherit;
-      background: #fff; transform: scale(0); transition: transform 0.45s cubic-bezier(0.65,0,0.35,1);
-    }
-    .cw-modal-close svg { position: relative; z-index: 1; width: 16px; height: 16px; transition: color 0.4s ease; }
-    .cw-modal-close:hover { border-color: #fff; transform: rotate(90deg); }
-    .cw-modal-close:hover::before { transform: scale(1); }
-    .cw-modal-close:hover svg { color: #0a0a0b; }
-    .cw-modal-eyebrow {
-      display: block; font-size: 0.78rem; letter-spacing: 0.24em; text-transform: uppercase;
-      color: rgba(255,255,255,0.45); margin-bottom: 1.4vh;
-    }
-    .cw-modal-title { font-size: clamp(2.4rem, 4.6vw, 4rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 2vh; }
-    .cw-modal-sub { font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,0.6); max-width: 640px; margin: 0 auto 5vh; }
-    .cw-modal-empty { font-size: 1.1rem; color: rgba(255,255,255,0.6); margin: 0; }
-    #cwWorks {
-      width: 100%; max-width: 1600px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 6vh 4.5vw;
-    }
-    #cwWorks.is-single { grid-template-columns: 1fr; max-width: 920px; }
-    #cwWorks.is-single .cw-work { text-align: center; }
-    .cw-work { text-align: left; }
-    .cw-work-media {
-      position: relative; width: 100%; overflow: hidden;
-      border-radius: 12px; margin-bottom: 1rem; background: #141416;
-    }
-    .cw-work-media img { width: 100%; height: auto; display: block;
-      filter: grayscale(0.3) brightness(0.75) contrast(1.1); }
-    @media (max-width: 700px) { #cwWorks { grid-template-columns: 1fr; } }
-    .cw-work-media::after {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 160px 160px; opacity: 0.16; mix-blend-mode: overlay; pointer-events: none;
-    }
-    .cw-work-name { font-size: clamp(1.3rem, 1.8vw, 1.6rem); font-weight: 700; letter-spacing: -0.01em; margin: 0 0 0.4rem; }
-    .cw-work-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin: 0 0 0.6rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    .cw-work-platform {
-      display: inline-block; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
-      color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px;
-      padding: 0.25rem 0.7rem; margin-bottom: 0.8rem;
-    }
-    .cw-work-desc { font-size: 0.88rem; line-height: 1.5; color: rgba(255,255,255,0.75); margin: 0; }
-
     /* ── 스크롤 인디케이터 (하단 중앙: 마우스 + 화살표 + Scroll) ── */
     #scroll-cue {
       position: fixed;
@@ -2130,17 +2053,6 @@
   </nav>
 </header>
 
-<div class="cw-modal" id="cwModal" aria-hidden="true">
-  <div class="cw-modal-backdrop" id="cwModalBackdrop"></div>
-  <div class="cw-modal-panel" role="dialog" aria-modal="true" aria-label="Client Works" data-lenis-prevent>
-    <button type="button" class="cw-modal-close" id="cwModalClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
-    <span class="cw-modal-eyebrow">[ Client Works ]</span>
-    <h2 class="cw-modal-title">Client Works</h2>
-    <p class="cw-modal-sub">클라이언트의 요구사항과 서비스 목적을 바탕으로<br>기획·디자인·구현까지 진행한 프로젝트입니다.</p>
-    <div id="cwWorks"></div>
-  </div>
-</div>
-
 <div id="scroll-progress" aria-hidden="true">
   <div class="sp-segs"></div>
 </div>
@@ -2392,15 +2304,15 @@
     </div>
     <div class="we-outcomes" id="weOutcomes">
       <div class="we-outcome">
-        <span class="we-outcome-num"><span class="wo-num" data-target="5000">0</span>+ Followers</span>
+        <span class="we-outcome-num"><span class="wo-num" data-target="5000">5000</span>+ Followers</span>
         <p class="we-outcome-label">글로벌 SNS 채널<br>누적 팔로워 성장<br><span class="we-outcome-sub">Global 3K+ · US 2K+<br>유료 광고 없이 채널 운영을 통한 오가닉 성장</span></p>
       </div>
       <div class="we-outcome">
-        <span class="we-outcome-num"><span class="wo-num" data-target="5">0</span> Channels</span>
+        <span class="we-outcome-num"><span class="wo-num" data-target="5">5</span> Channels</span>
         <p class="we-outcome-label">SNS · Marketplace<br>운영 경험<br><span class="we-outcome-sub">Instagram Global · Instagram US · Shopee · Amazon US · TikTok Shop</span></p>
       </div>
       <div class="we-outcome">
-        <span class="we-outcome-num"><span class="wo-num" data-target="3">0</span>Y <span class="wo-num" data-target="7">0</span>M</span>
+        <span class="we-outcome-num"><span class="wo-num" data-target="3">3</span>Y <span class="wo-num" data-target="7">7</span>M</span>
         <p class="we-outcome-label">해외영업 · 이커머스 · 마케팅<br>실무 경험</p>
       </div>
     </div>
@@ -2418,7 +2330,7 @@
     <div class="aw-viewport">
       <ul class="cw-list" id="awList"></ul>
     </div>
-    <p class="cw-empty" id="awEmpty">Coming soon.</p>
+    <p class="cw-empty" id="awEmpty"></p>
   </div>
 </section>
 
@@ -2475,8 +2387,8 @@
 
 <section id="experience-activities">
   <div class="ea-inner">
-    <span class="ea-eyebrow">Experience</span>
-    <h2 class="ea-title">Experience &amp; Activities</h2>
+    <span class="ea-eyebrow">Activities</span>
+    <h2 class="ea-title">Activities &amp; Content</h2>
 
     <div class="ea-group">
       <div class="ea-group-head">Marketing &amp; Content</div>
@@ -2567,9 +2479,9 @@
     <div class="pjv-info">
       <div class="pjv-main">
         <span class="pjv-eyebrow" id="pjvEyebrow">Personal Project</span>
-        <h2 class="pjv-title" id="pjvTitle">Project One</h2>
-        <span class="pjv-sub" id="pjvSub">Tagline</span>
-        <p class="pjv-desc" id="pjvDesc">설명 placeholder</p>
+        <h2 class="pjv-title" id="pjvTitle"></h2>
+        <span class="pjv-sub" id="pjvSub"></span>
+        <p class="pjv-desc" id="pjvDesc"></p>
         <div class="pjv-cta-row">
           <a class="pjv-live" id="pjvLive" href="#" target="_blank" rel="noopener"><span>View Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
           <a class="pjv-live pjv-doc" id="pjvDoc" href="#" target="_blank" rel="noopener" style="display:none"><span>View Notion</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
@@ -2972,46 +2884,6 @@
     });
   })();
 
-  /* ── 1.5) CLIENT WORKS 팝업 모달 ── */
-  (function () {
-    const navBtn   = document.getElementById('navClientWorks');
-    const modal    = document.getElementById('cwModal');
-    const backdrop = document.getElementById('cwModalBackdrop');
-    const closeBtn = document.getElementById('cwModalClose');
-    const worksEl  = document.getElementById('cwWorks');
-    if (!navBtn || !modal) return;
-
-    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    // ODE·UNFRAME·FLUSH는 나중에 별도 Archive 섹션으로 옮길 예정이라 잠시 뺐다 (에셋은 그대로 둠)
-    const CLIENT_WORKS = [
-      { name: 'ICANNNOTE', tagline: 'Educational Whiteboard Program Redesign',
-        summary: '교육용 판서 프로그램의 다양한 기능과 활용 사례를<br>직관적으로 전달한 웹사이트 리디자인 프로젝트',
-        thumb: 'icannote/icannote hero.jpg', live: 'https://icannote.com/help/intro.html' },
-    ];
-    if (worksEl) {
-      // 지금은 ICANNNOTE 하나뿐 — 2열 그리드 왼쪽에 붙지 않게 단일 카드일 땐 가운데+확대
-      worksEl.classList.toggle('is-single', CLIENT_WORKS.length === 1);
-      worksEl.innerHTML = CLIENT_WORKS.map((w) => `
-        <div class="cw-work">
-          <div class="cw-work-media"><img src="${esc(w.thumb)}" alt="" loading="lazy"></div>
-          <h3 class="cw-work-name">${esc(w.name)}</h3>
-          <p class="cw-work-tagline">${esc(w.tagline)}</p>
-          ${w.platform ? `<span class="cw-work-platform">${esc(w.platform)}</span>` : ''}
-          <p class="cw-work-desc">${w.summary}</p>
-          ${w.live ? `<a class="pjv-live" href="${esc(w.live)}" target="_blank" rel="noopener noreferrer"><span>View Site</span><svg class="pjv-live-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>` : ''}
-        </div>`).join('');
-    }
-
-    const open = (e) => { e.preventDefault(); modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); };
-    const close = () => { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); };
-
-    navBtn.addEventListener('click', open);
-    closeBtn.addEventListener('click', close);
-    backdrop.addEventListener('click', close);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
-    });
-  })();
 
   /* ── 2) 스크롤 인디케이터: 영상 진입(스크롤 다운) 시 숨김, 맨 위로 돌아오면 다시 표시 ── */
   (function () {
@@ -3055,7 +2927,7 @@
       { name: 'Web Design', top: docTop(projectsEl) - window.innerHeight * 0.5 },
       { name: 'App', top: docTop(appWorksEl) - window.innerHeight * 0.5 },
       { name: 'Banner Design', top: docTop(bannerEl) - window.innerHeight * 0.5 },
-      { name: 'Experience', top: docTop(experienceEl) - window.innerHeight * 0.5 },
+      { name: 'Activities & Content', top: docTop(experienceEl) - window.innerHeight * 0.5 },
       { name: 'Contact',  top: docTop(contactEl) + window.innerHeight * 0.1 },
     ];
 
