@@ -676,7 +676,7 @@
     #working-experience .we-outcome { display: flex; align-items: baseline; gap: 0.8rem; flex: 1 1 auto; min-width: 0; }
     #working-experience .we-outcome-num { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
     #working-experience .we-outcome-label { font-size: 0.82rem; line-height: 1.5; color: rgba(255, 255, 255, 0.55); margin: 0; min-width: 160px; word-break: keep-all; overflow-wrap: break-word; }
-    #working-experience .we-outcome-sub { display: inline-block; margin-top: 0.6vh; font-size: 0.74rem; color: rgba(255, 255, 255, 0.35); }
+    #working-experience .we-outcome-sub { display: inline-block; margin-top: 0.6vh; font-size: 0.74rem; color: rgba(255, 255, 255, 0.35); white-space: nowrap; }
     @media (max-width: 760px) {
       #working-experience .we-line { left: 20px; }
       #working-experience .we-item, #working-experience .we-item:nth-child(odd), #working-experience .we-item:nth-child(even) {
@@ -748,6 +748,19 @@
     .ea-video-preview.is-visible { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     .ea-video-preview.is-landscape { width: 320px; aspect-ratio: 16 / 9; }
     .ea-video-preview video { display: block; width: 100%; height: 100%; object-fit: cover; }
+    /* 프리로드가 아직 안 끝났을 때(느린 네트워크 등) 빈 검은 박스만 보이지 않도록,
+       재생 준비 전까지 짧게 로딩 스피너를 보여준다 */
+    .ea-video-preview .ea-video-spinner {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.15s ease; pointer-events: none;
+    }
+    .ea-video-preview.is-loading .ea-video-spinner { opacity: 1; }
+    .ea-video-preview .ea-video-spinner::after {
+      content: ''; width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.25); border-top-color: #fff;
+      animation: ea-spin 0.7s linear infinite;
+    }
+    @keyframes ea-spin { to { transform: rotate(360deg); } }
     @media (max-width: 900px) { .ea-video-preview { display: none; } }
     #about-me .me-grid {
       display: grid;
@@ -2142,26 +2155,26 @@
     <div id="card-ticker">
       <div id="card-ticker-track">
         <!-- set 1 -->
-        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/unframe/"><img src="unframe/unframe card.jpg" alt=""></figure>
-        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
         <figure class="tc-card" data-live="http://4team-notalk.vercel.app/"><img src="notalk/notalk card.jpg" alt=""></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/ODE/"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/SENNE/"><img src="senne/senne card.jpg" alt=""></figure>
         <!-- set 2 -->
-        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/unframe/"><img src="unframe/unframe card.jpg" alt=""></figure>
-        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
         <figure class="tc-card" data-live="http://4team-notalk.vercel.app/"><img src="notalk/notalk card.jpg" alt=""></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/ODE/"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/SENNE/"><img src="senne/senne card.jpg" alt=""></figure>
         <!-- set 3 -->
-        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
-        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/sledding_game/"><video src="assets/video/sledding_resized.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://itsmauvy.github.io/2XKO/"><video src="assets/video/2xko video_resized.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/unframe/"><img src="unframe/unframe card.jpg" alt=""></figure>
-        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
+        <figure class="tc-card" data-live="https://doorlove1234-coder.github.io/sangsangDoor/"><video src="sangsang/sangsang video_edited.webm" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></figure>
         <figure class="tc-card" data-live="http://4team-notalk.vercel.app/"><img src="notalk/notalk card.jpg" alt=""></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/ODE/"><img src="ode/ode hero.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% center;display:block;"></figure>
         <figure class="tc-card" data-live="https://itsmauvy.github.io/SENNE/"><img src="senne/senne card.jpg" alt=""></figure>
@@ -2468,7 +2481,7 @@
     <div class="ea-group">
       <div class="ea-group-head">Marketing &amp; Content</div>
       <div class="ea-grid">
-        <div class="ea-card" data-video="assets/video/rootin.mp4">
+        <div class="ea-card" data-video="assets/video/rootin.webm">
           <div class="ea-date">2026.08 – 현재</div>
           <div class="ea-name">ROOTIN 서포터즈 1기</div>
           <ul class="ea-points">
@@ -2476,7 +2489,7 @@
             <li>영상 촬영·편집까지 숏폼 콘텐츠 제작</li>
           </ul>
         </div>
-        <div class="ea-card" data-video="assets/video/beauty-brand.mp4">
+        <div class="ea-card" data-video="assets/video/beauty-brand.webm">
           <div class="ea-date">2022.08 – 2026.03</div>
           <div class="ea-name">뷰티 브랜드 해외영업·MD 실무</div>
           <ul class="ea-points">
@@ -2484,7 +2497,7 @@
             <li>제품·프로모션 운영 및 브랜드 커뮤니케이션 업무 수행</li>
           </ul>
         </div>
-        <div class="ea-card" data-video="assets/video/global-sns.mp4">
+        <div class="ea-card" data-video="assets/video/global-sns.webm">
           <div class="ea-date">2022.08 – 2026.03</div>
           <div class="ea-name">글로벌 SNS 채널 구축·운영</div>
           <ul class="ea-points">
@@ -2498,7 +2511,7 @@
     <div class="ea-group">
       <div class="ea-group-head">Design &amp; Build</div>
       <div class="ea-grid">
-        <div class="ea-card" data-video="assets/video/cafe24-skin.mp4" data-ratio="16:9">
+        <div class="ea-card" data-video="assets/video/cafe24-skin.webm" data-ratio="16:9">
           <div class="ea-date">2026.06</div>
           <div class="ea-name">브랜드 기획 및 카페24 쇼핑몰 스킨 제작 프로젝트</div>
           <ul class="ea-points">
@@ -2506,7 +2519,7 @@
             <li>카페24 기반 반응형 퍼블리싱 구현</li>
           </ul>
         </div>
-        <div class="ea-card" data-video="assets/video/ai-webclass.mp4" data-ratio="16:9" data-rate="2.5">
+        <div class="ea-card" data-video="assets/video/ai-webclass.webm" data-ratio="16:9" data-rate="2.5">
           <div class="ea-date">2026.02 – 2026.07</div>
           <div class="ea-name">AI 활용 UX/UI 웹제작 과정</div>
           <ul class="ea-points">
@@ -2514,7 +2527,7 @@
             <li>개인·팀 프로젝트를 통해 반응형 웹 제작 실무 경험</li>
           </ul>
         </div>
-        <div class="ea-card" data-video="assets/video/web-redesign.mp4" data-rate="2.5" data-ratio="16:9">
+        <div class="ea-card" data-video="assets/video/web-redesign.webm" data-rate="2.5" data-ratio="16:9">
           <div class="ea-date">2026.06 – 2026.07</div>
           <div class="ea-name">웹사이트 리디자인</div>
           <ul class="ea-points">
@@ -2525,7 +2538,7 @@
       </div>
     </div>
   </div>
-  <div class="ea-video-preview" id="eaVideoPreview"><video muted loop playsinline></video></div>
+  <div class="ea-video-preview" id="eaVideoPreview"><video muted loop playsinline></video><span class="ea-video-spinner" aria-hidden="true"></span></div>
 </section>
 
 <!-- ── CONTACT (다크 복귀 · 플립 명함) ── -->
@@ -2723,8 +2736,12 @@
       // 숫자 자릿수가 바뀔 때마다(5 → 8,789 등) 폭이 달라져서 주변 텍스트까지 같이
       // 밀렸다 당겨졌다 하며 렉 걸린 것처럼 보였다 — 최종 자릿수 기준으로 폭을
       // 고정해서 숫자만 그 안에서 바뀌게 한다
+      // 'ch' 단위는 폰트의 '0' 글리프 폭 기준이라 실제 렌더 폭과 살짝 어긋나서
+      // 숫자와 뒤 텍스트(+) 사이에 미세한 틈이 보였다 — 최종 텍스트를 실제로 한 번
+      // 그려서 그 픽셀 폭을 그대로 고정폭으로 쓴다
       el.style.display = 'inline-block';
-      el.style.minWidth = format(target).length + 'ch';
+      el.textContent = format(target);
+      el.style.minWidth = el.getBoundingClientRect().width + 'px';
       function frame(now) {
         const elapsed = now - start;
         if (elapsed >= duration) {
@@ -2825,10 +2842,31 @@
     const preview = document.getElementById('eaVideoPreview');
     if (!preview) return;
     const video = preview.querySelector('video');
+    video.preload = 'auto';
     const cards = document.querySelectorAll('#experience-activities .ea-card[data-video]');
     if (!cards.length) return;
 
+    // hover하는 순간 src를 처음 지정하면 그때부터 네트워크 요청이 시작돼서 재생까지
+    // 한 박자 늦게 나온다 — 화면에 보이지 않는 <video preload="auto">를 소스별로
+    // 미리 하나씩 만들어서 브라우저 캐시에 데이터를 먼저 받아두면, 실제 hover 시엔
+    // 이미 캐시된 걸 그대로 쓰게 돼서 바로 재생된다
+    const preloaded = new Set();
+    cards.forEach((card) => {
+      const src = card.dataset.video;
+      if (!src || preloaded.has(src)) return;
+      preloaded.add(src);
+      const warm = document.createElement('video');
+      warm.src = src;
+      warm.preload = 'auto';
+      warm.muted = true;
+      warm.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
+      document.body.appendChild(warm);
+    });
+
     const move = (e) => { preview.style.left = e.clientX + 'px'; preview.style.top = e.clientY + 'px'; };
+    // 프리로드가 아직 못 끝냈을 경우(느린 네트워크 등) 검은 빈 박스 대신 스피너를 보여준다
+    video.addEventListener('canplay', () => preview.classList.remove('is-loading'));
+    video.addEventListener('waiting', () => preview.classList.add('is-loading'));
 
     cards.forEach((card) => {
       card.addEventListener('mouseenter', (e) => {
@@ -2837,6 +2875,7 @@
         move(e);
         preview.classList.toggle('is-landscape', card.dataset.ratio === '16:9');
         preview.classList.add('is-visible');
+        preview.classList.toggle('is-loading', video.readyState < 3);
         video.currentTime = 0;
         video.playbackRate = parseFloat(card.dataset.rate) || 1.5;
         video.play().catch(() => {});
@@ -3150,7 +3189,7 @@
         redesign: true, beforeImg: '2XKO/2xko hero_before.jpg', afterImg: '2XKO/2xko hero_after.jpg',
         originalLive: 'https://2xko.riotgames.com/ko-kr/',
         caseSoon: true },
-      { name: 'Sledding Game', year: '2026.05', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.mp4', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Interaction', 'Responsive Web', 'KR / EN'],
+      { name: 'Sledding Game', year: '2026.05', role: 'Personal', type: 'Web', live: 'https://itsmauvy.github.io/sledding_game/', thumb: '', video: 'sledding/sledding-hero.webm', tagline: 'Interactive Game Website', tags: ['UX/UI Design', 'Interaction', 'Responsive Web', 'KR / EN'],
         summary: '귀여운 캐릭터와 겨울의 즐거움을 담은\n인터랙티브 게임 웹사이트',
         caseHero: 'sledding/case study/hero.jpg',
         caseTitle: '게임의 즐거움을\n웹으로 확장하다',
